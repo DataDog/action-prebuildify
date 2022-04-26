@@ -1,0 +1,28 @@
+{
+  "name": "main",
+  "version": "1.0.0",
+  "main": "test.js",
+  "repository": "git@github.com:DataDog/action-prebuildify.git",
+  "author": "Datadog Inc. <info@datadoghq.com>",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/DataDog/action-prebuildify#readme",
+  "private": true,
+  "scripts": {
+    "rebuild": "node-gyp rebuild",
+    "prebuild": "node prebuild",
+    "lint": "eslint .",
+    "test": "node test"
+  },
+  "dependencies": {
+    "nan": "^2.15.0",
+    "node-gyp-build": "^3.9.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.31.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
+    "eslint-plugin-standard": "^5.0.0"
+  }
+}

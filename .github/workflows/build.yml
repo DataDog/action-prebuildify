@@ -1,0 +1,141 @@
+name: Build
+
+on:
+  workflow_call:
+    inputs:
+      cache:
+        description: Whether to enable caching of dependencies based on lockfile.
+        default: false
+        required: false
+        type: boolean
+      package-manager:
+        description: The package manager (npm or yarn).
+        default: npm
+        required: false
+        type: string
+      target-name:
+        description: Target name of the build output.
+        default: addon
+        required: false
+        type: string
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+env:
+  CACHE: ${{ inputs.cache }}
+  PACKAGE_MANAGER: ${{ inputs.package-manager }}
+  TARGET_NAME: ${{ inputs.target-name }}
+
+jobs:
+  linux:
+    strategy:
+      matrix:
+        arch: ['ia32', 'x64']
+    runs-on: ubuntu-latest
+    container:
+      # using oldest image to ensure support for older glibc
+      # from node:12.0.0 on 2021-08-30
+      image: node@sha256:c88ef4f7ca8d52ed50366d821e104d029f43e8686120a29541ce0371f333453f
+    name: linux-${{ matrix.arch }}
+    env:
+      ARCH: ${{ matrix.arch }}
+    steps:
+      - run: apt-get update && apt-get install -y g++-multilib
+      - uses: actions/checkout@v3
+      - uses: DataDog/action-prebuildify/prebuild@workflow
+
+  macos-apple:
+    runs-on: macos-11
+    name: macos-apple
+    env:
+      ARCH: arm64
+    steps:
+      - uses: actions/checkout@v3
+      - uses: DataDog/action-prebuildify/prebuild@workflow
+
+  macos-intel:
+    strategy:
+      matrix:
+        arch: ['ia32', 'x64']
+    runs-on: macos-10.15
+    name: macos-intel-${{ matrix.arch }}
+    env:
+      ARCH: ${{ matrix.arch }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: DataDog/action-prebuildify/prebuild@workflow
+
+  windows:
+    strategy:
+      matrix:
+        arch: ['ia32', 'x64']
+    runs-on: windows-2019
+    name: windows-${{ matrix.arch }}
+    env:
+      ARCH: ${{ matrix.arch }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: DataDog/action-prebuildify/prebuild@workflow
+
+  # Tests
+
+  alpine-test:
+    strategy:
+      matrix:
+        node: [12, 14, 16, 18]
+    needs: linux
+    runs-on: ubuntu-latest
+    container:
+      image: node:${{ matrix.node }}-alpine
+    name: alpine-test-${{ matrix.node }}
+    steps:
+      - run: apk update && apk add bash
+      - uses: actions/checkout@v2
+      - uses: DataDog/action-prebuildify/test@workflow
+
+  linux-test:
+    needs: linux
+    runs-on: ubuntu-latest
+    name: linux-test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: DataDog/action-prebuildify/node/12@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/14@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/16@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/18@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
+
+  macos-intel-test:
+    needs: macos-intel
+    runs-on: macos-10.15
+    name: macos-intel-test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: DataDog/action-prebuildify/node/12@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/14@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/16@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/18@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
+
+  windows-test:
+    needs: windows
+    runs-on: windows-2019
+    name: windows-test
+    steps:
+      - uses: actions/checkout@v2
+      - uses: DataDog/action-prebuildify/node/12@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/14@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/16@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/18@workflow
+      - uses: DataDog/action-prebuildify/test@workflow
