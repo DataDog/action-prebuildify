@@ -3,7 +3,7 @@ runs:
   steps:
     - run: $PACKAGE_MANAGER --ignore-scripts
       shell: bash
-    - run: $PACKAGE_MANAGER exec node $GITHUB_ACTION_PATH
+    - run: yarn exec node $GITHUB_ACTION_PATH
       shell: bash
     - uses: actions/upload-artifact@v2
       with:
