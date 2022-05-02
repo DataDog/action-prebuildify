@@ -44,7 +44,7 @@ jobs:
     steps:
       - run: apt-get update && apt-get install -y g++-multilib
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@workflow
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   macos-apple:
     runs-on: macos-11
@@ -53,7 +53,7 @@ jobs:
       ARCH: arm64
     steps:
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@workflow
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   macos-intel:
     strategy:
@@ -65,7 +65,7 @@ jobs:
       ARCH: ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@workflow
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   windows:
     strategy:
@@ -77,7 +77,7 @@ jobs:
       ARCH: ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/prebuild@workflow
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   # Tests
 
@@ -93,7 +93,7 @@ jobs:
     steps:
       - run: apk update && apk add bash
       - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/test@main
 
   linux-test:
     needs: linux
@@ -101,14 +101,14 @@ jobs:
     name: linux-test
     steps:
       - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/node/12@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
-      - uses: DataDog/action-prebuildify/node/14@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
-      - uses: DataDog/action-prebuildify/node/16@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
-      - uses: DataDog/action-prebuildify/node/18@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/12@main
+      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/14@main
+      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/16@main
+      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/18@main
+      - uses: DataDog/action-prebuildify/test@main
 
   macos-intel-test:
     needs: macos-intel
@@ -116,14 +116,14 @@ jobs:
     name: macos-intel-test
     steps:
       - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/node/12@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
-      - uses: DataDog/action-prebuildify/node/14@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
-      - uses: DataDog/action-prebuildify/node/16@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
-      - uses: DataDog/action-prebuildify/node/18@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/12@main
+      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/14@main
+      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/16@main
+      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/18@main
+      - uses: DataDog/action-prebuildify/test@main
 
   windows-test:
     needs: windows
@@ -131,11 +131,11 @@ jobs:
     name: windows-test
     steps:
       - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/node/12@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
-      - uses: DataDog/action-prebuildify/node/14@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
-      - uses: DataDog/action-prebuildify/node/16@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
-      - uses: DataDog/action-prebuildify/node/18@workflow
-      - uses: DataDog/action-prebuildify/test@workflow
+      - uses: DataDog/action-prebuildify/node/12@main
+      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/14@main
+      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/16@main
+      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/18@main
+      - uses: DataDog/action-prebuildify/test@main

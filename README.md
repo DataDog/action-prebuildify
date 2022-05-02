@@ -15,7 +15,7 @@ Example usage with the available options and the defaults:
 ```yaml
 jobs:
   build:
-    uses: Datadog/action-prebuildify/.github/workflows/build.yml@v1
+    uses: Datadog/action-prebuildify/.github/workflows/build.yml@main
     with:
       target-name: 'addon' # target name in binding.gyp
       package-manager: 'npm' # npm or yarn
