@@ -1,0 +1,10 @@
+runs:
+  using: composite
+  steps:
+    - uses: actions/download-artifact@v3
+    - run: rm -f binding.gyp
+      shell: bash
+    - run: $PACKAGE_MANAGER --ignore-scripts
+      shell: bash
+    - run: $PACKAGE_MANAGER test
+      shell: bash
