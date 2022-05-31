@@ -1,7 +1,7 @@
 runs:
   using: composite
   steps:
-    - run: $PACKAGE_MANAGER --ignore-scripts
+    - run: $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
     - run: yarn exec node $GITHUB_ACTION_PATH
       shell: bash
