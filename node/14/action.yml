@@ -5,4 +5,4 @@ runs:
     - uses: actions/setup-node@v3
       with:
         node-version: '14'
-        cache: ${{ env.CACHE && env.PACKAGE_MANAGER || false }}
+        cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || false }}
