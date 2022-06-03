@@ -91,7 +91,7 @@ jobs:
       image: node:${{ matrix.node }}-alpine
     name: alpine-test-${{ matrix.node }}
     steps:
-      - run: apk update && apk add bash
+      - run: apk update && apk add bash python3
       - uses: actions/checkout@v2
       - uses: DataDog/action-prebuildify/test@main
 
