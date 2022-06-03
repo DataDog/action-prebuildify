@@ -49,19 +49,23 @@ jobs:
   linux-arm:
     strategy:
       matrix:
-        arch: ['arm', 'arm64']
-    runs-on: ubuntu-latest
-    container:
-      image: node
+        arch: ['arm64']
+    runs-on: ubuntu-18.04
     name: linux-${{ matrix.arch }}
     env:
       ARCH: ${{ matrix.arch }}
     steps:
       - uses: docker/setup-qemu-action@v2
-      - run: apt-get update && apt-get install -y g++-multilib
+      # - run: apt-get update && apt-get install -y g++-multilib
       - uses: actions/checkout@v3
       - uses: DataDog/action-prebuildify/prebuild@main
-      - run: ls -lisa ./prebuilds
+      - run: |
+          arch -arm64 bash
+          uname -a
+          wget -qO- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+          nvm install lts
+          node -e "console.log(require('os').arch())"
+          # ls -lisa ./prebuilds
 
   # macos-apple:
   #   runs-on: macos-11
