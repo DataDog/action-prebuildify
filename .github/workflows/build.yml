@@ -29,113 +29,140 @@ env:
   TARGET_NAME: ${{ inputs.target-name }}
 
 jobs:
-  linux:
+  # linux:
+  #   strategy:
+  #     matrix:
+  #       arch: ['ia32', 'x64']
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     # using oldest image to ensure support for older glibc
+  #     # from node:12.0.0 on 2021-08-30
+  #     image: node@sha256:c88ef4f7ca8d52ed50366d821e104d029f43e8686120a29541ce0371f333453f
+  #   name: linux-${{ matrix.arch }}
+  #   env:
+  #     ARCH: ${{ matrix.arch }}
+  #   steps:
+  #     - run: apt-get update && apt-get install -y g++-multilib
+  #     - uses: actions/checkout@v3
+  #     - uses: DataDog/action-prebuildify/prebuild@main
+
+  linux-arm:
     strategy:
       matrix:
-        arch: ['ia32', 'x64']
+        arch: ['arm', 'arm64']
     runs-on: ubuntu-latest
-    container:
-      # using oldest image to ensure support for older glibc
-      # from node:12.0.0 on 2021-08-30
-      image: node@sha256:c88ef4f7ca8d52ed50366d821e104d029f43e8686120a29541ce0371f333453f
     name: linux-${{ matrix.arch }}
     env:
       ARCH: ${{ matrix.arch }}
     steps:
-      - run: apt-get update && apt-get install -y g++-multilib
-      - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: docker/setup-qemu-action@v2
+      - run: uname -a
 
-  macos-apple:
-    runs-on: macos-11
-    name: macos-apple
-    env:
-      ARCH: arm64
-    steps:
-      - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@main
+  # macos-apple:
+  #   runs-on: macos-11
+  #   name: macos-apple
+  #   env:
+  #     ARCH: arm64
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: DataDog/action-prebuildify/prebuild@main
 
-  macos-intel:
-    strategy:
-      matrix:
-        arch: ['ia32', 'x64']
-    runs-on: macos-10.15
-    name: macos-intel-${{ matrix.arch }}
-    env:
-      ARCH: ${{ matrix.arch }}
-    steps:
-      - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@main
+  # macos-intel:
+  #   strategy:
+  #     matrix:
+  #       arch: ['ia32', 'x64']
+  #   runs-on: macos-10.15
+  #   name: macos-intel-${{ matrix.arch }}
+  #   env:
+  #     ARCH: ${{ matrix.arch }}
+  #   steps:
+  #     - uses: actions/checkout@v3
+  #     - uses: DataDog/action-prebuildify/prebuild@main
 
-  windows:
-    strategy:
-      matrix:
-        arch: ['ia32', 'x64']
-    runs-on: windows-2019
-    name: windows-${{ matrix.arch }}
-    env:
-      ARCH: ${{ matrix.arch }}
-    steps:
-      - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/prebuild@main
+  # windows:
+  #   strategy:
+  #     matrix:
+  #       arch: ['ia32', 'x64']
+  #   runs-on: windows-2019
+  #   name: windows-${{ matrix.arch }}
+  #   env:
+  #     ARCH: ${{ matrix.arch }}
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: DataDog/action-prebuildify/prebuild@main
 
-  # Tests
+  # # Tests
 
-  alpine-test:
-    strategy:
-      matrix:
-        node: [12, 14, 16, 18]
-    needs: linux
-    runs-on: ubuntu-latest
-    container:
-      image: node:${{ matrix.node }}-alpine
-    name: alpine-test-${{ matrix.node }}
-    steps:
-      - run: apk update && apk add bash
-      - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/test@main
+  # alpine-test:
+  #   strategy:
+  #     matrix:
+  #       node: [12, 14, 16, 18]
+  #   needs: linux
+  #   runs-on: ubuntu-latest
+  #   container:
+  #     image: node:${{ matrix.node }}-alpine
+  #   name: alpine-test-${{ matrix.node }}
+  #   steps:
+  #     - run: apk update && apk add bash
+  #     - uses: actions/checkout@v2
+  #     - uses: DataDog/action-prebuildify/test@main
 
-  linux-test:
-    needs: linux
-    runs-on: ubuntu-latest
-    name: linux-test
-    steps:
-      - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
+  # linux-test:
+  #   needs: linux
+  #   runs-on: ubuntu-latest
+  #   name: linux-test
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: DataDog/action-prebuildify/node/12@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/14@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/16@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/18@main
+  #     - uses: DataDog/action-prebuildify/test@main
 
-  macos-intel-test:
-    needs: macos-intel
-    runs-on: macos-10.15
-    name: macos-intel-test
-    steps:
-      - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
+  # linux-arm-test:
+  #   needs: linux
+  #   runs-on: ubuntu-latest
+  #   name: linux-test
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: DataDog/action-prebuildify/node/12@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/14@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/16@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/18@main
+  #     - uses: DataDog/action-prebuildify/test@main
 
-  windows-test:
-    needs: windows
-    runs-on: windows-2019
-    name: windows-test
-    steps:
-      - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
+  # macos-intel-test:
+  #   needs: macos-intel
+  #   runs-on: macos-10.15
+  #   name: macos-intel-test
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: DataDog/action-prebuildify/node/12@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/14@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/16@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/18@main
+  #     - uses: DataDog/action-prebuildify/test@main
+
+  # windows-test:
+  #   needs: windows
+  #   runs-on: windows-2019
+  #   name: windows-test
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: DataDog/action-prebuildify/node/12@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/14@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/16@main
+  #     - uses: DataDog/action-prebuildify/test@main
+  #     - uses: DataDog/action-prebuildify/node/18@main
+  #     - uses: DataDog/action-prebuildify/test@main
