@@ -51,12 +51,17 @@ jobs:
       matrix:
         arch: ['arm', 'arm64']
     runs-on: ubuntu-latest
+    container:
+      image: node
     name: linux-${{ matrix.arch }}
     env:
       ARCH: ${{ matrix.arch }}
     steps:
       - uses: docker/setup-qemu-action@v2
-      - run: uname -a
+      - run: apt-get update && apt-get install -y g++-multilib
+      - uses: actions/checkout@v3
+      - uses: DataDog/action-prebuildify/prebuild@main
+      - run: ls -lisa ./prebuilds
 
   # macos-apple:
   #   runs-on: macos-11
