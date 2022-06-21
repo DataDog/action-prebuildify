@@ -29,22 +29,38 @@ env:
   TARGET_NAME: ${{ inputs.target-name }}
 
 jobs:
-  linux:
-    strategy:
-      matrix:
-        arch: ['ia32', 'x64']
+  linux-ia32:
+    runs-on: ubuntu-latest
+    name: linux-ia32
+    env:
+      ARCH: ia32
+      DOCKER_BUILDER: rochdev/holy-node-box:12-i386
+    steps:
+      - uses: docker/setup-qemu-action@v2
+      - uses: actions/checkout@v3
+      - uses: DataDog/action-prebuildify/prebuild@glibcxx-3.4.17
+
+  linux-x64:
     runs-on: ubuntu-latest
     container:
-      # using oldest image to ensure support for older glibc
-      # from node:12.0.0 on 2021-08-30
-      image: node@sha256:c88ef4f7ca8d52ed50366d821e104d029f43e8686120a29541ce0371f333453f
-    name: linux-${{ matrix.arch }}
+      image: rochdev/holy-node-box:12-amd64
+    name: linux-x64
     env:
-      ARCH: ${{ matrix.arch }}
+      ARCH: x64
     steps:
-      - run: apt-get update && apt-get install -y g++-multilib
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@glibcxx-3.4.17
+
+  linux-arm64:
+    runs-on: ubuntu-latest
+    name: linux-arm64
+    env:
+      ARCH: arm64
+      DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
+    steps:
+      - uses: docker/setup-qemu-action@v2
+      - uses: actions/checkout@v3
+      - uses: DataDog/action-prebuildify/prebuild@glibcxx-3.4.17
 
   macos-apple:
     runs-on: macos-11
@@ -85,7 +101,7 @@ jobs:
     strategy:
       matrix:
         node: [12, 14, 16, 18]
-    needs: linux
+    needs: linux-x64
     runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node }}-alpine
@@ -96,7 +112,7 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   linux-test:
-    needs: linux
+    needs: linux-x64
     runs-on: ubuntu-latest
     name: linux-test
     steps:
