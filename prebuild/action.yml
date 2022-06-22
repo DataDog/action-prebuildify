@@ -4,6 +4,17 @@ runs:
     - run: $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
     - run: yarn exec node $GITHUB_ACTION_PATH
+      if: ${{ env.DOCKER_BUILDER == '' }}
+      shell: bash
+    - run: |
+        docker run \
+          -v $GITHUB_ACTION_PATH:/usr/action \
+          -v $PWD:/usr/workspace \
+          -e TARGET_NAME=$TARGET_NAME \
+          -w /usr/action \
+          $DOCKER_BUILDER \
+          /bin/bash -c 'yarn && cd /usr/workspace && yarn exec node /usr/action'
+      if: ${{ env.DOCKER_BUILDER != '' }}
       shell: bash
     - uses: actions/upload-artifact@v2
       with:
