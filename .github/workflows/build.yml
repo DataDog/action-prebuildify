@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v2
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@arm32
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-x64:
     runs-on: ubuntu-latest
@@ -49,7 +49,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@arm32
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm64:
     runs-on: ubuntu-latest
@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v2
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@arm32
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm:
     runs-on: ubuntu-latest
@@ -71,7 +71,7 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v2
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@arm32
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   macos-apple:
     runs-on: macos-11
