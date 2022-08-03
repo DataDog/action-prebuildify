@@ -73,21 +73,14 @@ jobs:
       - uses: actions/checkout@v3
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  macos-apple:
-    runs-on: macos-11
-    name: macos-apple
-    env:
-      ARCH: arm64
-    steps:
-      - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@main
-
-  macos-intel:
+  macos:
     strategy:
       matrix:
-        arch: ['ia32', 'x64']
-    runs-on: macos-10.15
-    name: macos-intel-${{ matrix.arch }}
+        arch:
+          - x64
+          - arm64
+    runs-on: macos-11
+    name: macos-${{ matrix.arch }}
     env:
       ARCH: ${{ matrix.arch }}
     steps:
@@ -137,10 +130,10 @@ jobs:
       - uses: DataDog/action-prebuildify/node/18@main
       - uses: DataDog/action-prebuildify/test@main
 
-  macos-intel-test:
-    needs: macos-intel
-    runs-on: macos-10.15
-    name: macos-intel-test
+  macos-x64-test:
+    needs: macos
+    runs-on: macos-11
+    name: macos-x64-test
     steps:
       - uses: actions/checkout@v2
       - uses: DataDog/action-prebuildify/node/12@main
