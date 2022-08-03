@@ -38,7 +38,7 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v2
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: ./prebuild
 
   linux-x64:
     runs-on: ubuntu-latest
@@ -49,7 +49,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: ./prebuild
 
   linux-arm64:
     runs-on: ubuntu-latest
@@ -60,7 +60,7 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v2
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: ./prebuild
 
   linux-arm:
     runs-on: ubuntu-latest
@@ -71,7 +71,7 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v2
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: ./prebuild
 
   macos-apple:
     runs-on: macos-11
@@ -80,7 +80,7 @@ jobs:
       ARCH: arm64
     steps:
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: ./prebuild
 
   macos-intel:
     strategy:
@@ -92,7 +92,7 @@ jobs:
       ARCH: ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v3
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: ./prebuild
 
   windows:
     strategy:
@@ -104,7 +104,7 @@ jobs:
       ARCH: ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: ./prebuild
 
   # Tests
 
@@ -120,7 +120,7 @@ jobs:
     steps:
       - run: apk update && apk add bash python3 build-base
       - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: ./test
 
   linux-test:
     needs: linux-x64
@@ -128,14 +128,14 @@ jobs:
     name: linux-test
     steps:
       - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: ./node/12
+      - uses: ./test
+      - uses: ./node/14
+      - uses: ./test
+      - uses: ./node/16
+      - uses: ./test
+      - uses: ./node/18
+      - uses: ./test
 
   macos-intel-test:
     needs: macos-intel
@@ -143,14 +143,14 @@ jobs:
     name: macos-intel-test
     steps:
       - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: ./node/12
+      - uses: ./test
+      - uses: ./node/14
+      - uses: ./test
+      - uses: ./node/16
+      - uses: ./test
+      - uses: ./node/18
+      - uses: ./test
 
   windows-test:
     needs: windows
@@ -158,11 +158,11 @@ jobs:
     name: windows-test
     steps:
       - uses: actions/checkout@v2
-      - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: ./node/12
+      - uses: ./test
+      - uses: ./node/14
+      - uses: ./test
+      - uses: ./node/16
+      - uses: ./test
+      - uses: ./node/18
+      - uses: ./test
