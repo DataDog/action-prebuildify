@@ -104,7 +104,7 @@ jobs:
   alpine-test:
     strategy:
       matrix:
-        node: [12, 14, 16, 18]
+        node: [12, 14, 16, 18, 19]
     needs: linux-x64
     runs-on: ubuntu-latest
     container:
@@ -129,6 +129,8 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
       - uses: DataDog/action-prebuildify/node/18@main
       - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/19@main
+      - uses: DataDog/action-prebuildify/test@main
 
   macos-x64-test:
     needs: macos
@@ -144,6 +146,8 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
       - uses: DataDog/action-prebuildify/node/18@main
       - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/19@main
+      - uses: DataDog/action-prebuildify/test@main
 
   windows-test:
     needs: windows
@@ -158,4 +162,6 @@ jobs:
       - uses: DataDog/action-prebuildify/node/16@main
       - uses: DataDog/action-prebuildify/test@main
       - uses: DataDog/action-prebuildify/node/18@main
+      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/node/19@main
       - uses: DataDog/action-prebuildify/test@main
