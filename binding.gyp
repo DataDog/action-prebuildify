@@ -7,6 +7,12 @@
     "include_dirs": [
       "<!(node -e \"require('nan')\")"
     ],
+    "link_settings": {
+      "ldflags": [
+        "-static-libgcc"
+        "-static-libstdc++"
+      ]
+    },
     "xcode_settings": {
       "MACOSX_DEPLOYMENT_TARGET": "10.10",
       "OTHER_CFLAGS": [
