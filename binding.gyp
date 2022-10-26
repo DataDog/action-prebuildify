@@ -9,7 +9,7 @@
     ],
     "link_settings": {
       "ldflags": [
-        "-static-libgcc"
+        "-static-libgcc",
         "-static-libstdc++"
       ]
     },
