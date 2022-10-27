@@ -1,6 +1,7 @@
 runs:
   using: composite
   steps:
+    - uses: actions/download-artifact@v3
     - run: $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
     - run: yarn exec node $GITHUB_ACTION_PATH
