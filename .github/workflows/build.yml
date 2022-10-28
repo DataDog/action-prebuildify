@@ -47,7 +47,7 @@ env:
 
 jobs:
   linux-ia32:
-    if: ${{ contains(inputs.skip, 'linux-ia32') }}
+    if: ${{ !contains(inputs.skip, 'linux-ia32') }}
     runs-on: ubuntu-latest
     name: linux-ia32
     env:
@@ -61,7 +61,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-x64:
-    if: ${{ contains(inputs.skip, 'linux-x64') }}
+    if: ${{ !contains(inputs.skip, 'linux-x64') }}
     runs-on: ubuntu-latest
     container:
       image: rochdev/holy-node-box:12-amd64
@@ -75,7 +75,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm64:
-    if: ${{ contains(inputs.skip, 'linux-arm64') }}
+    if: ${{ !contains(inputs.skip, 'linux-arm64') }}
     runs-on: ubuntu-latest
     name: linux-arm64
     env:
@@ -89,7 +89,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm:
-    if: ${{ contains(inputs.skip, 'linux-arm') }}
+    if: ${{ !contains(inputs.skip, 'linux-arm') }}
     runs-on: ubuntu-latest
     name: linux-arm
     env:
@@ -106,7 +106,7 @@ jobs:
     strategy:
       matrix:
         arch: ['arm64', 'x64']
-    if: ${{ contains(inputs.skip, 'macos-${{ matrix.arch }}') }}
+    if: ${{ !contains(inputs.skip, 'macos-${{ matrix.arch }}') }}
     runs-on: macos-11
     name: macos-${{ matrix.arch }}
     env:
@@ -121,7 +121,7 @@ jobs:
     strategy:
       matrix:
         arch: ['ia32', 'x64']
-    if: ${{ contains(inputs.skip, 'windows-${{ matrix.arch }}') }}
+    if: ${{ !contains(inputs.skip, 'windows-${{ matrix.arch }}') }}
     runs-on: windows-2019
     name: windows-${{ matrix.arch }}
     env:
