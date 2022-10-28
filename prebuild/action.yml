@@ -18,6 +18,9 @@ runs:
           /bin/bash -c 'yarn && cd /usr/workspace && yarn exec node /usr/action'
       if: ${{ env.DOCKER_BUILDER != '' }}
       shell: bash
+    - run: eval $POSTBUILD
+      if: ${{ env.POSTBUILD != '' }}
+      shell: bash
     - uses: actions/upload-artifact@v2
       with:
         name: prebuilds

@@ -18,6 +18,11 @@ on:
         default: npm
         required: false
         type: string
+      postbuild:
+        description: Command to run after prebuilds have been generated.
+        default: ''
+        required: false
+        type: string
       target-name:
         description: Target name of the build output.
         default: addon
@@ -32,6 +37,7 @@ env:
   CACHE: ${{ inputs.cache }}
   NAPI: ${{ inputs.napi }}
   PACKAGE_MANAGER: ${{ inputs.package-manager }}
+  POSTBUILD: ${{ inputs.postbuild }}
   TARGET_NAME: ${{ inputs.target-name }}
 
 jobs:
