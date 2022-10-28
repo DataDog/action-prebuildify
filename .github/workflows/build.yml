@@ -8,6 +8,11 @@ on:
         default: false
         required: false
         type: boolean
+      napi:
+        description: Whether to generate a single Node-API binary for all versions of Node.
+        default: false
+        required: false
+        type: boolean
       package-manager:
         description: The package manager (npm or yarn).
         default: npm
