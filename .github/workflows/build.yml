@@ -3,11 +3,6 @@ name: Build
 on:
   workflow_call:
     inputs:
-      32bit:
-        description: Whether to generate 32-bit binaries.
-        default: true
-        required: false
-        type: boolean
       cache:
         description: Whether to enable caching of dependencies based on lockfile.
         default: false
@@ -28,6 +23,11 @@ on:
         default: ''
         required: false
         type: string
+      skip:
+        description: Array of jobs to skip.
+        default: []
+        required: false
+        type: array
       target-name:
         description: Target name of the build output.
         default: addon
@@ -47,7 +47,7 @@ env:
 
 jobs:
   linux-ia32:
-    if: ${{ inputs.32bit }}
+    if: ${{ contains(inputs.skip, 'linux-ia32') }}
     runs-on: ubuntu-latest
     name: linux-ia32
     env:
@@ -61,6 +61,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-x64:
+    if: ${{ contains(inputs.skip, 'linux-x64') }}
     runs-on: ubuntu-latest
     container:
       image: rochdev/holy-node-box:12-amd64
@@ -74,6 +75,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm64:
+    if: ${{ contains(inputs.skip, 'linux-arm64') }}
     runs-on: ubuntu-latest
     name: linux-arm64
     env:
@@ -87,7 +89,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm:
-    if: ${{ inputs.32bit }}
+    if: ${{ contains(inputs.skip, 'linux-arm') }}
     runs-on: ubuntu-latest
     name: linux-arm
     env:
@@ -103,9 +105,8 @@ jobs:
   macos:
     strategy:
       matrix:
-        arch:
-          - x64
-          - arm64
+        arch: ['arm64', 'x64']
+    if: ${{ contains(inputs.skip, 'macos-${{ matrix.arch }}') }}
     runs-on: macos-11
     name: macos-${{ matrix.arch }}
     env:
@@ -116,23 +117,15 @@ jobs:
           submodules: true
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  windows-ia32:
-    if: ${{ inputs.32bit }}
+  windows:
+    strategy:
+      matrix:
+        arch: ['ia32', 'x64']
+    if: ${{ contains(inputs.skip, 'windows-${{ matrix.arch }}') }}
     runs-on: windows-2019
-    name: windows-ia32
+    name: windows-${{ matrix.arch }}
     env:
-      ARCH: ia32
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
-
-  windows-x64:
-    runs-on: windows-2019
-    name: windows-x64
-    env:
-      ARCH: x64
+      ARCH: ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v3
         with:
