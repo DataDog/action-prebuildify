@@ -11,6 +11,7 @@ runs:
         docker run \
           -v $GITHUB_ACTION_PATH:/usr/action \
           -v $PWD:/usr/workspace \
+          -e NAPI=$NAPI \
           -e TARGET_NAME=$TARGET_NAME \
           -w /usr/action \
           $DOCKER_BUILDER \

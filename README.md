@@ -17,7 +17,8 @@ jobs:
   build:
     uses: Datadog/action-prebuildify/.github/workflows/build.yml@main
     with:
-      target-name: 'addon' # target name in binding.gyp
-      package-manager: 'npm' # npm or yarn
       cache: false # enable caching of dependencies based on lockfile
+      napi: false # generate single Node-API binary for all versions of Node
+      package-manager: 'npm' # npm or yarn
+      target-name: 'addon' # target name in binding.gyp
 ```

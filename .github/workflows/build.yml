@@ -25,6 +25,7 @@ concurrency:
 
 env:
   CACHE: ${{ inputs.cache }}
+  NAPI: ${{ inputs.napi }}
   PACKAGE_MANAGER: ${{ inputs.package-manager }}
   TARGET_NAME: ${{ inputs.target-name }}
 

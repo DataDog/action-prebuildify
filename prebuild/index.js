@@ -7,9 +7,14 @@ const execSync = require('child_process').execSync
 const semver = require('semver')
 
 const platform = os.platform()
-const arches = (process.env.ARCH || os.arch()).split(',')
+const arch = process.env.ARCH || os.arch()
+const cache = path.join(os.tmpdir(), 'prebuilds')
 
-const { NODE_VERSIONS = '>=12', TARGET_NAME = 'addon' } = process.env
+const {
+  NAPI = 'false',
+  NODE_VERSIONS = '>=12',
+  TARGET_NAME = 'addon'
+} = process.env
 
 // https://nodejs.org/en/download/releases/
 const targets = [
@@ -26,35 +31,36 @@ const targets = [
 prebuildify()
 
 function prebuildify () {
-  const cache = path.join(os.tmpdir(), 'prebuilds')
-
   fs.mkdirSync(cache, { recursive: true })
+  fs.mkdirSync(`prebuilds/${platform}-${arch}`, { recursive: true })
 
-  for (const arch of arches) {
-    fs.mkdirSync(`prebuilds/${platform}-${arch}`, { recursive: true })
-
-    targets.forEach(target => {
-      if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
-      if (platform === 'win32' && arch === 'ia32' && semver.gte(target.version, '18.0.0')) return
-
-      const output = `prebuilds/${platform}-${arch}/node-${target.abi}.node`
-      const cmd = [
-        'node-gyp rebuild',
-        `--target=${target.version}`,
-        `--target_arch=${arch}`,
-        `--arch=${arch}`,
-        `--devdir=${cache}`,
-        '--release',
-        '--jobs=max',
-        '--build_v8_with_gn=false',
-        '--v8_enable_pointer_compression=""',
-        '--v8_enable_31bit_smis_on_64bit_arch=""',
-        '--enable_lto=false'
-      ].join(' ')
-
-      execSync(cmd, { stdio: [0, 1, 2], shell: process.env.SHELL })
-
-      fs.copyFileSync(`build/Release/${TARGET_NAME}.node`, output)
-    })
+  if (NAPI === 'true') {
+    prebuildTarget(arch, { version: targets[0].version, abi: 'napi' })
+  } else {
+    targets.forEach(target => prebuildTarget(arch, target))
   }
+}
+
+function prebuildTarget (arch, target) {
+  if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
+  if (platform === 'win32' && arch === 'ia32' && semver.gte(target.version, '18.0.0')) return
+
+  const output = `prebuilds/${platform}-${arch}/node-${target.abi}.node`
+  const cmd = [
+    'node-gyp rebuild',
+    `--target=${target.version}`,
+    `--target_arch=${arch}`,
+    `--arch=${arch}`,
+    `--devdir=${cache}`,
+    '--release',
+    '--jobs=max',
+    '--build_v8_with_gn=false',
+    '--v8_enable_pointer_compression=""',
+    '--v8_enable_31bit_smis_on_64bit_arch=""',
+    '--enable_lto=false'
+  ].join(' ')
+
+  execSync(cmd, { stdio: [0, 1, 2], shell: process.env.SHELL })
+
+  fs.copyFileSync(`build/Release/${TARGET_NAME}.node`, output)
 }
