@@ -3,6 +3,11 @@ name: Build
 on:
   workflow_call:
     inputs:
+      32bit:
+        description: Whether to generate 32-bit binaries.
+        default: true
+        required: false
+        type: boolean
       cache:
         description: Whether to enable caching of dependencies based on lockfile.
         default: false
@@ -42,6 +47,7 @@ env:
 
 jobs:
   linux-ia32:
+    if: ${{ inputs.32bit }}
     runs-on: ubuntu-latest
     name: linux-ia32
     env:
@@ -81,6 +87,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm:
+    if: ${{ inputs.32bit }}
     runs-on: ubuntu-latest
     name: linux-arm
     env:
@@ -109,14 +116,23 @@ jobs:
           submodules: true
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  windows:
-    strategy:
-      matrix:
-        arch: ['ia32', 'x64']
+  windows-ia32:
+    if: ${{ inputs.32bit }}
     runs-on: windows-2019
-    name: windows-${{ matrix.arch }}
+    name: windows-ia32
     env:
-      ARCH: ${{ matrix.arch }}
+      ARCH: ia32
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - uses: DataDog/action-prebuildify/prebuild@main
+
+  windows-x64:
+    runs-on: windows-2019
+    name: windows-x64
+    env:
+      ARCH: x64
     steps:
       - uses: actions/checkout@v3
         with:
