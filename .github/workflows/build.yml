@@ -24,10 +24,10 @@ on:
         required: false
         type: string
       skip:
-        description: Array of jobs to skip.
-        default: []
+        description: List of jobs to skip.
+        default: ''
         required: false
-        type: array
+        type: string
       target-name:
         description: Target name of the build output.
         default: addon
