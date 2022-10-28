@@ -38,6 +38,8 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v2
       - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-x64:
@@ -49,6 +51,8 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm64:
@@ -60,6 +64,8 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v2
       - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm:
@@ -71,6 +77,8 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v2
       - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@main
 
   macos:
@@ -85,6 +93,8 @@ jobs:
       ARCH: ${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@main
 
   windows:
@@ -96,7 +106,9 @@ jobs:
     env:
       ARCH: ${{ matrix.arch }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@main
 
   # Tests
@@ -111,8 +123,10 @@ jobs:
       image: node:${{ matrix.node }}-alpine
     name: alpine-test-${{ matrix.node }}
     steps:
-      - run: apk update && apk add bash python3 build-base
-      - uses: actions/checkout@v2
+      - run: apk update && apk add bash build-base git python3
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: DataDog/action-prebuildify/test@main
 
   linux-test:
@@ -120,7 +134,9 @@ jobs:
     runs-on: ubuntu-latest
     name: linux-test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: DataDog/action-prebuildify/node/12@main
       - uses: DataDog/action-prebuildify/test@main
       - uses: DataDog/action-prebuildify/node/14@main
@@ -137,7 +153,9 @@ jobs:
     runs-on: macos-11
     name: macos-x64-test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: DataDog/action-prebuildify/node/12@main
       - uses: DataDog/action-prebuildify/test@main
       - uses: DataDog/action-prebuildify/node/14@main
@@ -154,7 +172,9 @@ jobs:
     runs-on: windows-2019
     name: windows-test
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
       - uses: DataDog/action-prebuildify/node/12@main
       - uses: DataDog/action-prebuildify/test@main
       - uses: DataDog/action-prebuildify/node/14@main
