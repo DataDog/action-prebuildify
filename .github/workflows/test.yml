@@ -10,6 +10,7 @@ jobs:
   build:
     uses: ./.github/workflows/build.yml
     with:
-      target-name: test
-      package-manager: yarn
       cache: true
+      napi: false # TODO: test Node-API support
+      package-manager: yarn
+      target-name: test

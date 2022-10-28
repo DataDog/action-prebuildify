@@ -8,9 +8,24 @@ on:
         default: false
         required: false
         type: boolean
+      napi:
+        description: Whether to generate a single Node-API binary for all versions of Node.
+        default: false
+        required: false
+        type: boolean
       package-manager:
         description: The package manager (npm or yarn).
         default: npm
+        required: false
+        type: string
+      postbuild:
+        description: Command to run after prebuilds have been generated.
+        default: ''
+        required: false
+        type: string
+      skip:
+        description: List of jobs to skip.
+        default: ''
         required: false
         type: string
       target-name:
@@ -25,11 +40,14 @@ concurrency:
 
 env:
   CACHE: ${{ inputs.cache }}
+  NAPI: ${{ inputs.napi }}
   PACKAGE_MANAGER: ${{ inputs.package-manager }}
+  POSTBUILD: ${{ inputs.postbuild }}
   TARGET_NAME: ${{ inputs.target-name }}
 
 jobs:
   linux-ia32:
+    if: ${{ !contains(inputs.skip, 'linux-ia32') }}
     runs-on: ubuntu-latest
     name: linux-ia32
     env:
@@ -43,6 +61,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-x64:
+    if: ${{ !contains(inputs.skip, 'linux-x64') }}
     runs-on: ubuntu-latest
     container:
       image: rochdev/holy-node-box:12-amd64
@@ -56,6 +75,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm64:
+    if: ${{ !contains(inputs.skip, 'linux-arm64') }}
     runs-on: ubuntu-latest
     name: linux-arm64
     env:
@@ -69,6 +89,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm:
+    if: ${{ !contains(inputs.skip, 'linux-arm') }}
     runs-on: ubuntu-latest
     name: linux-arm
     env:
@@ -84,9 +105,8 @@ jobs:
   macos:
     strategy:
       matrix:
-        arch:
-          - x64
-          - arm64
+        arch: ['arm64', 'x64']
+    if: ${{ !contains(inputs.skip, 'macos-${{ matrix.arch }}') }}
     runs-on: macos-11
     name: macos-${{ matrix.arch }}
     env:
@@ -101,6 +121,7 @@ jobs:
     strategy:
       matrix:
         arch: ['ia32', 'x64']
+    if: ${{ !contains(inputs.skip, 'windows-${{ matrix.arch }}') }}
     runs-on: windows-2019
     name: windows-${{ matrix.arch }}
     env:
