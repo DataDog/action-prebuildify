@@ -23,6 +23,11 @@ on:
         default: ''
         required: false
         type: string
+      prebuild:
+        description: Command to run before prebuilds are generated.
+        default: ''
+        required: false
+        type: string
       skip:
         description: List of jobs to skip.
         default: ''
@@ -43,6 +48,7 @@ env:
   NAPI: ${{ inputs.napi }}
   PACKAGE_MANAGER: ${{ inputs.package-manager }}
   POSTBUILD: ${{ inputs.postbuild }}
+  PREBUILD: ${{ inputs.prebuild }}
   TARGET_NAME: ${{ inputs.target-name }}
 
 jobs:
@@ -102,6 +108,24 @@ jobs:
           submodules: true
       - uses: DataDog/action-prebuildify/prebuild@main
 
+  linuxmusl-x64:
+    if: ${{ !contains(inputs.skip, 'linuxmusl-x64') }}
+    runs-on: ubuntu-latest
+    container:
+      image: node:12.0.0-alpine
+    name: linuxmusl-x64
+    env:
+      ARCH: x64
+      LIBC: musl
+    steps:
+      - run: apk update && apk add bash build-base git python
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - uses: DataDog/action-prebuildify/prebuild@main
+
+  # TODO: linuxmusl-arm / linuxmusl-arm64
+
   macos:
     strategy:
       matrix:
@@ -138,7 +162,7 @@ jobs:
     strategy:
       matrix:
         node: [12, 14, 16, 18, 19]
-    needs: linux-x64
+    needs: linuxmusl-x64
     runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node }}-alpine

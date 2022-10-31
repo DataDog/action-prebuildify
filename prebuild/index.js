@@ -8,11 +8,16 @@ const semver = require('semver')
 
 const platform = os.platform()
 const arch = process.env.ARCH || os.arch()
+const libc = process.env.LIBC || ''
 const cache = path.join(os.tmpdir(), 'prebuilds')
+const stdio = [0, 1, 2]
+const shell = process.env.SHELL
 
 const {
   NAPI = 'false',
   NODE_VERSIONS = '>=12',
+  POSTBUILD = '',
+  PREBUILD = '',
   TARGET_NAME = 'addon'
 } = process.env
 
@@ -32,12 +37,20 @@ prebuildify()
 
 function prebuildify () {
   fs.mkdirSync(cache, { recursive: true })
-  fs.mkdirSync(`prebuilds/${platform}-${arch}`, { recursive: true })
+  fs.mkdirSync(`prebuilds/${platform}${libc}-${arch}`, { recursive: true })
+
+  if (PREBUILD) {
+    execSync(PREBUILD, { stdio, shell })
+  }
 
   if (NAPI === 'true') {
     prebuildTarget(arch, { version: targets[0].version, abi: 'napi' })
   } else {
     targets.forEach(target => prebuildTarget(arch, target))
+  }
+
+  if (POSTBUILD) {
+    execSync(POSTBUILD, { stdio, shell })
   }
 }
 
@@ -45,7 +58,7 @@ function prebuildTarget (arch, target) {
   if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
   if (platform === 'win32' && arch === 'ia32' && semver.gte(target.version, '18.0.0')) return
 
-  const output = `prebuilds/${platform}-${arch}/node-${target.abi}.node`
+  const output = `prebuilds/${platform}${libc}-${arch}/node-${target.abi}.node`
   const cmd = [
     'node-gyp rebuild',
     `--target=${target.version}`,
@@ -60,7 +73,7 @@ function prebuildTarget (arch, target) {
     '--enable_lto=false'
   ].join(' ')
 
-  execSync(cmd, { stdio: [0, 1, 2], shell: process.env.SHELL })
+  execSync(cmd, { stdio, shell })
 
   fs.copyFileSync(`build/Release/${TARGET_NAME}.node`, output)
 }

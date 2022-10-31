@@ -11,15 +11,14 @@ runs:
         docker run \
           -v $GITHUB_ACTION_PATH:/usr/action \
           -v $PWD:/usr/workspace \
-          -e NAPI=$NAPI \
-          -e TARGET_NAME=$TARGET_NAME \
+          -e NAPI="$NAPI" \
+          -e POSTBUILD="$POSTBUILD" \
+          -e PREBUILD="$PREBUILD" \
+          -e TARGET_NAME="$TARGET_NAME" \
           -w /usr/action \
           $DOCKER_BUILDER \
           /bin/bash -c 'yarn && cd /usr/workspace && yarn exec node /usr/action'
       if: ${{ env.DOCKER_BUILDER != '' }}
-      shell: bash
-    - run: eval $POSTBUILD
-      if: ${{ env.POSTBUILD != '' }}
       shell: bash
     - uses: actions/upload-artifact@v2
       with:
