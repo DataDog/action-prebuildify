@@ -20,5 +20,8 @@ jobs:
       cache: false # enable caching of dependencies based on lockfile
       napi: false # generate single Node-API binary for all versions of Node
       package-manager: 'npm' # npm or yarn
+      postbuild: '' # command to run after prebuilds have been generated
+      prebuild: '' # command to run before prebuilds are generated
+      skip: '' # list of jobs to skip, for example when a platform is not supported
       target-name: 'addon' # target name in binding.gyp
 ```

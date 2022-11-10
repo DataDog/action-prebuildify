@@ -29,7 +29,7 @@ on:
         required: false
         type: string
       skip:
-        description: List of jobs to skip.
+        description: List of jobs to skip, for example when a platform is not supported.
         default: ''
         required: false
         type: string
