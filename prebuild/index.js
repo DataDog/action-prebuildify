@@ -19,12 +19,11 @@ const {
   NODE_VERSIONS = '>=12',
   POSTBUILD = '',
   PREBUILD = '',
-  TARGET_NAME = 'addon',
   DIRECTORY_PATH = '.',
+  TARGET_NAME = 'addon'
 } = process.env
 
-console.log("platofrm: " + platform)
-
+// https://nodejs.org/en/download/releases/
 const targets = [
   { version: '12.0.0', abi: '72' },
   { version: '13.0.0', abi: '79' },
@@ -36,7 +35,6 @@ const targets = [
   { version: '19.0.0', abi: '111' }
 ]
 
-// https://nodejs.org/en/download/releases/
 if (NAPI_RS === 'false') {
   targets.filter(target => semver.satisfies(target.version, NODE_VERSIONS))
 }
@@ -65,17 +63,16 @@ function prebuildify () {
 }
 
 function prebuildTarget (arch, target) {
-  console.log('arch: ' + arch)
-  console.log('target: ' + target)
+  // only support building for linux and darwin, arm64 and x64
   if (NAPI_RS === 'true' && (platform !== 'linux' && platform !== 'darwin')) return
   if (NAPI_RS === 'true' && (arch !== 'arm64' && arch !== 'x64')) return
   if (NAPI_RS === 'true' && platform === 'linux' && libc === 'musl') return
+
   if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
   if (platform === 'win32' && arch === 'ia32' && semver.gte(target.version, '18.0.0')) return
 
   let cmd;
 
-  // only support building for linux and darwin, arm64 and x64
   if (NAPI_RS === 'true') {
     let build_target;
     if (platform === 'linux') {
@@ -116,13 +113,9 @@ function prebuildTarget (arch, target) {
     ].join(' ')
   }
 
-  console.log("process env before running cmd")
-  console.log(process.env)
-
   execSync(cmd, { stdio, shell })
 
   if (NAPI_RS === 'true') {
-    console.log("looking for: " + `${DIRECTORY_PATH}/${TARGET_NAME}.node`);
     const output = `prebuilds/${platform}${libc}-${arch}/${TARGET_NAME}.node`
     fs.copyFileSync(`${DIRECTORY_PATH}/${TARGET_NAME}.node`, output)
   } else {
