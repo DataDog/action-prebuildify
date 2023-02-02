@@ -33,11 +33,7 @@ const targets = [
   { version: '17.0.1', abi: '102' },
   { version: '18.0.0', abi: '108' },
   { version: '19.0.0', abi: '111' }
-]
-
-if (NAPI_RS === 'false') {
-  targets.filter(target => semver.satisfies(target.version, NODE_VERSIONS))
-}
+].filter(target => semver.satisfies(target.version, NODE_VERSIONS))
 
 prebuildify()
 
