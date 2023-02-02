@@ -23,5 +23,5 @@ jobs:
       postbuild: '' # command to run after prebuilds have been generated
       prebuild: '' # command to run before prebuilds are generated
       skip: '' # list of jobs to skip, for example when a platform is not supported
-      target-name: 'addon' # target name in binding.gyp
+      target-name: 'addon' # target name in binding.gyp (or napi.name in package.json for napi-rs projects)
 ```
