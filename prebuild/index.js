@@ -90,7 +90,8 @@ function prebuildTarget (arch, target) {
     cmd = [
       `rustup target add ${build_target} &&`,
       `cd ${DIRECTORY_PATH} &&`,
-      'napi build --release',
+      'napi build',
+      '--release',
       `--target=${build_target}`,
     ].join(' ')
   } else {
