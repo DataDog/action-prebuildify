@@ -171,7 +171,6 @@ jobs:
   # Tests
 
   alpine-test:
-    if: ${{ !inputs.napi-rs }}
     strategy:
       matrix:
         node: [12, 14, 16, 18, 19]
@@ -188,7 +187,6 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   linux-test:
-    if: ${{ !inputs.napi-rs }}
     needs: linux-x64
     runs-on: ubuntu-latest
     name: linux-test
@@ -208,7 +206,6 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   macos-x64-test:
-    if: ${{ !inputs.napi-rs }}
     needs: macos
     runs-on: macos-11
     name: macos-x64-test
@@ -228,7 +225,6 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   windows-test:
-    if: ${{ !inputs.napi-rs }}
     needs: windows
     runs-on: windows-2019
     name: windows-test
