@@ -48,7 +48,7 @@ function prebuildify () {
   if (NAPI === 'true') {
     prebuildTarget(arch, { version: targets[0].version, abi: 'napi' })
   } else if (NAPI_RS === 'true') {
-    prebuildTarget(arch, {})
+    prebuildTarget(arch, { version: targets[0].version })
   } else {
     targets.forEach(target => prebuildTarget(arch, target))
   }
@@ -59,10 +59,8 @@ function prebuildify () {
 }
 
 function prebuildTarget (arch, target) {
-  // only support building for linux and darwin, arm64 and x64
-  if (NAPI_RS === 'true' && (platform !== 'linux' && platform !== 'darwin')) return
-  if (NAPI_RS === 'true' && (arch !== 'arm64' && arch !== 'x64')) return
-  if (NAPI_RS === 'true' && platform === 'linux' && libc === 'musl') return
+  // napi-rs doesn't support linux ia32. See here for supported platforms: https://napi.rs/docs/cross-build/summary
+  if (NAPI_RS === 'true' && platform === 'linux' && arch === 'ia32') return
 
   if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
   if (platform === 'win32' && arch === 'ia32' && semver.gte(target.version, '18.0.0')) return
@@ -71,28 +69,56 @@ function prebuildTarget (arch, target) {
 
   if (NAPI_RS === 'true') {
     let build_target;
-    if (platform === 'linux') {
-      execSync("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y", { stdio, shell })
-      process.env["PATH"] += path.delimiter + process.env["HOME"] + path.sep + ".cargo" + path.sep + "bin"
-
-      if (arch === 'arm64') {
-        build_target = 'aarch64-unknown-linux-gnu'
-      } else { // arch === 'x64'
-        build_target = 'x86_64-unknown-linux-gnu'
-      }
-    } else { // platform === 'darwin'
-      if (arch === 'arm64') {
-        build_target = 'aarch64-apple-darwin'
-      } else { // arch === 'x64'
-        build_target = 'x86_64-apple-darwin'
-      }
+    let rust_env_flags = "";
+    console.log("platform: " + platform);
+    console.log("arch: " + arch);
+    switch (platform) {
+      case 'linux':
+        if (libc === 'musl') {
+          execSync('apk add --update curl', { stdio, shell })
+          build_target = 'x86_64-unknown-linux-musl'
+          rust_env_flags = `RUSTFLAGS="-C target-feature=-crt-static"`
+        } else {
+          switch (arch) {
+            case 'arm64':
+              build_target = 'aarch64-unknown-linux-gnu'
+              break
+            case 'arm':
+              build_target = 'armv7-unknown-linux-gnueabihf'
+              break
+            case 'x64':
+              build_target = 'x86_64-unknown-linux-gnu'
+              break
+          }
+        }
+        break
+      case 'darwin':
+        switch (arch) {
+          case'arm64' :
+            build_target = 'aarch64-apple-darwin'
+            break
+          case 'x64':
+            build_target = 'x86_64-apple-darwin'
+            break
+        }
+        break
+      case 'win32':
+        build_target = 'i686-pc-windows-msvc'
+        break
+      case 'win64':
+        build_target = 'x86_64-pc-windows-msvc'
+        break
     }
+    execSync("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y", { stdio, shell })
+    process.env["PATH"] += path.delimiter + process.env["HOME"] + path.sep + ".cargo" + path.sep + "bin"
+    console.log("build_target: " + build_target);
     cmd = [
       `rustup target add ${build_target} &&`,
       `cd ${DIRECTORY_PATH} &&`,
+      `${rust_env_flags}`,
       'napi build',
       '--release',
-      `--target=${build_target}`,
+      `--target=${build_target}`
     ].join(' ')
   } else {
     cmd = [

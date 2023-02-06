@@ -4,5 +4,7 @@ runs:
     - uses: actions/download-artifact@v3
     - run: $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
+      working-directory: ${{ env.DIRECTORY_PATH }}
     - run: $PACKAGE_MANAGER test
       shell: bash
+      working-directory: ${{ env.DIRECTORY_PATH }}
