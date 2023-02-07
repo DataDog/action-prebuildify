@@ -109,14 +109,12 @@ function prebuildTarget (arch, target) {
     }
     execSync("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y", { stdio, shell })
     process.env["PATH"] += path.delimiter + process.env["HOME"] + path.sep + ".cargo" + path.sep + "bin"
-
-    const napi_rs_path = `${process.cwd()}/node_modules/@napi-rs/cli/scripts/index.js`;
     
     cmd = [
       `rustup target add ${build_target} &&`,
       `cd ${DIRECTORY_PATH} &&`,
       `${rust_env_flags}`,
-      `${napi_rs_path} build`,
+      `napi build`,
       '--release',
       `--target=${build_target}`
     ].join(' ')

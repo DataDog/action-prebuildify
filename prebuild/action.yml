@@ -4,9 +4,7 @@ runs:
     - uses: actions/download-artifact@v3
     - run: $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
-    - run: $PACKAGE_MANAGER install @napi-rs/cli@2.0.0
-      if: ${{ env.NAPI_RS == 'true' }}
-      shell: bash
+      working-directory: ${{ env.DIRECTORY_PATH }}
     - run: yarn exec node $GITHUB_ACTION_PATH
       if: ${{ env.DOCKER_BUILDER == '' }}
       shell: bash
