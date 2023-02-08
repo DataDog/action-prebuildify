@@ -59,7 +59,6 @@ function prebuildify () {
 }
 
 function prebuildTarget (arch, target) {
-  // napi-rs doesn't support linux ia32. See here for supported platforms: https://napi.rs/docs/cross-build/summary
   if (NAPI_RS === 'true' && platform === 'linux' && arch === 'ia32') return
 
   if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
@@ -86,6 +85,9 @@ function prebuildTarget (arch, target) {
               break
             case 'x64':
               build_target = 'x86_64-unknown-linux-gnu'
+              break
+            case 'ia32':
+              build_target = 'i686-unknown-linux-gnu'
               break
           }
         }
