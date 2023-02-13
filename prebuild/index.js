@@ -83,9 +83,6 @@ function prebuildTarget (arch, target) {
       ? 'RUSTFLAGS="-C target-feature=-crt-static"'
       : ''
 
-    execSync("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y", { stdio, shell })
-    process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
-
     cmd = [
       `rustup target add ${buildTarget} &&`,
       `cd ${DIRECTORY_PATH} &&`,

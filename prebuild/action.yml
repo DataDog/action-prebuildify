@@ -8,6 +8,9 @@ runs:
     - run: $PACKAGE_MANAGER install @napi-rs/cli@2.0.0
       if: ${{ env.NAPI_RS == 'true' }}
       shell: bash
+    - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+      if: ${{ env.NAPI_RS == 'true' }}
+      shell: bash
     - run: yarn exec node $GITHUB_ACTION_PATH
       if: ${{ env.DOCKER_BUILDER == '' }}
       shell: bash
