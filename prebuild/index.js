@@ -35,6 +35,17 @@ const targets = [
   { version: '19.0.0', abi: '111' }
 ].filter(target => semver.satisfies(target.version, NODE_VERSIONS))
 
+const napiTargets = {
+  'linux-musl': 'x86_64-unknown-linux-musl',
+  'linux-arm64': 'aarch64-unknown-linux-gnu',
+  'linux-arm': 'armv7-unknown-linux-gnueabihf',
+  'linux-x64': 'x86_64-unknown-linux-gnu',
+  'darwin-arm64': 'aarch64-apple-darwin',
+  'darwin-x64': 'x86_64-apple-darwin',
+  'win32-ia32': 'i686-pc-windows-msvc',
+  'win64-x64': 'x86_64-pc-windows-msvc'
+}
+
 prebuildify()
 
 function prebuildify () {
@@ -64,61 +75,24 @@ function prebuildTarget (arch, target) {
   if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
   if (platform === 'win32' && arch === 'ia32' && semver.gte(target.version, '18.0.0')) return
 
-  let cmd;
+  let cmd
 
   if (NAPI_RS === 'true') {
-    let build_target;
-    let rust_env_flags = "";
-    switch (platform) {
-      case 'linux':
-        if (libc === 'musl') {
-          execSync('apk add --update curl', { stdio, shell })
-          build_target = 'x86_64-unknown-linux-musl'
-          rust_env_flags = `RUSTFLAGS="-C target-feature=-crt-static"`
-        } else {
-          switch (arch) {
-            case 'arm64':
-              build_target = 'aarch64-unknown-linux-gnu'
-              break
-            case 'arm':
-              build_target = 'armv7-unknown-linux-gnueabihf'
-              break
-            case 'x64':
-              build_target = 'x86_64-unknown-linux-gnu'
-              break
-            case 'ia32':
-              build_target = 'i686-unknown-linux-gnu'
-              break
-          }
-        }
-        break
-      case 'darwin':
-        switch (arch) {
-          case'arm64' :
-            build_target = 'aarch64-apple-darwin'
-            break
-          case 'x64':
-            build_target = 'x86_64-apple-darwin'
-            break
-        }
-        break
-      case 'win32':
-        build_target = 'i686-pc-windows-msvc'
-        break
-      case 'win64':
-        build_target = 'x86_64-pc-windows-msvc'
-        break
-    }
+    const buildTarget = napiTargets[`${platform}-${arch}`]
+    const rustEnvFlags = (platform === 'linux' && libc === 'musl')
+      ? 'RUSTFLAGS="-C target-feature=-crt-static"'
+      : ''
+
     execSync("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y", { stdio, shell })
-    process.env["PATH"] += path.delimiter + process.env["HOME"] + path.sep + ".cargo" + path.sep + "bin"
-    
+    process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
+
     cmd = [
-      `rustup target add ${build_target} &&`,
+      `rustup target add ${buildTarget} &&`,
       `cd ${DIRECTORY_PATH} &&`,
-      `${rust_env_flags}`,
-      `napi build`,
+      `${rustEnvFlags}`,
+      'napi build',
       '--release',
-      `--target=${build_target}`
+      `--target=${buildTarget}`
     ].join(' ')
   } else {
     cmd = [
@@ -138,11 +112,11 @@ function prebuildTarget (arch, target) {
 
   execSync(cmd, { stdio, shell })
 
+  const output = `prebuilds/${platform}${libc}-${arch}/node-${target.abi}.node`
+
   if (NAPI_RS === 'true') {
-    const output = `prebuilds/${platform}${libc}-${arch}/${TARGET_NAME}.node`
     fs.copyFileSync(`${DIRECTORY_PATH}/${TARGET_NAME}.node`, output)
   } else {
-    const output = `prebuilds/${platform}${libc}-${arch}/node-${target.abi}.node`
-    fs.copyFileSync(`build/Release/${TARGET_NAME}.node`, output)
+    fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${TARGET_NAME}.node`, output)
   }
 }

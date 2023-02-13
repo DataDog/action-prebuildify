@@ -130,7 +130,7 @@ jobs:
       ARCH: x64
       LIBC: musl
     steps:
-      - run: apk update && apk add bash build-base git python
+      - run: apk update && apk add bash build-base git python curl
       - uses: actions/checkout@v3
         with:
           submodules: true
