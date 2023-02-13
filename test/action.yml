@@ -5,7 +5,7 @@ runs:
     - run: $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
-    - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && sudo echo "export PATH=$HOME/.cargo/bin:${PATH}" >> /etc/.bash_profile
+    - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && echo "$HOME/.cargo/bin" >> $GITHUB_PATH
       if: ${{ env.NAPI_RS == 'true' }}
       shell: bash
     - run: $PACKAGE_MANAGER test
