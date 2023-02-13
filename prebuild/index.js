@@ -70,7 +70,7 @@ function prebuildify () {
 }
 
 function prebuildTarget (arch, target) {
-  // if (NAPI_RS === 'true' && platform === 'linux' && arch === 'ia32') return
+  if (NAPI_RS === 'true' && platform === 'linux' && arch === 'ia32') return
 
   if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
   if (platform === 'win32' && arch === 'ia32' && semver.gte(target.version, '18.0.0')) return
@@ -82,6 +82,9 @@ function prebuildTarget (arch, target) {
     const rustEnvFlags = (platform === 'linux' && libc === 'musl')
       ? 'RUSTFLAGS="-C target-feature=-crt-static"'
       : ''
+
+    execSync("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y", { stdio, shell })
+    process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
 
     cmd = [
       `rustup target add ${buildTarget} &&`,
