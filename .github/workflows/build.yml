@@ -181,8 +181,6 @@ jobs:
     name: alpine-test-${{ matrix.node }}
     steps:
       - run: apk update && apk add bash build-base git python3 curl
-      - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && source ~/.cargo/env
-        if: ${{ env.NAPI_RS == 'true' }}
       - uses: actions/checkout@v3
         with:
           submodules: true
