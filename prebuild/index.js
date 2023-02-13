@@ -70,7 +70,7 @@ function prebuildify () {
 }
 
 function prebuildTarget (arch, target) {
-  if (NAPI_RS === 'true' && platform === 'linux' && arch === 'ia32') return
+  // if (NAPI_RS === 'true' && platform === 'linux' && arch === 'ia32') return
 
   if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
   if (platform === 'win32' && arch === 'ia32' && semver.gte(target.version, '18.0.0')) return
