@@ -43,7 +43,7 @@ const napiTargets = {
   'darwin-arm64': 'aarch64-apple-darwin',
   'darwin-x64': 'x86_64-apple-darwin',
   'win32-ia32': 'i686-pc-windows-msvc',
-  'win64-x64': 'x86_64-pc-windows-msvc'
+  'win32-x64': 'x86_64-pc-windows-msvc'
 }
 
 prebuildify()
@@ -112,11 +112,11 @@ function prebuildTarget (arch, target) {
 
   execSync(cmd, { stdio, shell })
 
-  const output = `prebuilds/${platform}${libc}-${arch}/node-${target.abi}.node`
-
   if (NAPI_RS === 'true') {
+    const output = `prebuilds/${platform}${libc}-${arch}/${TARGET_NAME}.node`
     fs.copyFileSync(`${DIRECTORY_PATH}/${TARGET_NAME}.node`, output)
   } else {
+    const output = `prebuilds/${platform}${libc}-${arch}/node-${target.abi}.node`
     fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${TARGET_NAME}.node`, output)
   }
 }

@@ -76,7 +76,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@david.lee/serverless-action-test
 
   linux-x64:
     if: ${{ !contains(inputs.skip, 'linux-x64') }}
@@ -90,7 +90,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@david.lee/serverless-action-test
 
   linux-arm64:
     if: ${{ !contains(inputs.skip, 'linux-arm64') }}
@@ -104,7 +104,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@david.lee/serverless-action-test
 
   linux-arm:
     if: ${{ !contains(inputs.skip, 'linux-arm') }}
@@ -118,7 +118,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@david.lee/serverless-action-test
 
   linuxmusl-x64:
     if: ${{ !contains(inputs.skip, 'linuxmusl-x64') }}
@@ -134,7 +134,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@david.lee/serverless-action-test
 
   # TODO: linuxmusl-arm / linuxmusl-arm64
 
@@ -151,7 +151,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@david.lee/serverless-action-test
 
   windows:
     strategy:
@@ -166,7 +166,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@david.lee/serverless-action-test
 
   # Tests
 
@@ -180,11 +180,13 @@ jobs:
       image: node:${{ matrix.node }}-alpine
     name: alpine-test-${{ matrix.node }}
     steps:
-      - run: apk update && apk add bash build-base git python3
+      - run: apk update && apk add bash build-base git python3 curl
+      - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && source ~/.cargo/env
+        if: ${{ env.NAPI_RS == 'true' }}
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
 
   linux-test:
     needs: linux-x64
@@ -195,15 +197,15 @@ jobs:
         with:
           submodules: true
       - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/19@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
 
   macos-x64-test:
     needs: macos
@@ -214,15 +216,15 @@ jobs:
         with:
           submodules: true
       - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/19@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
 
   windows-test:
     needs: windows
@@ -233,12 +235,12 @@ jobs:
         with:
           submodules: true
       - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
       - uses: DataDog/action-prebuildify/node/19@main
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@david.lee/serverless-action-test
