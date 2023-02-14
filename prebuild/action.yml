@@ -4,6 +4,7 @@ runs:
     - uses: actions/download-artifact@v3
     - run: $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
+      working-directory: ${{ env.DIRECTORY_PATH }}
     - run: yarn exec node $GITHUB_ACTION_PATH
       if: ${{ env.DOCKER_BUILDER == '' }}
       shell: bash
@@ -15,6 +16,8 @@ runs:
           -e POSTBUILD="$POSTBUILD" \
           -e PREBUILD="$PREBUILD" \
           -e TARGET_NAME="$TARGET_NAME" \
+          -e NAPI_RS="$NAPI_RS" \
+          -e DIRECTORY_PATH="$DIRECTORY_PATH" \
           -w /usr/action \
           $DOCKER_BUILDER \
           /bin/bash -c 'yarn && cd /usr/workspace && yarn exec node /usr/action'

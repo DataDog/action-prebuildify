@@ -38,6 +38,16 @@ on:
         default: addon
         required: false
         type: string
+      napi-rs:
+        description: Whether or not this build is for a napi-rs project.
+        default: false
+        required: false
+        type: string
+      directory-path:
+        description: The path to the directory containing your build files, relative to the repo root.
+        default: '.'
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -50,6 +60,8 @@ env:
   POSTBUILD: ${{ inputs.postbuild }}
   PREBUILD: ${{ inputs.prebuild }}
   TARGET_NAME: ${{ inputs.target-name }}
+  NAPI_RS: ${{ inputs.napi-rs }}
+  DIRECTORY_PATH: ${{ inputs.directory-path }}
 
 jobs:
   linux-ia32:
@@ -118,7 +130,7 @@ jobs:
       ARCH: x64
       LIBC: musl
     steps:
-      - run: apk update && apk add bash build-base git python
+      - run: apk update && apk add bash build-base git python curl
       - uses: actions/checkout@v3
         with:
           submodules: true
@@ -168,7 +180,7 @@ jobs:
       image: node:${{ matrix.node }}-alpine
     name: alpine-test-${{ matrix.node }}
     steps:
-      - run: apk update && apk add bash build-base git python3
+      - run: apk update && apk add bash build-base git python3 curl
       - uses: actions/checkout@v3
         with:
           submodules: true
