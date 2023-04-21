@@ -32,7 +32,8 @@ const targets = [
   { version: '16.0.0', abi: '93' },
   { version: '17.0.1', abi: '102' },
   { version: '18.0.0', abi: '108' },
-  { version: '19.0.0', abi: '111' }
+  { version: '19.0.0', abi: '111' },
+  { version: '20.0.0', abi: '115' }
 ].filter(target => semver.satisfies(target.version, NODE_VERSIONS))
 
 const napiTargets = {
