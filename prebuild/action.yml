@@ -18,12 +18,13 @@ runs:
           -e TARGET_NAME="$TARGET_NAME" \
           -e NAPI_RS="$NAPI_RS" \
           -e DIRECTORY_PATH="$DIRECTORY_PATH" \
+          -e NODE_VERSIONS="$NODE_VERSIONS" \
           -w /usr/action \
           $DOCKER_BUILDER \
           /bin/bash -c 'yarn && cd /usr/workspace && yarn exec node /usr/action'
       if: ${{ env.DOCKER_BUILDER != '' }}
       shell: bash
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v3
       with:
         name: prebuilds
         path: prebuilds/**/*

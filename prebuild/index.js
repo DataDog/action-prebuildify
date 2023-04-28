@@ -16,12 +16,14 @@ const shell = process.env.SHELL
 const {
   NAPI = 'false',
   NAPI_RS = 'false',
-  NODE_VERSIONS = '>=12',
+  NODE_VERSIONS = '[12, 14, 16, 18, 20]',
   POSTBUILD = '',
   PREBUILD = '',
   DIRECTORY_PATH = '.',
   TARGET_NAME = 'addon'
 } = process.env
+
+const lowestVersion = JSON.parse(NODE_VERSIONS).sort().shift()
 
 // https://nodejs.org/en/download/releases/
 const targets = [
@@ -34,7 +36,7 @@ const targets = [
   { version: '18.0.0', abi: '108' },
   { version: '19.0.0', abi: '111' },
   { version: '20.0.0', abi: '115' }
-].filter(target => semver.satisfies(target.version, NODE_VERSIONS))
+].filter(target => semver.satisfies(target.version, `>=${lowestVersion}`))
 
 const napiTargets = {
   'linux-musl': 'x86_64-unknown-linux-musl',
