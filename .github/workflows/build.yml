@@ -48,7 +48,7 @@ on:
         default: '.'
         required: false
         type: string
-      minimum-major-version:
+      min-node-version:
         description: The minimum Node.js version to build and test
         default: 12
         required: false
@@ -67,9 +67,19 @@ env:
   TARGET_NAME: ${{ inputs.target-name }}
   NAPI_RS: ${{ inputs.napi-rs }}
   DIRECTORY_PATH: ${{ inputs.directory-path }}
-  NODE_VERSIONS: '>=${{ inputs.minimum-major-version }}'
+  NODE_VERSIONS: '>=${{ inputs.min-node-version }}'
 
 jobs:
+  versions:
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.versions.outputs.versions }}
+    steps:
+      - id: versions
+        uses: DataDog/action-prebuildify/compute-matrix@main
+        with:
+          min: ${{ inputs.min-node-version }}
+
   linux-ia32:
     if: ${{ !contains(inputs.skip, 'linux-ia32') }}
     runs-on: ubuntu-latest
@@ -179,8 +189,10 @@ jobs:
   alpine-test:
     strategy:
       matrix:
-        node: [12, 14, 16, 18, 20]
-    needs: linuxmusl-x64
+        node: ${{ fromJson(needs.versions.outputs.versions) }}
+    needs: 
+      - versions
+      - linuxmusl-x64
     runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node }}-alpine
@@ -191,13 +203,14 @@ jobs:
         with:
           submodules: true
       - uses: DataDog/action-prebuildify/test@main
-        if: matrix.node >= inputs.minimum-major-version
 
   linux-test:
     strategy:
       matrix:
-        node: [12, 14, 16, 18, 20]
-    needs: linux-x64
+        node: ${{ fromJson(needs.versions.outputs.versions) }}
+    needs: 
+      - versions
+      - linux-x64
     runs-on: ubuntu-latest
     name: linux-test-${{ matrix.node }}
     steps:
@@ -205,13 +218,14 @@ jobs:
         with:
           submodules: true
       - uses: DataDog/action-prebuildify/test@main
-        if: matrix.node >= inputs.minimum-major-version
 
   macos-x64-test:
     strategy:
       matrix:
-        node: [12, 14, 16, 18, 20]
-    needs: macos
+        node: ${{ fromJson(needs.versions.outputs.versions) }}
+    needs: 
+      - versions
+      - macos
     runs-on: macos-11
     name: macos-x64-test-${{ matrix.node }}
     steps:
@@ -223,13 +237,14 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
       - uses: DataDog/action-prebuildify/test@main
-        if: matrix.node >= inputs.minimum-major-version
 
   windows-test:
     strategy:
       matrix:
-        node: [12, 14, 16, 18, 20]
-    needs: windows
+        node: ${{ fromJson(needs.versions.outputs.versions) }}
+    needs: 
+      - versions
+      - windows
     runs-on: windows-2019
     name: windows-test-${{ matrix.node }}
     steps:
@@ -241,4 +256,3 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
       - uses: DataDog/action-prebuildify/test@main
-        if: matrix.node >= inputs.minimum-major-version
