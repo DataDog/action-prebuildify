@@ -48,6 +48,11 @@ on:
         default: '.'
         required: false
         type: string
+      min-node-version:
+        description: The minimum Node.js version to build and test
+        default: 12
+        required: false
+        type: number
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -62,8 +67,19 @@ env:
   TARGET_NAME: ${{ inputs.target-name }}
   NAPI_RS: ${{ inputs.napi-rs }}
   DIRECTORY_PATH: ${{ inputs.directory-path }}
+  NODE_VERSIONS: '>=${{ inputs.min-node-version }}'
 
 jobs:
+  versions:
+    runs-on: ubuntu-latest
+    outputs:
+      versions: ${{ steps.versions.outputs.versions }}
+    steps:
+      - id: versions
+        uses: DataDog/action-prebuildify/compute-matrix@main
+        with:
+          min: ${{ inputs.min-node-version }}
+
   linux-ia32:
     if: ${{ !contains(inputs.skip, 'linux-ia32') }}
     runs-on: ubuntu-latest
@@ -173,8 +189,10 @@ jobs:
   alpine-test:
     strategy:
       matrix:
-        node: [12, 14, 16, 18, 20]
-    needs: linuxmusl-x64
+        node: ${{ fromJson(needs.versions.outputs.versions) }}
+    needs: 
+      - versions
+      - linuxmusl-x64
     runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node }}-alpine
@@ -187,58 +205,54 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   linux-test:
-    needs: linux-x64
+    strategy:
+      matrix:
+        node: ${{ fromJson(needs.versions.outputs.versions) }}
+    needs: 
+      - versions
+      - linux-x64
     runs-on: ubuntu-latest
-    name: linux-test
+    name: linux-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/20@main
       - uses: DataDog/action-prebuildify/test@main
 
   macos-x64-test:
-    needs: macos
+    strategy:
+      matrix:
+        node: ${{ fromJson(needs.versions.outputs.versions) }}
+    needs: 
+      - versions
+      - macos
     runs-on: macos-11
-    name: macos-x64-test
+    name: macos-x64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/20@main
+      - uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node }}
+          cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
       - uses: DataDog/action-prebuildify/test@main
 
   windows-test:
-    needs: windows
+    strategy:
+      matrix:
+        node: ${{ fromJson(needs.versions.outputs.versions) }}
+    needs: 
+      - versions
+      - windows
     runs-on: windows-2019
-    name: windows-test
+    name: windows-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/node/12@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/14@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/16@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/18@main
-      - uses: DataDog/action-prebuildify/test@main
-      - uses: DataDog/action-prebuildify/node/20@main
+      - uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node }}
+          cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
       - uses: DataDog/action-prebuildify/test@main

@@ -103,3 +103,4 @@ build
 prebuilds
 package-lock.json
 !prebuild/node_modules
+!compute-matrix/node_modules

@@ -1,0 +1,22 @@
+name: Compute matrix
+description: Computes matrix of Node.js versions
+inputs:
+  min:
+    description: The minimum Node.js version to include in the matrix
+    default: '12'
+  max:
+    description: The maximum Node.js version to include in the matrix
+    default: '20'
+  step:
+    description: Major version step between LTS releases
+    default: '2'
+outputs:
+  versions:
+    description: Computed matrix of Node.js versions
+    value: ${{ steps.versions.outputs.versions }}
+runs:
+  using: composite
+  steps:
+    - id: versions
+      run: node $GITHUB_ACTION_PATH/index.js --min ${{ inputs.min }} --max ${{ inputs.max }} --step ${{ inputs.step }} >> $GITHUB_OUTPUT
+      shell: bash
