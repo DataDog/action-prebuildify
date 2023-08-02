@@ -5,7 +5,7 @@ const os = require('os')
 const fs = require('fs')
 const execSync = require('child_process').execSync
 const semver = require('semver')
-const { nodeTargets } = require('./targets')
+const { getFilteredNodeTargets } = require('./targets')
 
 const platform = os.platform()
 const arch = process.env.ARCH || os.arch()
@@ -25,7 +25,7 @@ const {
 } = process.env
 
 // https://nodejs.org/en/download/releases/
-const targets = nodeTargets.filter(target => semver.satisfies(target.version, NODE_VERSIONS))
+const targets = getFilteredNodeTargets(NODE_VERSIONS)
 
 const napiTargets = {
   'linux-musl': 'x86_64-unknown-linux-musl',

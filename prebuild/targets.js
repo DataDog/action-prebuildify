@@ -1,5 +1,7 @@
 "use strict";
 
+const semver = require("semver");
+
 const nodeTargets = [
   { version: "12.0.0", abi: "72" },
   { version: "13.0.0", abi: "79" },
@@ -12,4 +14,10 @@ const nodeTargets = [
   { version: "20.0.0", abi: "115" },
 ];
 
-module.exports = { nodeTargets };
+function getFilteredNodeTargets(semverConstraint) {
+  return nodeTargets.filter((target) =>
+    semver.satisfies(target.version, semverConstraint)
+  );
+}
+
+module.exports = { getFilteredNodeTargets };

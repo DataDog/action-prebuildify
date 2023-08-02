@@ -1,15 +1,14 @@
 "use strict";
 
 const retry = require("retry");
-const semver = require("semver");
-const { nodeTargets } = require("./targets");
+const { getFilteredNodeTargets } = require("./targets");
 const execSync = require("child_process").execSync;
 
 const stdio = [0, 1, 2];
 const shell = process.env.SHELL;
 
 const { NODE_VERSIONS = ">=12" } = process.env;
-const targets = nodeTargets.filter(target => semver.satisfies(target.version, NODE_VERSIONS))
+const targets = getFilteredNodeTargets(NODE_VERSIONS);
 
 function fetchNodeHeaders(version, devDir) {
   let operation = retry.operation({
@@ -45,7 +44,7 @@ function computeNodeTargetsHash() {
   const crypto = require("crypto");
   const hash = crypto
     .createHash("sha256")
-    .update(JSON.stringify(nodeTargets))
+    .update(JSON.stringify(targets))
     .digest("hex");
   console.log(`hash=${hash}`);
 }
