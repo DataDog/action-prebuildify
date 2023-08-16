@@ -42,7 +42,7 @@ on:
         description: Whether or not this build is for a napi-rs project.
         default: false
         required: false
-        type: string
+        type: boolean
       directory-path:
         description: The path to the directory containing your build files, relative to the repo root.
         default: '.'
