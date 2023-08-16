@@ -6,9 +6,8 @@ runs:
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
     - run: |
-        cd $GITHUB_ACTION_PATH
-        yarn exec -s -- node fetch_node_headers.js >> "$GITHUB_OUTPUT"
-        echo "NODE_HEADERS_DIRECTORY=/tmp/node_headers" >> "$GITHUB_ENV"
+        yarn exec -s -- node $GITHUB_ACTION_PATH/fetch_node_headers.js >> "$GITHUB_OUTPUT"
+        echo "NODE_HEADERS_DIRECTORY=${DIRECTORY_PATH}/tmp_node_headers" >> "$GITHUB_ENV"
       id: compute-node-targets-hash
       shell: bash
     - name: Restore node headers
@@ -18,10 +17,10 @@ runs:
       with:
         path: ${{ env.NODE_HEADERS_DIRECTORY }}
         key: node-headers-cache-${{ runner.os }}-version${{ env.NODE_VERSIONS }}-${{ steps.compute-node-targets-hash.outputs.hash }}
-    - if: ${{ steps.cache-node-headers.outputs.cache-hit != 'true' }}
+    - name: Fetch node headers
+      if: ${{ steps.cache-node-headers.outputs.cache-hit != 'true' }}
       run: |
-        cd $GITHUB_ACTION_PATH
-        yarn exec -s -- node fetch_node_headers.js $NODE_HEADERS_DIRECTORY
+        yarn exec -s -- node $GITHUB_ACTION_PATH/fetch_node_headers.js $NODE_HEADERS_DIRECTORY
       shell: bash
     - name: Save node headers
       if: ${{ env.CACHE == 'true' && steps.cache-node-headers.outputs.cache-hit != 'true' }}
