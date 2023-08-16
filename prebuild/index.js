@@ -5,11 +5,11 @@ const os = require('os')
 const fs = require('fs')
 const execSync = require('child_process').execSync
 const semver = require('semver')
+const { getFilteredNodeTargets } = require('./targets')
 
 const platform = os.platform()
 const arch = process.env.ARCH || os.arch()
 const libc = process.env.LIBC || ''
-const cache = path.join(os.tmpdir(), 'prebuilds')
 const stdio = [0, 1, 2]
 const shell = process.env.SHELL
 
@@ -20,21 +20,12 @@ const {
   POSTBUILD = '',
   PREBUILD = '',
   DIRECTORY_PATH = '.',
-  TARGET_NAME = 'addon'
+  TARGET_NAME = 'addon',
+  NODE_HEADERS_DIRECTORY = path.join(os.tmpdir(), 'prebuilds'),
 } = process.env
 
 // https://nodejs.org/en/download/releases/
-const targets = [
-  { version: '12.0.0', abi: '72' },
-  { version: '13.0.0', abi: '79' },
-  { version: '14.0.0', abi: '83' },
-  { version: '15.0.0', abi: '88' },
-  { version: '16.0.0', abi: '93' },
-  { version: '17.0.1', abi: '102' },
-  { version: '18.0.0', abi: '108' },
-  { version: '19.0.0', abi: '111' },
-  { version: '20.0.0', abi: '115' }
-].filter(target => semver.satisfies(target.version, NODE_VERSIONS))
+const targets = getFilteredNodeTargets(NODE_VERSIONS)
 
 const napiTargets = {
   'linux-musl': 'x86_64-unknown-linux-musl',
@@ -50,7 +41,7 @@ const napiTargets = {
 prebuildify()
 
 function prebuildify () {
-  fs.mkdirSync(cache, { recursive: true })
+  fs.mkdirSync(NODE_HEADERS_DIRECTORY, { recursive: true })
   fs.mkdirSync(`prebuilds/${platform}${libc}-${arch}`, { recursive: true })
 
   if (PREBUILD) {
@@ -107,9 +98,8 @@ function prebuildTarget (arch, target) {
     cmd = [
       'node-gyp rebuild',
       `--target=${target.version}`,
-      `--target_arch=${arch}`,
       `--arch=${arch}`,
-      `--devdir=${cache}`,
+      `--devdir=${NODE_HEADERS_DIRECTORY}`,
       '--release',
       '--jobs=max',
       '--build_v8_with_gn=false',

@@ -5,6 +5,30 @@ runs:
     - run: $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
+    - run: |
+        cd $GITHUB_ACTION_PATH
+        yarn exec -s -- node fetch_node_headers.js >> "$GITHUB_OUTPUT"
+        echo "NODE_HEADERS_DIRECTORY=/tmp/node_headers" >> "$GITHUB_ENV"
+      id: compute-node-targets-hash
+      shell: bash
+    - name: Restore node headers
+      if: ${{ env.CACHE == 'true' }}
+      id: cache-node-headers
+      uses: actions/cache/restore@v3
+      with:
+        path: ${{ env.NODE_HEADERS_DIRECTORY }}
+        key: node-headers-cache-${{ runner.os }}-version${{ env.NODE_VERSIONS }}-${{ steps.compute-node-targets-hash.outputs.hash }}
+    - if: ${{ steps.cache-node-headers.outputs.cache-hit != 'true' }}
+      run: |
+        cd $GITHUB_ACTION_PATH
+        yarn exec -s -- node fetch_node_headers.js $NODE_HEADERS_DIRECTORY
+      shell: bash
+    - name: Save node headers
+      if: ${{ env.CACHE == 'true' && steps.cache-node-headers.outputs.cache-hit != 'true' }}
+      uses: actions/cache/save@v3
+      with:
+        path: ${{ env.NODE_HEADERS_DIRECTORY }}
+        key: ${{ steps.cache-node-headers.outputs.cache-primary-key }}
     - run: yarn exec node $GITHUB_ACTION_PATH
       if: ${{ env.DOCKER_BUILDER == '' }}
       shell: bash
@@ -12,6 +36,7 @@ runs:
         docker run \
           -v $GITHUB_ACTION_PATH:/usr/action \
           -v $PWD:/usr/workspace \
+          -v $NODE_HEADERS_DIRECTORY:/usr/node_headers \
           -e NAPI="$NAPI" \
           -e POSTBUILD="$POSTBUILD" \
           -e PREBUILD="$PREBUILD" \
@@ -19,6 +44,7 @@ runs:
           -e NAPI_RS="$NAPI_RS" \
           -e DIRECTORY_PATH="$DIRECTORY_PATH" \
           -e NODE_VERSIONS="$NODE_VERSIONS" \
+          -e NODE_HEADERS_DIRECTORY="/usr/node_headers" \
           -w /usr/action \
           $DOCKER_BUILDER \
           /bin/bash -c 'yarn && cd /usr/workspace && yarn exec node /usr/action'

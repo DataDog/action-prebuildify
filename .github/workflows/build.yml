@@ -97,11 +97,10 @@ jobs:
   linux-x64:
     if: ${{ !contains(inputs.skip, 'linux-x64') }}
     runs-on: ubuntu-latest
-    container:
-      image: rochdev/holy-node-box:12-amd64
     name: linux-x64
     env:
       ARCH: x64
+      DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@v3
         with:
@@ -146,7 +145,7 @@ jobs:
       ARCH: x64
       LIBC: musl
     steps:
-      - run: apk update && apk add bash build-base git python curl
+      - run: apk update && apk add bash build-base git python curl tar zstd
       - uses: actions/checkout@v3
         with:
           submodules: true
