@@ -144,7 +144,7 @@ jobs:
       LIBC: musl
       DOCKER_BUILDER: node:12.0.0-alpine
     steps:
-      - run: apk update && apk add bash build-base git python curl tar zstd
+      # - run: apk update && apk add bash build-base git python curl tar zstd
       - uses: actions/checkout@v3
         with:
           submodules: true
