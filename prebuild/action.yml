@@ -2,7 +2,9 @@ runs:
   using: composite
   steps:
     - uses: actions/download-artifact@v3
-    - run: $PACKAGE_MANAGER install --ignore-scripts
+    - run: |
+        alias node-gyp="/opt/node-v12.0.0-linux-x64/lib/node_modules/npm/bin/node-gyp-bin/node-gyp"
+        $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
     - run: |
