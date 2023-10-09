@@ -2,7 +2,19 @@ runs:
   using: composite
   steps:
     - uses: actions/download-artifact@v3
-    - run: $PACKAGE_MANAGER install --ignore-scripts
+    - name: Install node-gyp npm
+      if: ${{ env.PACKAGE_MANAGER == 'npm' }}
+      run: |
+        npm config set unsafe-perm true
+        npm install -g node-gyp
+      shell: bash
+    - name: Install node-gyp yarn
+      if: ${{ env.PACKAGE_MANAGER == 'yarn' }}
+      run: |
+        yarn global add node-gyp --ignore-engines
+      shell: bash
+    - run: |
+        $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
     - run: |
