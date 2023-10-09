@@ -5,12 +5,13 @@ runs:
     - name: Install node-gyp npm
       if: ${{ env.PACKAGE_MANAGER == 'npm' }}
       run: |
-        $PACKAGE_MANAGER install -g node-gyp
+        npm config set unsafe-perm true
+        npm install -g node-gyp
       shell: bash
     - name: Install node-gyp yarn
       if: ${{ env.PACKAGE_MANAGER == 'yarn' }}
       run: |
-        $PACKAGE_MANAGER global add node-gyp --ignore-engines
+        yarn global add node-gyp --ignore-engines
       shell: bash
     - run: |
         $PACKAGE_MANAGER install --ignore-scripts
