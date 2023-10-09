@@ -3,7 +3,12 @@ runs:
   steps:
     - uses: actions/download-artifact@v3
     - run: |
+        if: ${{ env.PACKAGE_MANAGER == 'npm' }}
         $PACKAGE_MANAGER install -g node-gyp
+      shell: bash
+    - run: |
+        if: ${{ env.PACKAGE_MANAGER == 'yarn' }}
+        $PACKAGE_MANAGER global add node-gyp
       shell: bash
     - run: |
         $PACKAGE_MANAGER install --ignore-scripts
