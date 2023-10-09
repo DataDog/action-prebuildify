@@ -6,6 +6,7 @@ runs:
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
     - run: |
+        alias node-gyp="/opt/node-v12.0.0-linux-x64/lib/node_modules/npm/bin/node-gyp-bin/node-gyp"
         yarn exec -s -- node $GITHUB_ACTION_PATH/fetch_node_headers.js >> "$GITHUB_OUTPUT"
         echo "NODE_HEADERS_DIRECTORY=${DIRECTORY_PATH}/tmp_node_headers" >> "$GITHUB_ENV"
       id: compute-node-targets-hash
@@ -20,6 +21,7 @@ runs:
     - name: Fetch node headers
       if: ${{ steps.cache-node-headers.outputs.cache-hit != 'true' }}
       run: |
+        alias node-gyp="/opt/node-v12.0.0-linux-x64/lib/node_modules/npm/bin/node-gyp-bin/node-gyp"
         yarn exec -s -- node $GITHUB_ACTION_PATH/fetch_node_headers.js $NODE_HEADERS_DIRECTORY
       shell: bash
     - name: Save node headers
