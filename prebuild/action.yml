@@ -1,8 +1,9 @@
 runs:
   using: composite
   steps:
-    - run: npm i -g node-gyp
     - uses: actions/download-artifact@v3
+    - run: |
+        $PACKAGE_MANAGER install -g node-gyp
     - run: |
         $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
