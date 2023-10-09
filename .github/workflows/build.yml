@@ -71,7 +71,7 @@ env:
 
 jobs:
   versions:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     outputs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
@@ -96,7 +96,7 @@ jobs:
 
   linux-x64:
     if: ${{ !contains(inputs.skip, 'linux-x64') }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04	
     name: linux-x64
     env:
       ARCH: x64
