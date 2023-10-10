@@ -2,10 +2,15 @@ runs:
   using: composite
   steps:
     - uses: actions/download-artifact@v3
+    - name: Set unsafe for alpine
+      if: ${{ env.PACKAGE_MANAGER == 'npm' && contains(github.job, 'musl') }}
+      run: |
+        npm config set unsafe-perm true
+        npm install -g node-gyp
+      shell: bash
     - name: Install node-gyp npm
       if: ${{ env.PACKAGE_MANAGER == 'npm' }}
       run: |
-        npm config set unsafe-perm true
         npm install -g node-gyp
       shell: bash
     - name: Install node-gyp yarn
