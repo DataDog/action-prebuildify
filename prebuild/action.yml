@@ -7,7 +7,7 @@ runs:
         yarn global add node-gyp --ignore-engines
       shell: bash
     - run: |
-        yarn install --ignore-scripts
+        $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
     - run: |
