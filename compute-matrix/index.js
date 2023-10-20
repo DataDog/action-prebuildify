@@ -6,7 +6,7 @@ const { values } = parseArgs({
   args: process.argv.slice(2),
   options: {
     min: { type: 'string', default: '12' },
-    max: { type: 'string', default: '20' },
+    max: { type: 'string', default: '21' },
     step: { type: 'string', default: '2' }
   }
 })
@@ -19,6 +19,10 @@ const versions = []
 
 for (let version = min; version <= max; version += step) {
   versions.push(version)
+}
+
+if (versions[versions.length - 1] !== max) {
+  versions.push(max)
 }
 
 console.log(`versions=${JSON.stringify(versions)}`)
