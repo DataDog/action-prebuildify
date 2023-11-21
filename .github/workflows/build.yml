@@ -189,7 +189,7 @@ jobs:
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
-    needs: 
+    needs:
       - versions
       - linuxmusl-x64
     runs-on: ubuntu-latest
@@ -207,7 +207,7 @@ jobs:
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
-    needs: 
+    needs:
       - versions
       - linux-x64
     runs-on: ubuntu-latest
@@ -222,7 +222,7 @@ jobs:
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
-    needs: 
+    needs:
       - versions
       - macos
     runs-on: macos-11
@@ -235,13 +235,38 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
+
+      #########################################################################
+      # node-gyp < 10 is not compatible with python 3.12
+      #
+      # For node 16+, we need to install node-gyp@latest that is compatible
+      # with python 3.12
+      # Instruct npm to use the global version.
+      - run: |
+          npm install -g node-gyp@latest
+          npm explore npm/node_modules/@npmcli/run-script -g -- npm_config_global=false npm install node-gyp@latest
+        if: ${{ matrix.node > '14' }}
+      # For node 14, we need to install node-gyp@9, because node-gyp@10 is not
+      # compatible with node 14. By installing manually setuptools, we ensure
+      # that node-gyp@9 is compatible with python 3.12.
+      # Older node-gyp versions are not compatible with python 3.12 even with
+      # setuptools that's why we install node-gyp@9.
+      # nvm@6 refuses to use the local node-gyp version, hence we install it
+      # globally and instruct npm to use the global version.
+      - run: |
+          npm install -g node-gyp@9
+          npm config set node_gyp $(npm prefix -g)/lib/node_modules/node-gyp/bin/node-gyp.js
+          pip3 install setuptools
+        if: ${{ matrix.node <= '14' }}
+      #########################################################################
+
       - uses: DataDog/action-prebuildify/test@main
 
   windows-test:
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
-    needs: 
+    needs:
       - versions
       - windows
     runs-on: windows-2019
