@@ -46,6 +46,7 @@ runs:
           -e PREBUILD="$PREBUILD" \
           -e TARGET_NAME="$TARGET_NAME" \
           -e NAPI_RS="$NAPI_RS" \
+          -e NEON="$NEON" \
           -e DIRECTORY_PATH="$DIRECTORY_PATH" \
           -e NODE_VERSIONS="$NODE_VERSIONS" \
           -e NODE_HEADERS_DIRECTORY="/usr/node_headers" \

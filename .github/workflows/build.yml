@@ -43,6 +43,11 @@ on:
         default: false
         required: false
         type: boolean
+      neon:
+        description: Whether or not this build is for a Neon project.
+        default: false
+        required: false
+        type: boolean
       directory-path:
         description: The path to the directory containing your build files, relative to the repo root.
         default: '.'
@@ -66,6 +71,7 @@ env:
   PREBUILD: ${{ inputs.prebuild }}
   TARGET_NAME: ${{ inputs.target-name }}
   NAPI_RS: ${{ inputs.napi-rs }}
+  NEON: ${{ inputs.neon }}
   DIRECTORY_PATH: ${{ inputs.directory-path }}
   NODE_VERSIONS: '>=${{ inputs.min-node-version }}'
 
@@ -76,7 +82,7 @@ jobs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
       - id: versions
-        uses: DataDog/action-prebuildify/compute-matrix@main
+        uses: DataDog/action-prebuildify/compute-matrix@neon
         with:
           min: ${{ inputs.min-node-version }}
 
@@ -92,7 +98,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@neon
 
   linux-x64:
     if: ${{ !contains(inputs.skip, 'linux-x64') }}
@@ -105,7 +111,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@neon
 
   linux-arm64:
     if: ${{ !contains(inputs.skip, 'linux-arm64') }}
@@ -119,7 +125,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@neon
 
   linux-arm:
     if: ${{ !contains(inputs.skip, 'linux-arm') }}
@@ -133,7 +139,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@neon
 
   linuxmusl-x64:
     if: ${{ !contains(inputs.skip, 'linuxmusl-x64') }}
@@ -149,7 +155,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@neon
 
   # TODO: linuxmusl-arm / linuxmusl-arm64
 
@@ -166,7 +172,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@neon
 
   windows:
     strategy:
@@ -181,7 +187,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@neon
 
   # Tests
 
@@ -201,7 +207,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@neon
 
   linux-test:
     strategy:
@@ -216,7 +222,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@neon
 
   macos-x64-test:
     strategy:
@@ -260,7 +266,7 @@ jobs:
         if: ${{ matrix.node <= '14' }}
       #########################################################################
 
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@neon
 
   windows-test:
     strategy:
@@ -279,4 +285,4 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@neon

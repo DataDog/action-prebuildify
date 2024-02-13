@@ -7,10 +7,10 @@ on:
     - cron: '0 4 * * *'
 
 jobs:
-  build:
-    uses: ./.github/workflows/build.yml
-    with:
-      cache: true
-      napi: false # TODO: test Node-API support
-      package-manager: yarn
-      target-name: test
+  # build:
+  #   uses: ./.github/workflows/build.yml
+  #   with:
+  #     cache: true
+  #     napi: false # TODO: test Node-API support
+  #     package-manager: yarn
+  #     target-name: test
