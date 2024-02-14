@@ -2,11 +2,13 @@ runs:
   using: composite
   steps:
     - uses: actions/download-artifact@v3
+      with:
+        path: ${{ env.DIRECTORY_PATH }}
     - run: $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
     - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-      if: ${{ env.NAPI_RS == 'true' || env.NEON == 'true' }}
+      if: ${{ env.NAPI_RS == 'true' }}
       shell: bash
     - run: $PACKAGE_MANAGER test
       shell: bash

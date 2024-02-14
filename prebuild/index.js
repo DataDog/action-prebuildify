@@ -47,7 +47,7 @@ prebuildify()
 
 function prebuildify () {
   fs.mkdirSync(NODE_HEADERS_DIRECTORY, { recursive: true })
-  fs.mkdirSync(`prebuilds/${platform}${libc}-${arch}`, { recursive: true })
+  fs.mkdirSync(`${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}`, { recursive: true })
 
   if (PREBUILD) {
     execSync(PREBUILD, { stdio, shell })
@@ -112,13 +112,13 @@ function prebuildTarget (arch, target) {
   execSync(cmd, { stdio, shell })
 
   if (NAPI_RS === 'true') {
-    const output = `prebuilds/${platform}${libc}-${arch}/${TARGET_NAME}.node`
+    const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/node-napi.node`
     fs.copyFileSync(`${DIRECTORY_PATH}/${TARGET_NAME}.node`, output)
   } else if (NEON === 'true') {
-    const output = `prebuilds/${platform}${libc}-${arch}/${TARGET_NAME}.node`
-    fs.copyFileSync(`${DIRECTORY_PATH}/index.node`, output)
+    const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/node-napi.node`
+    fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${TARGET_NAME}.node`, output)
   } else {
-    const output = `prebuilds/${platform}${libc}-${arch}/node-${target.abi}.node`
+    const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/node-${target.abi}.node`
     fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${TARGET_NAME}.node`, output)
   }
 }
