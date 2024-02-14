@@ -1,0 +1,17 @@
+name: Test (Neon)
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: '0 4 * * *'
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    with:
+      cache: true
+      neon: true
+      package-manager: yarn
+      target-name: test
+      directory-path: ./test/neon

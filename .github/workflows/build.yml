@@ -43,6 +43,11 @@ on:
         default: false
         required: false
         type: boolean
+      neon:
+        description: Whether or not this build is for a Neon project.
+        default: false
+        required: false
+        type: boolean
       directory-path:
         description: The path to the directory containing your build files, relative to the repo root.
         default: '.'
@@ -66,6 +71,7 @@ env:
   PREBUILD: ${{ inputs.prebuild }}
   TARGET_NAME: ${{ inputs.target-name }}
   NAPI_RS: ${{ inputs.napi-rs }}
+  NEON: ${{ inputs.neon }}
   DIRECTORY_PATH: ${{ inputs.directory-path }}
   NODE_VERSIONS: '>=${{ inputs.min-node-version }}'
 

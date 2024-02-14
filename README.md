@@ -18,7 +18,11 @@ jobs:
     uses: Datadog/action-prebuildify/.github/workflows/build.yml@main
     with:
       cache: false # enable caching of dependencies based on lockfile
+      directory-path: '.' # The path to the directory containing your build files, relative to the repo root.
+      min-node-version: 12 # The minimum Node.js version to build and test
       napi: false # generate single Node-API binary for all versions of Node
+      napi-rs: false # Whether or not this build is for a napi-rs project.
+      neon: false # Whether or not this build is for a Neon project.
       package-manager: 'npm' # npm or yarn
       postbuild: '' # command to run after prebuilds have been generated
       prebuild: '' # command to run before prebuilds are generated

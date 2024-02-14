@@ -2,6 +2,8 @@ runs:
   using: composite
   steps:
     - uses: actions/download-artifact@v3
+      with:
+        path: ${{ env.DIRECTORY_PATH }}
     - run: $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
