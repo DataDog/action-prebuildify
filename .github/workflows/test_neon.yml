@@ -10,6 +10,7 @@ jobs:
   build:
     uses: ./.github/workflows/build.yml
     with:
+      min-node-version: 14 # Neon only supports Node >=14 when using latest Rust
       cache: true
       neon: true
       package-manager: yarn

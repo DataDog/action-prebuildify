@@ -2,13 +2,10 @@
 
 const { parseArgs } = require('node:util')
 
-// Neon only supports Node >=14
-const defaultMin = process.env.NEON === 'true' ? '14' : '12'
-
 const { values } = parseArgs({
   args: process.argv.slice(2),
   options: {
-    min: { type: 'string', default: defaultMin },
+    min: { type: 'string', default: '12' },
     max: { type: 'string', default: '21' },
     step: { type: 'string', default: '2' }
   }
