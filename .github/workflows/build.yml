@@ -82,7 +82,7 @@ jobs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
       - id: versions
-        uses: DataDog/action-prebuildify/compute-matrix@main
+        uses: DataDog/action-prebuildify/compute-matrix@fix-musl-2
         with:
           min: ${{ inputs.min-node-version }}
 
