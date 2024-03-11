@@ -116,6 +116,7 @@ jobs:
   linux-arm64:
     if: ${{ !contains(inputs.skip, 'linux-arm64') }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     name: linux-arm64
     env:
       ARCH: arm64
@@ -130,6 +131,7 @@ jobs:
   linux-arm:
     if: ${{ !contains(inputs.skip, 'linux-arm') }}
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     name: linux-arm
     env:
       ARCH: arm
@@ -145,7 +147,8 @@ jobs:
     if: ${{ !contains(inputs.skip, 'linuxmusl-x64') }}
     runs-on: ubuntu-latest
     container:
-      image: node:12.0.0-alpine
+      # musl is statically linked so we can use more recent version of image.
+      image: node:14.0.0-alpine
     name: linuxmusl-x64
     env:
       ARCH: x64
