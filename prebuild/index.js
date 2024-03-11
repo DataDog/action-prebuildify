@@ -81,9 +81,9 @@ function prebuildTarget (arch, target) {
     let napiBuildCommand
 
     if (platform === 'win32') {
-      napiBuildCommand = `npx ${__dirname + path.sep}node_modules${path.sep}@napi-rs${path.sep}cli build`
+      napiBuildCommand = `npx ${path.join(__dirname, 'node_modules', '@napi-rs', 'cli')} build`
     } else {
-      napiBuildCommand = `${__dirname + path.sep}node_modules${path.sep}.bin${path.sep}napi build`
+      napiBuildCommand = `${path.join('node_modules', '.bin', 'napi')} build`
     }
 
     cmd = `cd ${DIRECTORY_PATH} && ${napiBuildCommand} --release`
@@ -124,14 +124,19 @@ function prebuildTarget (arch, target) {
 }
 
 function installRust () {
-  execSync("curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y", { stdio, shell })
+  const target = napiTargets[`${platform}${libc}-${arch}`]
 
   process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
-  process.env.CARGO_BUILD_TARGET = napiTargets[`${platform}${libc}-${arch}`]
+  process.env.CARGO_BUILD_TARGET = target
+  process.env.RUSTUP_TOOLCHAIN = 'nightly'
+  process.env.RUSTUP_UPDATE_ROOT = 'https://dev-static.rust-lang.org/rustup'
 
   if (platform === 'linux' && libc === 'musl') {
     process.env.RUSTFLAGS = '-C target-feature=-crt-static'
   }
 
-  execSync('rustup toolchain install nightly && rustup component add rust-src --toolchain nightly')
+  execSync([
+    "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs",
+    `sh -s -- -y --verbose --default-host ${target} --default-toolchain nightly --component rust-src`
+  ].join(' | '), { stdio, shell })
 }
