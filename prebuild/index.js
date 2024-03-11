@@ -135,6 +135,7 @@ function installRust () {
     process.env.RUSTFLAGS = '-C target-feature=-crt-static'
   }
 
+  // TODO: Switch back to stable toolchain when build-std becomes stable.
   execSync([
     "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs",
     `sh -s -- -y --verbose --default-host ${target} --default-toolchain nightly --component rust-src`
