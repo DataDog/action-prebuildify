@@ -37,7 +37,8 @@ const napiTargets = {
   'linuxglibc-x64': 'x86_64-unknown-linux-gnu',
   'linuxmusl-x64': 'x86_64-unknown-linux-musl',
   'linuxmusl-arm64': 'aarch64-unknown-linux-musl',
-  'darwin-arm64': 'aarch64-apple-darwin',
+  // x86_64-apple-darwin is universal macOS, aarch64-apple-darwin is iOS
+  'darwin-arm64': 'x86_64-apple-darwin',
   'darwin-x64': 'x86_64-apple-darwin',
   'win32-ia32': 'i686-pc-windows-msvc',
   'win32-x64': 'x86_64-pc-windows-msvc'
@@ -83,7 +84,7 @@ function prebuildTarget (arch, target) {
     if (platform === 'win32') {
       napiBuildCommand = `npx ${path.join(__dirname, 'node_modules', '@napi-rs', 'cli')} build`
     } else {
-      napiBuildCommand = `${path.join('node_modules', '.bin', 'napi')} build`
+      napiBuildCommand = `${path.join(__dirname, 'node_modules', '.bin', 'napi')} build`
     }
 
     cmd = `cd ${DIRECTORY_PATH} && ${napiBuildCommand} --release`
@@ -129,15 +130,20 @@ function installRust () {
   process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
   process.env.CARGO_BUILD_TARGET = target
   process.env.RUSTUP_TOOLCHAIN = 'nightly'
-  process.env.RUSTUP_UPDATE_ROOT = 'https://dev-static.rust-lang.org/rustup'
+  // process.env.RUSTUP_UPDATE_ROOT = 'https://dev-static.rust-lang.org/rustup'
 
   if (platform === 'linux' && libc === 'musl') {
     process.env.RUSTFLAGS = '-C target-feature=-crt-static'
   }
 
-  // TODO: Switch back to stable toolchain when build-std becomes stable.
+  // Needs to be done as a separate command because Rust may already be
+  // installed, for example on GitHub Actions Windows runners.
   execSync([
     "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs",
-    `sh -s -- -y --verbose --default-host ${target} --default-toolchain nightly --component rust-src`
+    `sh -s -- -y --verbose --default-host ${target} --default-toolchain nightly`
   ].join(' | '), { stdio, shell })
+
+  // TODO: Switch back to stable toolchain when build-std becomes stable.
+  execSync('rustup toolchain install nightly && rustup default nightly', { stdio, shell })
+  execSync('rustup component add rust-src', { stdio, shell })
 }
