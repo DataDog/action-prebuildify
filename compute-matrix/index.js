@@ -25,4 +25,5 @@ if (versions[versions.length - 1] !== max) {
   versions.push(max)
 }
 
+// eslint-disable-next-line no-console
 console.log(`versions=${JSON.stringify(versions)}`)
