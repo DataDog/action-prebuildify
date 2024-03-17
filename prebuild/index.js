@@ -129,8 +129,6 @@ function installRust () {
 
   process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
   process.env.CARGO_BUILD_TARGET = target
-  process.env.RUSTUP_TOOLCHAIN = 'nightly'
-  // process.env.RUSTUP_UPDATE_ROOT = 'https://dev-static.rust-lang.org/rustup'
 
   if (platform === 'linux' && libc === 'musl') {
     process.env.RUSTFLAGS = '-C target-feature=-crt-static'
@@ -140,10 +138,9 @@ function installRust () {
   // installed, for example on GitHub Actions Windows runners.
   execSync([
     "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs",
-    `sh -s -- -y --verbose --default-host ${target} --default-toolchain nightly`
+    `sh -s -- -y --verbose --default-host ${target}`
   ].join(' | '), { stdio, shell })
 
-  // TODO: Switch back to stable toolchain when build-std becomes stable.
-  execSync('rustup toolchain install nightly && rustup default nightly', { stdio, shell })
-  execSync('rustup component add rust-src', { stdio, shell })
+  execSync('rustup toolchain install nightly --no-self-update', { stdio, shell })
+  execSync('rustup component add rust-src --toolchain nightly', { stdio, shell })
 }
