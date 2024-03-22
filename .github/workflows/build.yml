@@ -87,34 +87,31 @@ jobs:
           min: ${{ inputs.min-node-version }}
 
   # TODO: Add tests when out of beta and we have more ARM runners available.
-  linux:
-    strategy:
-      matrix:
-        arch: [ {node: arm64, docker: arm64v8}, {node: arm, docker: arm32v7} ]
-    if: ${{ !contains(inputs.skip, 'linux-${{ matrix.arch.node }}') }}
+  linux-arm:
+    if: ${{ !contains(inputs.skip, 'linux-arm') }}
     runs-on: arm-4core-linux
-    name: linux-${{ matrix.arch.node }}
+    name: linux-arm
     env:
-      ARCH: ${{ matrix.arch.node }}
-      DOCKER_BUILDER: rochdev/holy-node-box:12-${{ matrix.arch.docker }}
+      ARCH: arm
+      DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
-      - run: |
-          curl -fsSL https://get.docker.com -o get-docker.sh
-          sudo sh ./get-docker.sh
-      - run: |
-          sudo usermod -aG docker $USER
-          sudo apt-get install acl
-          sudo setfacl --modify user:$USER:rw /var/run/docker.sock
-      - uses: actions/setup-node@v3
-        with:
-          node-version: '18'
-      - run: npm i -g yarn
+      - uses: DataDog/action-prebuildify/docker@main
       - uses: DataDog/action-prebuildify/prebuild@main
         # Otherwise hangs for 6h sometimes. Remove when no longer happening.
         timeout-minutes: 10
+
+  linux-arm64:
+    if: ${{ !contains(inputs.skip, 'linux-arm64') }}
+    runs-on: arm-4core-linux
+    name: linux-arm64
+    env:
+      ARCH: arm64
+      DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
+    steps:
+      - uses: actions/checkout@v3
+      - uses: DataDog/action-prebuildify/docker@main
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-ia32:
     if: ${{ !contains(inputs.skip, 'linux-ia32') }}
