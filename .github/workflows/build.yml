@@ -97,6 +97,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v4
+        with:
+          node-version: 18
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/docker@fix-skip-linux-arm
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
@@ -113,6 +115,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v4
+        with:
+          node-version: 18
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/docker@fix-skip-linux-arm
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
