@@ -97,6 +97,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v4
+      - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/docker@fix-skip-linux-arm
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
         # Otherwise hangs for 6h sometimes. Remove when no longer happening.
@@ -112,6 +113,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v4
+      - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/docker@fix-skip-linux-arm
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
 
