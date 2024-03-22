@@ -96,6 +96,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
       - uses: DataDog/action-prebuildify/docker@fix-skip-linux-arm
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
         # Otherwise hangs for 6h sometimes. Remove when no longer happening.
@@ -110,6 +111,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
     steps:
       - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
       - uses: DataDog/action-prebuildify/docker@fix-skip-linux-arm
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
 
