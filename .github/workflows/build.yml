@@ -82,7 +82,7 @@ jobs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
       - id: versions
-        uses: DataDog/action-prebuildify/compute-matrix@fix-skip-linux-arm
+        uses: DataDog/action-prebuildify/compute-matrix@main
         with:
           min: ${{ inputs.min-node-version }}
 
@@ -100,8 +100,8 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/docker@fix-skip-linux-arm
-      - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
+      - uses: DataDog/action-prebuildify/docker@main
+      - uses: DataDog/action-prebuildify/prebuild@main
         # Otherwise hangs for 6h sometimes. Remove when no longer happening.
         timeout-minutes: 10
 
@@ -118,8 +118,8 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/docker@fix-skip-linux-arm
-      - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
+      - uses: DataDog/action-prebuildify/docker@main
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-ia32:
     if: ${{ !contains(inputs.skip, 'linux-ia32') }}
@@ -133,7 +133,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-x64:
     if: ${{ !contains(inputs.skip, 'linux-x64') }}
@@ -146,7 +146,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxmusl-x64:
     if: ${{ !contains(inputs.skip, 'linuxmusl-x64') }}
@@ -163,7 +163,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   # TODO: linuxmusl-arm / linuxmusl-arm64
 
@@ -180,7 +180,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   windows:
     strategy:
@@ -195,7 +195,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/prebuild@fix-skip-linux-arm
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   # Tests
 
@@ -215,7 +215,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/test@fix-skip-linux-arm
+      - uses: DataDog/action-prebuildify/test@main
 
   linux-test:
     strategy:
@@ -230,7 +230,7 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
-      - uses: DataDog/action-prebuildify/test@fix-skip-linux-arm
+      - uses: DataDog/action-prebuildify/test@main
 
   macos-x64-test:
     strategy:
@@ -274,7 +274,7 @@ jobs:
         if: ${{ matrix.node <= '14' }}
       #########################################################################
 
-      - uses: DataDog/action-prebuildify/test@fix-skip-linux-arm
+      - uses: DataDog/action-prebuildify/test@main
 
   windows-test:
     strategy:
@@ -293,4 +293,4 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
-      - uses: DataDog/action-prebuildify/test@fix-skip-linux-arm
+      - uses: DataDog/action-prebuildify/test@main
