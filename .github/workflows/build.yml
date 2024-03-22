@@ -91,7 +91,7 @@ jobs:
     strategy:
       matrix:
         arch: [ {node: arm64, docker: arm64v8}, {node: arm, docker: arm32v7} ]
-    if: ${{ !contains(inputs.skip, 'linux-${{ matrix.arch.node }}') }}
+    if: ${{ contains(inputs.skip, format('linux-{0}', matrix.arch.node)) }}
     runs-on: arm-4core-linux
     name: linux-${{ matrix.arch.node }}
     env:
@@ -101,6 +101,11 @@ jobs:
       - uses: actions/checkout@v3
         with:
           submodules: true
+      - run: |
+          echo "Check condition"
+          echo "skip: ${{ inputs.skip }}"
+          echo "linux-${{ matrix.arch.node }}"
+          echo "${{contains(inputs.skip, format('linux-{0}', matrix.arch.node)) }}"
       - run: |
           curl -fsSL https://get.docker.com -o get-docker.sh
           sudo sh ./get-docker.sh
