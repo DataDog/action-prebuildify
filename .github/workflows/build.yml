@@ -167,30 +167,46 @@ jobs:
 
   # TODO: linuxmusl-arm / linuxmusl-arm64
 
-  macos:
-    strategy:
-      matrix:
-        arch: ['arm64', 'x64']
-    if: ${{ !contains(inputs.skip, 'macos-${{ matrix.arch }}') }}
+  macos-arm64:
+    if: ${{ !contains(inputs.skip, 'macos-arm64') }}
     runs-on: macos-11
-    name: macos-${{ matrix.arch }}
+    name: macos-arm64
     env:
-      ARCH: ${{ matrix.arch }}
+      ARCH: arm64
     steps:
       - uses: actions/checkout@v3
         with:
           submodules: true
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  windows:
-    strategy:
-      matrix:
-        arch: ['ia32', 'x64']
-    if: ${{ !contains(inputs.skip, 'windows-${{ matrix.arch }}') }}
-    runs-on: windows-2019
-    name: windows-${{ matrix.arch }}
+  macos-x64:
+    if: ${{ !contains(inputs.skip, 'macos-x64') }}
+    runs-on: macos-11
+    name: macos-x64
     env:
-      ARCH: ${{ matrix.arch }}
+      ARCH: x64
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - uses: DataDog/action-prebuildify/prebuild@main
+
+  windows-ia32:
+    if: ${{ !contains(inputs.skip, 'windows-ia32') }}
+    runs-on: windows-2019
+    env:
+      ARCH: ia32
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - uses: DataDog/action-prebuildify/prebuild@main
+
+  windows-x64:
+    if: ${{ !contains(inputs.skip, 'windows-x64') }}
+    runs-on: windows-2019
+    env:
+      ARCH: x64
     steps:
       - uses: actions/checkout@v3
         with:
@@ -238,7 +254,7 @@ jobs:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
-      - macos
+      - macos-x64
     runs-on: macos-11
     name: macos-x64-test-${{ matrix.node }}
     steps:
@@ -282,7 +298,7 @@ jobs:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
-      - windows
+      - windows-x64
     runs-on: windows-2019
     name: windows-test-${{ matrix.node }}
     steps:
