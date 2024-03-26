@@ -131,8 +131,6 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v2
       - uses: actions/checkout@v3
-        with:
-          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-mac-win
 
   linux-x64:
@@ -144,8 +142,6 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-mac-win
 
   linuxmusl-x64:
@@ -161,8 +157,6 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl tar zstd
       - uses: actions/checkout@v3
-        with:
-          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-mac-win
 
   # TODO: linuxmusl-arm / linuxmusl-arm64
@@ -170,25 +164,19 @@ jobs:
   macos-arm64:
     if: ${{ !contains(inputs.skip, 'macos-arm64') }}
     runs-on: macos-11
-    name: macos-arm64
     env:
       ARCH: arm64
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-mac-win
 
   macos-x64:
     if: ${{ !contains(inputs.skip, 'macos-x64') }}
     runs-on: macos-11
-    name: macos-x64
     env:
       ARCH: x64
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-mac-win
 
   windows-ia32:
@@ -198,8 +186,6 @@ jobs:
       ARCH: ia32
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-mac-win
 
   windows-x64:
@@ -209,8 +195,6 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
       - uses: DataDog/action-prebuildify/prebuild@fix-skip-mac-win
 
   # Tests
@@ -229,8 +213,6 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl
       - uses: actions/checkout@v3
-        with:
-          submodules: true
       - uses: DataDog/action-prebuildify/test@fix-skip-mac-win
 
   linux-test:
@@ -244,8 +226,6 @@ jobs:
     name: linux-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
       - uses: DataDog/action-prebuildify/test@fix-skip-mac-win
 
   macos-x64-test:
@@ -259,8 +239,6 @@ jobs:
     name: macos-x64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node }}
@@ -303,8 +281,6 @@ jobs:
     name: windows-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v3
-        with:
-          submodules: true
       - uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node }}
