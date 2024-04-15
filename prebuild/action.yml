@@ -1,7 +1,6 @@
 runs:
   using: composite
   steps:
-    - uses: actions/download-artifact@v3
     - name: Install node-gyp
       run: |
         yarn global add node-gyp --ignore-engines
@@ -18,7 +17,7 @@ runs:
     - name: Restore node headers
       if: ${{ env.CACHE == 'true' }}
       id: cache-node-headers
-      uses: actions/cache/restore@v3
+      uses: actions/cache/restore@v4
       with:
         path: ${{ env.NODE_HEADERS_DIRECTORY }}
         key: node-headers-cache-${{ runner.os }}-version${{ env.NODE_VERSIONS }}-${{ steps.compute-node-targets-hash.outputs.hash }}
@@ -55,7 +54,7 @@ runs:
           /bin/bash -c 'yarn && cd /usr/workspace && yarn exec node /usr/action'
       if: ${{ env.DOCKER_BUILDER != '' }}
       shell: bash
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
-        name: prebuilds
-        path: ${{ env.DIRECTORY_PATH }}/prebuilds/**/*
+        name: prebuilds-${{ github.job }}
+        path: ${{ env.DIRECTORY_PATH }}/**/prebuilds/**/*
