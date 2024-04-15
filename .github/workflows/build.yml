@@ -286,3 +286,27 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
       - uses: DataDog/action-prebuildify/test@main
+
+  # Prebuilds
+
+  prebuilds:
+    needs:
+      - linux-arm
+      - linux-arm64
+      - linux-ia32
+      - linuxmusl-x64
+      - linux-x64
+      - macos-arm64
+      - macos-x64
+      - windows-ia32
+      - windows-x64
+    runs-on: ubuntu-latest
+    name: prebuilds
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: ${{ env.DIRECTORY_PATH }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: prebuilds
+          path: ${{ env.DIRECTORY_PATH }}/prebuilds/**/*
