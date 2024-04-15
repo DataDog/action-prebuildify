@@ -310,4 +310,4 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: prebuilds
-          path: ${{ env.DIRECTORY_PATH }}/prebuilds/**/*
+          path: ${{ env.DIRECTORY_PATH }}/**/prebuilds/**/*
