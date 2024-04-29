@@ -6,7 +6,7 @@ inputs:
     default: '12'
   max:
     description: The maximum Node.js version to include in the matrix
-    default: '21'
+    default: '22'
   step:
     description: Major version step between LTS releases
     default: '2'
