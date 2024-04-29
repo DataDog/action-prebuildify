@@ -26,7 +26,10 @@
         ]
       }],
       ["OS == 'win'", {
-        "cflags": []
+        "cflags": [],
+        'defines': [
+            'NOMINMAX' # allow std::min/max to work
+        ],
       }]
     ]
   }]
