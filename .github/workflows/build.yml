@@ -300,6 +300,11 @@ jobs:
       - macos-x64
       - windows-ia32
       - windows-x64
+    # Usage of needs implies that the job will only run if all the jobs it depends on are successful.
+    # If any of the jobs it depends on is skipped, this job will be skipped.
+    # To workaround this, we use the `if` condition but we also need to add `always()` to make sure the job is run
+    # related to https://github.com/actions/runner/issues/2205
+    if: ${{ always() && ! contains(needs.*.result, 'failure') && ! contains(needs.*.result, 'cancelled') }}
     runs-on: ubuntu-latest
     name: prebuilds
     steps:
