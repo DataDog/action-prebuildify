@@ -1,6 +1,8 @@
 runs:
   using: composite
   steps:
+    # Make artifacts previously uploaded by the parent workflow available to binding.gyp
+    - uses: actions/download-artifact@v4
     - name: Install node-gyp
       run: |
         yarn global add node-gyp --ignore-engines
