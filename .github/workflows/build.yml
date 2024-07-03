@@ -163,7 +163,7 @@ jobs:
 
   macos-arm64:
     if: ${{ !contains(inputs.skip, 'macos-arm64') }}
-    runs-on: macos-11
+    runs-on: macos-14
     env:
       ARCH: arm64
     steps:
@@ -172,7 +172,7 @@ jobs:
 
   macos-x64:
     if: ${{ !contains(inputs.skip, 'macos-x64') }}
-    runs-on: macos-11
+    runs-on: macos-12
     env:
       ARCH: x64
     steps:
@@ -235,7 +235,7 @@ jobs:
     needs:
       - versions
       - macos-x64
-    runs-on: macos-11
+    runs-on: macos-12
     name: macos-x64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
