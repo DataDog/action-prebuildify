@@ -161,7 +161,7 @@ jobs:
 
   linuxmusl-arm64:
     if: ${{ !contains(inputs.skip, 'linuxmusl-arm64') }}
-    runs-on: ubuntu-latest
+    runs-on: arm-4core-linux
     container:
       # musl is statically linked so we can use more recent version of image.
       image: node:20.0.0-alpine
