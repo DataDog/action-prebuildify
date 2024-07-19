@@ -159,6 +159,21 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
 
+  linuxmusl-arm64:
+    if: ${{ !contains(inputs.skip, 'linuxmusl-x64') }}
+    runs-on: ubuntu-latest
+    container:
+      # musl is statically linked so we can use more recent version of image.
+      image: node:20.0.0-alpine
+    name: linuxmusl-arm64
+    env:
+      ARCH: arm64
+      LIBC: musl
+    steps:
+      - run: apk update && apk add bash build-base git python3 curl tar zstd
+      - uses: actions/checkout@v4
+      - uses: DataDog/action-prebuildify/prebuild@main
+
   # TODO: linuxmusl-arm / linuxmusl-arm64
 
   macos-arm64:
