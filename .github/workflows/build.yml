@@ -159,6 +159,23 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
 
+  linuxmusl-arm64:
+    if: ${{ !contains(inputs.skip, 'linuxmusl-arm64') }}
+    runs-on: arm-4core-linux
+    name: linuxmusl-arm64
+    env:
+      ARCH: arm64
+      LIBC: musl
+      DOCKER_BUILDER: uurien/node-to-build:20.0.0-alpine
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm i -g yarn
+      - uses: DataDog/action-prebuildify/docker@main
+      - uses: DataDog/action-prebuildify/prebuild@main
+
   # TODO: linuxmusl-arm / linuxmusl-arm64
 
   macos-arm64:
@@ -295,6 +312,7 @@ jobs:
       - linux-arm64
       - linux-ia32
       - linuxmusl-x64
+      - linuxmusl-arm64
       - linux-x64
       - macos-arm64
       - macos-x64
