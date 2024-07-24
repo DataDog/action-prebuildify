@@ -90,7 +90,7 @@ function prebuildTarget (arch, target) {
     cmd = `cd ${DIRECTORY_PATH} && ${napiBuildCommand} --release`
   } else if (NEON === 'true') {
     installRust()
-    console.log('rust installed')
+
     cmd = `cd ${DIRECTORY_PATH} && npm run build-release`
   } else {
     cmd = [
@@ -110,15 +110,12 @@ function prebuildTarget (arch, target) {
     ].join(' ')
   }
 
-  console.log('execSync: ', cmd)
   execSync(cmd, { stdio, shell })
-  console.log('executed', cmd)
 
   if (NAPI_RS === 'true') {
     const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/node-napi.node`
     fs.copyFileSync(`${DIRECTORY_PATH}/${TARGET_NAME}.node`, output)
   } else if (NEON === 'true') {
-    console.log('copyy')
     const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/node-napi.node`
     fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${TARGET_NAME}.node`, output)
   } else {
@@ -130,9 +127,7 @@ function prebuildTarget (arch, target) {
 function installRust () {
   const target = napiTargets[`${platform}${libc}-${arch}`]
 
-  const cargoPath = process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
-
-  process.env.PATH += path.delimiter + cargoPath
+  process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
   process.env.CARGO_BUILD_TARGET = target
 
   if (platform === 'linux' && libc === 'musl') {
@@ -148,6 +143,4 @@ function installRust () {
 
   execSync('rustup toolchain install nightly --no-self-update', { stdio, shell })
   execSync('rustup component add rust-src --toolchain nightly', { stdio, shell })
-  console.log(`${ cargoPath + path.sep }cargo --version`)
-  execSync(`${ cargoPath + path.sep }cargo --version`, { stdio, shell })
 }

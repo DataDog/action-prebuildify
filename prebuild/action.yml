@@ -51,6 +51,7 @@ runs:
           -e DIRECTORY_PATH="$DIRECTORY_PATH" \
           -e NODE_VERSIONS="$NODE_VERSIONS" \
           -e NODE_HEADERS_DIRECTORY="/usr/node_headers" \
+          -e LIBC="$LIBC" \
           -w /usr/action \
           $DOCKER_BUILDER \
           /bin/bash -c 'yarn && cd /usr/workspace && yarn exec node /usr/action'
