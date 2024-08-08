@@ -4,7 +4,7 @@
   "description": "Neon test application.",
   "main": "index.node",
   "scripts": {
-    "build": "cargo-cp-artifact -nc build/Release/test.node -- cargo +nightly build -Z build-std=std,panic_abort --message-format=json-render-diagnostics",
+    "build": "cargo-cp-artifact -nc build/Release/test.node -- cargo build -Z build-std=std,panic_abort --message-format=json-render-diagnostics",
     "build-debug": "npm run build --",
     "build-release": "npm run build -- --release",
     "test": "node test"

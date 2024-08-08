@@ -141,6 +141,5 @@ function installRust () {
     `sh -s -- -y --verbose --default-host ${target}`
   ].join(' | '), { stdio, shell })
 
-  execSync('rustup toolchain install nightly-2024-08-01 --no-self-update', { stdio, shell })
-  execSync('rustup component add rust-src --toolchain nightly-2024-08-01', { stdio, shell })
+  execSync(`cd ${DIRECTORY_PATH} && rustup component add rust-src`, { stdio, shell })
 }
