@@ -12,6 +12,7 @@ const arch = process.env.ARCH || os.arch()
 const libc = process.env.LIBC || ''
 const stdio = [0, 1, 2]
 const shell = process.env.SHELL
+const cwd = path.join(process.cwd(), process.env.DIRECTORY_PATH)
 
 const {
   NAPI = 'false',
@@ -51,7 +52,7 @@ function prebuildify () {
   fs.mkdirSync(`${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}`, { recursive: true })
 
   if (PREBUILD) {
-    execSync(PREBUILD, { stdio, shell })
+    execSync(PREBUILD, { cwd, stdio, shell })
   }
 
   if (NAPI === 'true') {
@@ -63,7 +64,7 @@ function prebuildify () {
   }
 
   if (POSTBUILD) {
-    execSync(POSTBUILD, { stdio, shell })
+    execSync(POSTBUILD, { cwd, stdio, shell })
   }
 }
 
@@ -87,11 +88,11 @@ function prebuildTarget (arch, target) {
       napiBuildCommand = `${path.join(__dirname, 'node_modules', '.bin', 'napi')} build`
     }
 
-    cmd = `cd ${DIRECTORY_PATH} && ${napiBuildCommand} --release`
+    cmd = `${napiBuildCommand} --release`
   } else if (NEON === 'true') {
     installRust()
 
-    cmd = `cd ${DIRECTORY_PATH} && npm run build-release`
+    cmd = 'npm run build-release'
   } else {
     cmd = [
       'node-gyp rebuild',
@@ -110,7 +111,7 @@ function prebuildTarget (arch, target) {
     ].join(' ')
   }
 
-  execSync(cmd, { stdio, shell })
+  execSync(cmd, { cwd, stdio, shell })
 
   if (NAPI_RS === 'true') {
     const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/node-napi.node`
@@ -138,9 +139,8 @@ function installRust () {
   // installed, for example on GitHub Actions Windows runners.
   execSync([
     "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs",
-    `sh -s -- -y --verbose --default-host ${target}`
-  ].join(' | '), { stdio, shell })
+    `sh -s -- -y --verbose --no-update-default-toolchain --default-host ${target}`
+  ].join(' | '), { cwd, stdio, shell })
 
-  execSync('rustup toolchain install nightly --no-self-update', { stdio, shell })
-  execSync('rustup component add rust-src --toolchain nightly', { stdio, shell })
+  execSync('rustup component add rust-src', { cwd, stdio, shell })
 }
