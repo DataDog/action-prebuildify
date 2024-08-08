@@ -113,15 +113,19 @@ function prebuildTarget (arch, target) {
 
   execSync(cmd, { cwd, stdio, shell })
 
-  if (NAPI_RS === 'true') {
-    const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${TARGET_NAME}-napi.node`
-    fs.copyFileSync(`${DIRECTORY_PATH}/${TARGET_NAME}.node`, output)
-  } else if (NEON === 'true') {
-    const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${TARGET_NAME}-napi.node`
-    fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${TARGET_NAME}.node`, output)
-  } else {
-    const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${TARGET_NAME}-${target.abi}.node`
-    fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${TARGET_NAME}.node`, output)
+  const names = TARGET_NAME.split(',')
+
+  for (const name of names) {
+    if (NAPI_RS === 'true') {
+      const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${name}-napi.node`
+      fs.copyFileSync(`${DIRECTORY_PATH}/${name}.node`, output)
+    } else if (NEON === 'true') {
+      const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${name}-napi.node`
+      fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}.node`, output)
+    } else {
+      const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${name}-${target.abi}.node`
+      fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}.node`, output)
+    }
   }
 }
 
