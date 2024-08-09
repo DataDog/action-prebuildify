@@ -18,6 +18,7 @@ const {
   NAPI = 'false',
   NAPI_RS = 'false',
   NEON = 'false',
+  RUST = 'false',
   NODE_VERSIONS = '>=12',
   POSTBUILD = '',
   PREBUILD = '',
@@ -55,10 +56,8 @@ function prebuildify () {
     execSync(PREBUILD, { cwd, stdio, shell })
   }
 
-  if (NAPI === 'true') {
+  if (NAPI === 'true' || NAPI_RS === 'true' || NEON === 'true' || RUST === 'true') {
     prebuildTarget(arch, { version: targets[0].version, abi: 'napi' })
-  } else if (NAPI_RS === 'true' || NEON === 'true') {
-    prebuildTarget(arch, { version: targets[0].version })
   } else {
     targets.forEach(target => prebuildTarget(arch, target))
   }
@@ -69,9 +68,9 @@ function prebuildify () {
 }
 
 function prebuildTarget (arch, target) {
-  if (NAPI_RS === 'true' && platform === 'linux' && arch === 'ia32') return
-  if (NEON === 'true' && platform === 'linux' && arch === 'ia32') return
+  const isRust = NAPI_RS === 'true' || NEON === 'true' || RUST === 'true'
 
+  if (platform === 'linux' && arch === 'ia32' && isRust) return
   if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
   if (platform === 'win32' && arch === 'ia32' && semver.gte(target.version, '18.0.0')) return
 
@@ -89,7 +88,7 @@ function prebuildTarget (arch, target) {
     }
 
     cmd = `${napiBuildCommand} --release`
-  } else if (NEON === 'true') {
+  } else if (NEON === 'true' || RUST === 'true') {
     installRust()
 
     cmd = 'npm run build-release'
@@ -113,19 +112,22 @@ function prebuildTarget (arch, target) {
 
   execSync(cmd, { cwd, stdio, shell })
 
-  const names = TARGET_NAME.split(',')
+  if (RUST === 'true') {
+    const names = fs.readdirSync(`${DIRECTORY_PATH}/build/Release`)
 
-  for (const name of names) {
-    if (NAPI_RS === 'true') {
-      const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${name}-napi.node`
-      fs.copyFileSync(`${DIRECTORY_PATH}/${name}.node`, output)
-    } else if (NEON === 'true') {
-      const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${name}-napi.node`
-      fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}.node`, output)
-    } else {
-      const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${name}-${target.abi}.node`
-      fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}.node`, output)
+    for (const name of names) {
+      const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${name}`
+        .replace('.node', `-${target.abi}.node`)
+
+      fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}`, output)
     }
+  } else {
+    const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/node-${target.abi}.node`
+    const input = NAPI_RS === 'true'
+      ? `${DIRECTORY_PATH}/${TARGET_NAME}.node`
+      : `${DIRECTORY_PATH}/build/Release/${TARGET_NAME}.node`
+
+    fs.copyFileSync(input, output)
   }
 }
 
