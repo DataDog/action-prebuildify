@@ -107,7 +107,7 @@ jobs:
           node-version: 18
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/docker@main
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/targets
+      - uses: DataDog/action-prebuildify/prebuild@main
         # Otherwise hangs for 6h sometimes. Remove when no longer happening.
         timeout-minutes: 10
 
@@ -125,7 +125,7 @@ jobs:
           node-version: 18
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/docker@main
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/targets
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-ia32:
     if: ${{ !contains(inputs.skip, 'linux-ia32') }}
@@ -137,7 +137,7 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v3
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/targets
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-x64:
     if: ${{ !contains(inputs.skip, 'linux-x64') }}
@@ -148,7 +148,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/targets
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxmusl-x64:
     if: ${{ !contains(inputs.skip, 'linuxmusl-x64') }}
@@ -163,7 +163,7 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl tar zstd
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/targets
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxmusl-arm64:
     if: ${{ !contains(inputs.skip, 'linuxmusl-arm64') }}
@@ -180,7 +180,7 @@ jobs:
           node-version: 18
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/docker@main
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/targets
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   # TODO: linuxmusl-arm / linuxmusl-arm64
 
@@ -191,7 +191,7 @@ jobs:
       ARCH: arm64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/targets
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   macos-x64:
     if: ${{ !contains(inputs.skip, 'macos-x64') }}
@@ -200,7 +200,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/targets
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   windows-ia32:
     if: ${{ !contains(inputs.skip, 'windows-ia32') }}
@@ -209,7 +209,7 @@ jobs:
       ARCH: ia32
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/targets
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   windows-x64:
     if: ${{ !contains(inputs.skip, 'windows-x64') }}
@@ -218,7 +218,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/targets
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   # Tests
 
