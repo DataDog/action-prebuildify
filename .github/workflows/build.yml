@@ -48,6 +48,11 @@ on:
         default: false
         required: false
         type: boolean
+      rust:
+        description: Whether or not this build is for a Rust project.
+        default: false
+        required: false
+        type: boolean
       directory-path:
         description: The path to the directory containing your build files, relative to the repo root.
         default: '.'
@@ -72,6 +77,7 @@ env:
   TARGET_NAME: ${{ inputs.target-name }}
   NAPI_RS: ${{ inputs.napi-rs }}
   NEON: ${{ inputs.neon }}
+  RUST: ${{ inputs.rust }}
   DIRECTORY_PATH: ${{ inputs.directory-path }}
   NODE_VERSIONS: '>=${{ inputs.min-node-version }}'
 
