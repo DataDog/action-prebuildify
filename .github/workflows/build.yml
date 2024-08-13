@@ -88,7 +88,7 @@ jobs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
       - id: versions
-        uses: DataDog/action-prebuildify/compute-matrix@main
+        uses: DataDog/action-prebuildify/compute-matrix@rochdev/prebuild-before-tests
         with:
           min: ${{ inputs.min-node-version }}
 
@@ -106,8 +106,8 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/docker@main
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/docker@rochdev/prebuild-before-tests
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/prebuild-before-tests
         # Otherwise hangs for 6h sometimes. Remove when no longer happening.
         timeout-minutes: 10
 
@@ -124,8 +124,8 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/docker@main
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/docker@rochdev/prebuild-before-tests
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/prebuild-before-tests
 
   linux-ia32:
     if: ${{ !contains(inputs.skip, 'linux-ia32') }}
@@ -137,7 +137,7 @@ jobs:
     steps:
       - uses: docker/setup-qemu-action@v3
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/prebuild-before-tests
 
   linux-x64:
     if: ${{ !contains(inputs.skip, 'linux-x64') }}
@@ -148,7 +148,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/prebuild-before-tests
 
   linuxmusl-x64:
     if: ${{ !contains(inputs.skip, 'linuxmusl-x64') }}
@@ -163,7 +163,7 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl tar zstd
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/prebuild-before-tests
 
   linuxmusl-arm64:
     if: ${{ !contains(inputs.skip, 'linuxmusl-arm64') }}
@@ -179,8 +179,8 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/docker@main
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/docker@rochdev/prebuild-before-tests
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/prebuild-before-tests
 
   # TODO: linuxmusl-arm / linuxmusl-arm64
 
@@ -191,7 +191,7 @@ jobs:
       ARCH: arm64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/prebuild-before-tests
 
   macos-x64:
     if: ${{ !contains(inputs.skip, 'macos-x64') }}
@@ -200,7 +200,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/prebuild-before-tests
 
   windows-ia32:
     if: ${{ !contains(inputs.skip, 'windows-ia32') }}
@@ -209,7 +209,7 @@ jobs:
       ARCH: ia32
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/prebuild-before-tests
 
   windows-x64:
     if: ${{ !contains(inputs.skip, 'windows-x64') }}
@@ -218,7 +218,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/prebuild-before-tests
 
   # Tests
 
@@ -236,7 +236,7 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/prebuild-before-tests
 
   linux-test:
     strategy:
@@ -249,7 +249,7 @@ jobs:
     name: linux-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/prebuild-before-tests
 
   macos-x64-test:
     strategy:
@@ -291,7 +291,7 @@ jobs:
         if: ${{ matrix.node <= '14' }}
       #########################################################################
 
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/prebuild-before-tests
 
   windows-test:
     strategy:
@@ -308,7 +308,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/prebuild-before-tests
 
   # Prebuilds
 
