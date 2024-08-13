@@ -24,7 +24,7 @@ runs:
         path: ${{ env.NODE_HEADERS_DIRECTORY }}
         key: node-headers-cache-${{ runner.os }}-version${{ env.NODE_VERSIONS }}-${{ steps.compute-node-targets-hash.outputs.hash }}
     - name: Fetch node headers
-      if: ${{ steps.cache-node-headers.outputs.cache-hit != 'true' }}
+      if: ${{ env.CACHE == 'true' && steps.cache-node-headers.outputs.cache-hit != 'true' }}
       run: |
         yarn exec -s -- node $GITHUB_ACTION_PATH/fetch_node_headers.js $NODE_HEADERS_DIRECTORY
       shell: bash
