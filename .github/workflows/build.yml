@@ -228,7 +228,7 @@ jobs:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
-      - linuxmusl-x64
+      - prebuilds
     runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node }}-alpine
@@ -244,7 +244,7 @@ jobs:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
-      - linux-x64
+      - prebuilds
     runs-on: ubuntu-latest
     name: linux-test-${{ matrix.node }}
     steps:
@@ -257,7 +257,7 @@ jobs:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
-      - macos-x64
+      - prebuilds
     runs-on: macos-12
     name: macos-x64-test-${{ matrix.node }}
     steps:
@@ -299,7 +299,7 @@ jobs:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
-      - windows-x64
+      - prebuilds
     runs-on: windows-2019
     name: windows-test-${{ matrix.node }}
     steps:
