@@ -7,12 +7,12 @@ runs:
         RELEASE=$(lsb_release --release)
         CODENAME=$(lsb_release --codename)
         ARCH=$(uname -m)
-        sudo curl \
-          -O https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/containerd.io_1.7.20-1_${ARCH}.deb \
-          -O https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/docker-buildx-plugin_0.16.2-1~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb \
-          -O https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/docker-ce-cli_27.1.2-1~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb \
-          -O https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/docker-ce_27.1.2-1~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb \
-          -O https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/docker-compose-plugin_2.29.1-1~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb
+        sudo curl --parallel \
+          -O "https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/containerd.io_1.7.20-1_${ARCH}.deb" \
+          -O "https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/docker-buildx-plugin_0.16.2-1~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb" \
+          -O "https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/docker-ce-cli_27.1.2-1~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb" \
+          -O "https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/docker-ce_27.1.2-1~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb" \
+          -O "https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/docker-compose-plugin_2.29.1-1~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb"
         sudo dpkg -i ./containerd.io_1.7.20-1_${ARCH}.deb \
           ./docker-ce_27.1.2-1~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb \
           ./docker-ce-cli_27.1.2-1~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb \
