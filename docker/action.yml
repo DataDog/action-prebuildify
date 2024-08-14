@@ -3,6 +3,7 @@ runs:
   using: composite
   steps:
     - run: |
+        sudo apt-get -o Acquire::ForceIPv4=true update -qq >/dev/null
         curl -fsSL https://get.docker.com -o get-docker.sh
         sudo sh ./get-docker.sh
       shell: bash
