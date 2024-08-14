@@ -7,6 +7,7 @@ runs:
         RELEASE=$(lsb_release --release)
         CODENAME=$(lsb_release --codename)
         ARCH=$(uname -m)
+        echo "https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/containerd.io_1.7.20-1_${ARCH}.deb"
         sudo curl --parallel \
           -O "https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/containerd.io_1.7.20-1_${ARCH}.deb" \
           -O "https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/docker-buildx-plugin_0.16.2-1~ubuntu.${RELEASE}~${CODENAME}_${ARCH}.deb" \
