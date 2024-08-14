@@ -78,7 +78,7 @@ env:
   NAPI_RS: ${{ inputs.napi-rs }}
   NEON: ${{ inputs.neon }}
   RUST: ${{ inputs.rust }}
-  GYP: ${{ inputs.napi-rs != 'true' && inputs.neon != 'true' && inputs.rust != 'true' }}
+  GYP: ${{ !inputs.napi-rs && !inputs.neon && !inputs.rust }}
   DIRECTORY_PATH: ${{ inputs.directory-path }}
   NODE_VERSIONS: '>=${{ inputs.min-node-version }}'
 
