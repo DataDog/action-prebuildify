@@ -5,8 +5,8 @@ runs:
   steps:
     - run: |
         RELEASE=$(lsb_release --release | cut -f2)
-        CODENAME=$(lsb_release --codename | cut -f2 | sed "s/aarch64/arm64/")
-        ARCH=$(uname -m)
+        CODENAME=$(lsb_release --codename | cut -f2)
+        ARCH=$(uname -m | sed "s/aarch64/arm64/")
         echo "https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/containerd.io_1.7.20-1_${ARCH}.deb"
         sudo curl --parallel \
           -O "https://download.docker.com/linux/ubuntu/dists/${CODENAME}/pool/stable/${ARCH}/containerd.io_1.7.20-1_${ARCH}.deb" \
