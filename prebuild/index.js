@@ -146,7 +146,7 @@ function installRust () {
   execSync([
     "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s",
     `-y --verbose --profile minimal --no-update-default-toolchain --default-host ${target}`
-  ].join('--'), { cwd, stdio, shell })
+  ].join(' -- '), { cwd, stdio, shell })
 
   // execSync('rustup component add rust-src', { cwd, stdio, shell })
 }
