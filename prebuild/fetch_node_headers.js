@@ -7,10 +7,11 @@ const execSync = require('child_process').execSync
 const stdio = [0, 1, 2]
 const shell = process.env.SHELL
 
-const { NODE_VERSIONS = '>=12' } = process.env
+const { NODE_VERSIONS = '>=12', NAPI_RS, NEON, RUST } = process.env
 const targets = getFilteredNodeTargets(NODE_VERSIONS)
 
 function fetchNodeHeaders (version, devDir) {
+  if (NAPI_RS === 'true' || NEON === 'true' || RUST === 'true') return
   const operation = retry.operation({
     retries: 3,
     factor: 2,
