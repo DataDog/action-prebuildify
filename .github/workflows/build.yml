@@ -221,14 +221,13 @@ jobs:
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
-        arch: [x64, arm64]
     needs:
       - versions
       - prebuilds
-    runs-on: ${{ matrix.arch == 'arm64' && 'arm-4core-linux-arm-limited' || 'ubuntu-latest' }}
+    runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node }}-alpine
-    name: alpine-test-${{ matrix.arch }}-${{ matrix.node }}
+    name: alpine-test-${{ matrix.node }}
     steps:
       - run: apk update && apk add bash build-base git python3 curl
       - uses: actions/checkout@v4
@@ -243,7 +242,7 @@ jobs:
       - versions
       - prebuilds
     runs-on: ${{ matrix.arch == 'arm64' && 'arm-4core-linux-arm-limited' || 'ubuntu-latest' }}
-    name: linux-test-${{ matrix.arch }}-${{ matrix.node }}
+    name: linux-test-${{ matrix.node }}-${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/test@main
