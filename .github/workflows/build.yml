@@ -93,7 +93,6 @@ jobs:
         with:
           min: ${{ inputs.min-node-version }}
 
-  # TODO: Add tests when out of beta and we have more ARM runners available.
   linux-arm:
     if: ${{ !contains(inputs.skip, 'linux-arm') }}
     runs-on: arm-4core-linux-arm-limited
