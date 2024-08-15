@@ -93,7 +93,6 @@ jobs:
         with:
           min: ${{ inputs.min-node-version }}
 
-  # TODO: Add tests when out of beta and we have more ARM runners available.
   linux-arm:
     if: ${{ !contains(inputs.skip, 'linux-arm') }}
     runs-on: arm-4core-linux-arm-limited
@@ -108,8 +107,6 @@ jobs:
           node-version: 18
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@main
-        # Otherwise hangs for 6h sometimes. Remove when no longer happening.
-        timeout-minutes: 10
 
   linux-arm64:
     if: ${{ !contains(inputs.skip, 'linux-arm64') }}
@@ -134,7 +131,6 @@ jobs:
       ARCH: ia32
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
     steps:
-      - uses: docker/setup-qemu-action@v3
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
 
@@ -180,7 +176,7 @@ jobs:
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  # TODO: linuxmusl-arm / linuxmusl-arm64
+  # TODO: linuxmusl-arm
 
   macos-arm64:
     if: ${{ !contains(inputs.skip, 'macos-arm64') }}
@@ -240,11 +236,12 @@ jobs:
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
+        arch: [x64, arm64]
     needs:
       - versions
       - prebuilds
-    runs-on: ubuntu-latest
-    name: linux-test-${{ matrix.node }}
+    runs-on: ${{ matrix.arch == 'arm64' && 'arm-4core-linux-arm-limited' || 'ubuntu-latest' }}
+    name: linux-test-${{ matrix.node }}-${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/test@main
