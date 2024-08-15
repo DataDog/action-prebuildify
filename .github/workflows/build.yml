@@ -78,6 +78,7 @@ env:
   NAPI_RS: ${{ inputs.napi-rs }}
   NEON: ${{ inputs.neon }}
   RUST: ${{ inputs.rust }}
+  GYP: ${{ !inputs.napi-rs && !inputs.neon && !inputs.rust }}
   DIRECTORY_PATH: ${{ inputs.directory-path }}
   NODE_VERSIONS: '>=${{ inputs.min-node-version }}'
 
@@ -95,7 +96,7 @@ jobs:
   # TODO: Add tests when out of beta and we have more ARM runners available.
   linux-arm:
     if: ${{ !contains(inputs.skip, 'linux-arm') }}
-    runs-on: arm-4core-linux
+    runs-on: arm-4core-linux-arm-limited
     name: linux-arm
     env:
       ARCH: arm
@@ -106,14 +107,13 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/docker@main
       - uses: DataDog/action-prebuildify/prebuild@main
         # Otherwise hangs for 6h sometimes. Remove when no longer happening.
         timeout-minutes: 10
 
   linux-arm64:
     if: ${{ !contains(inputs.skip, 'linux-arm64') }}
-    runs-on: arm-4core-linux
+    runs-on: arm-4core-linux-arm-limited
     name: linux-arm64
     env:
       ARCH: arm64
@@ -124,7 +124,6 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/docker@main
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-ia32:
@@ -167,7 +166,7 @@ jobs:
 
   linuxmusl-arm64:
     if: ${{ !contains(inputs.skip, 'linuxmusl-arm64') }}
-    runs-on: arm-4core-linux
+    runs-on: arm-4core-linux-arm-limited
     name: linuxmusl-arm64
     env:
       ARCH: arm64
@@ -179,7 +178,6 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/docker@main
       - uses: DataDog/action-prebuildify/prebuild@main
 
   # TODO: linuxmusl-arm / linuxmusl-arm64
@@ -228,7 +226,7 @@ jobs:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
-      - linuxmusl-x64
+      - prebuilds
     runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node }}-alpine
@@ -244,7 +242,7 @@ jobs:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
-      - linux-x64
+      - prebuilds
     runs-on: ubuntu-latest
     name: linux-test-${{ matrix.node }}
     steps:
@@ -257,7 +255,7 @@ jobs:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
-      - macos-x64
+      - prebuilds
     runs-on: macos-12
     name: macos-x64-test-${{ matrix.node }}
     steps:
@@ -299,7 +297,7 @@ jobs:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
-      - windows-x64
+      - prebuilds
     runs-on: windows-2019
     name: windows-test-${{ matrix.node }}
     steps:
