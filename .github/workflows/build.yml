@@ -227,7 +227,7 @@ jobs:
       - prebuilds
     runs-on: ${{ matrix.arch == 'arm64' && 'arm-4core-linux-arm-limited' || 'ubuntu-latest' }}
     container:
-      image: ${{ matrix.node }}-alpine
+      image: node:${{ matrix.node }}-alpine
     name: alpine-test-${{ matrix.arch }}-${{ matrix.node }}
     steps:
       - run: apk update && apk add bash build-base git python3 curl
