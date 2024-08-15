@@ -132,7 +132,6 @@ jobs:
       ARCH: ia32
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
     steps:
-      - uses: docker/setup-qemu-action@v3
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
 
