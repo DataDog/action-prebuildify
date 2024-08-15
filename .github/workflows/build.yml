@@ -108,8 +108,6 @@ jobs:
           node-version: 18
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@main
-        # Otherwise hangs for 6h sometimes. Remove when no longer happening.
-        timeout-minutes: 10
 
   linux-arm64:
     if: ${{ !contains(inputs.skip, 'linux-arm64') }}
@@ -180,7 +178,7 @@ jobs:
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  # TODO: linuxmusl-arm / linuxmusl-arm64
+  # TODO: linuxmusl-arm
 
   macos-arm64:
     if: ${{ !contains(inputs.skip, 'macos-arm64') }}
