@@ -89,7 +89,7 @@ jobs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
       - id: versions
-        uses: DataDog/action-prebuildify/compute-matrix@main
+        uses: DataDog/action-prebuildify/compute-matrix@rochdev/fix-empty-prebuild-warning
         with:
           min: ${{ inputs.min-node-version }}
 
@@ -106,7 +106,7 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
   linux-arm64:
     if: ${{ !contains(inputs.skip, 'linux-arm64') }}
@@ -121,7 +121,7 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
   linux-ia32:
     if: ${{ !contains(inputs.skip, 'linux-ia32') }}
@@ -132,7 +132,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
   linux-x64:
     if: ${{ !contains(inputs.skip, 'linux-x64') }}
@@ -143,7 +143,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
   linuxmusl-x64:
     if: ${{ !contains(inputs.skip, 'linuxmusl-x64') }}
@@ -158,7 +158,7 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl tar zstd
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
   linuxmusl-arm64:
     if: ${{ !contains(inputs.skip, 'linuxmusl-arm64') }}
@@ -174,7 +174,7 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
   # TODO: linuxmusl-arm
 
@@ -185,7 +185,7 @@ jobs:
       ARCH: arm64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
   macos-x64:
     if: ${{ !contains(inputs.skip, 'macos-x64') }}
@@ -194,7 +194,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
   windows-ia32:
     if: ${{ !contains(inputs.skip, 'windows-ia32') }}
@@ -203,7 +203,7 @@ jobs:
       ARCH: ia32
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
   windows-x64:
     if: ${{ !contains(inputs.skip, 'windows-x64') }}
@@ -212,7 +212,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
   # Tests
 
@@ -230,7 +230,7 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/fix-empty-prebuild-warning
 
   linux-test:
     strategy:
@@ -244,7 +244,7 @@ jobs:
     name: linux-test-${{ matrix.node }}-${{ matrix.arch }}
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/fix-empty-prebuild-warning
 
   macos-x64-test:
     strategy:
@@ -286,7 +286,7 @@ jobs:
         if: ${{ matrix.node <= '14' }}
       #########################################################################
 
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/fix-empty-prebuild-warning
 
   windows-test:
     strategy:
@@ -303,7 +303,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/fix-empty-prebuild-warning
 
   # Prebuilds
 
