@@ -330,4 +330,5 @@ jobs:
       - uses: actions/upload-artifact/merge@v4
         with:
           name: prebuilds
-          pattern: ${{ env.DIRECTORY_PATH }}/**/prebuilds/**/*
+          pattern: prebuilds/**/*
+          delete-merged: true
