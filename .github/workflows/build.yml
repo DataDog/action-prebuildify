@@ -332,6 +332,7 @@ jobs:
           path: ${{ env.DIRECTORY_PATH }}
           merge-multiple: true
       - uses: actions/upload-artifact@v4
+        if: ${{ hashFiles(format('{0}/{1}', env.DIRECTORY_PATH, '**/prebuilds/**/*')) != '' }}
         with:
           name: prebuilds
           path: ${{ env.DIRECTORY_PATH }}/**/prebuilds/**/*
