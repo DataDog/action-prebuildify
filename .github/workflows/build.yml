@@ -178,8 +178,8 @@ jobs:
 
   # TODO: linuxmusl-arm
 
-  macos-arm64:
-    if: ${{ !contains(inputs.skip, 'macos-arm64') }}
+  darwin-arm64:
+    if: ${{ !contains(inputs.skip, 'darwin-arm64') && !contains(inputs.skip, 'macos-arm64') }}
     runs-on: macos-14
     env:
       ARCH: arm64
@@ -187,8 +187,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
-  macos-x64:
-    if: ${{ !contains(inputs.skip, 'macos-x64') }}
+  darwin-x64:
+    if: ${{ !contains(inputs.skip, 'darwin-x64') && !contains(inputs.skip, 'macos-x64') }}
     runs-on: macos-12
     env:
       ARCH: x64
@@ -196,8 +196,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
-  windows-ia32:
-    if: ${{ !contains(inputs.skip, 'windows-ia32') }}
+  win32-ia32:
+    if: ${{ !contains(inputs.skip, 'win32-ia32') && !contains(inputs.skip, 'windows-ia32') }}
     runs-on: windows-2019
     env:
       ARCH: ia32
@@ -205,8 +205,8 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
 
-  windows-x64:
-    if: ${{ !contains(inputs.skip, 'windows-x64') }}
+  win32-x64:
+    if: ${{ !contains(inputs.skip, 'win32-x64') && !contains(inputs.skip, 'windows-x64') }}
     runs-on: windows-2019
     env:
       ARCH: x64
@@ -246,7 +246,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/test@rochdev/fix-empty-prebuild-warning
 
-  macos-x64-test:
+  darwin-x64-test:
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -254,7 +254,7 @@ jobs:
       - versions
       - prebuilds
     runs-on: macos-12
-    name: macos-x64-test-${{ matrix.node }}
+    name: darwin-x64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -288,7 +288,7 @@ jobs:
 
       - uses: DataDog/action-prebuildify/test@rochdev/fix-empty-prebuild-warning
 
-  windows-test:
+  win32-test:
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -296,7 +296,7 @@ jobs:
       - versions
       - prebuilds
     runs-on: windows-2019
-    name: windows-test-${{ matrix.node }}
+    name: win32-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
