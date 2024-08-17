@@ -327,7 +327,7 @@ jobs:
     runs-on: ubuntu-latest
     name: prebuilds
     steps:
-      - uses: actions/download-artifact/merge@v4
+      - uses: actions/upload-artifact/merge@v4
         with:
           name: prebuilds
           pattern: ${{ env.DIRECTORY_PATH }}/**/prebuilds/**/*
