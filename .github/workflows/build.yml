@@ -115,8 +115,8 @@ jobs:
       - platforms
     steps:
       - run: |
-        echo '${{ needs.platforms.outputs.platforms }}'
-        echo '${{ fromJson(needs.platforms.outputs.platforms) }}'
+          echo '${{ needs.platforms.outputs.platforms }}'
+          echo '${{ fromJson(needs.platforms.outputs.platforms) }}'
 
   linux-arm:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
