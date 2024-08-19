@@ -113,6 +113,8 @@ jobs:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
     runs-on: arm-4core-linux-arm-limited
     name: linux-arm
+    needs:
+      - platforms
     env:
       ARCH: arm
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
@@ -128,6 +130,8 @@ jobs:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
     runs-on: arm-4core-linux-arm-limited
     name: linux-arm64
+    needs:
+      - platforms
     env:
       ARCH: arm64
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
@@ -143,6 +147,8 @@ jobs:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
     runs-on: ubuntu-latest
     name: linux-ia32
+    needs:
+      - platforms
     env:
       ARCH: ia32
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
@@ -154,6 +160,8 @@ jobs:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
     runs-on: ubuntu-latest
     name: linux-x64
+    needs:
+      - platforms
     env:
       ARCH: x64
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
@@ -168,6 +176,8 @@ jobs:
       # musl is statically linked so we can use more recent version of image.
       image: node:20.0.0-alpine
     name: linuxmusl-x64
+    needs:
+      - platforms
     env:
       ARCH: x64
       LIBC: musl
@@ -180,6 +190,8 @@ jobs:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
     runs-on: arm-4core-linux-arm-limited
     name: linuxmusl-arm64
+    needs:
+      - platforms
     env:
       ARCH: arm64
       LIBC: musl
@@ -197,6 +209,8 @@ jobs:
   darwin-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
     runs-on: macos-14
+    needs:
+      - platforms
     env:
       ARCH: arm64
     steps:
@@ -206,6 +220,8 @@ jobs:
   darwin-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
     runs-on: macos-12
+    needs:
+      - platforms
     env:
       ARCH: x64
     steps:
@@ -215,6 +231,8 @@ jobs:
   win32-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
     runs-on: windows-2019
+    needs:
+      - platforms
     env:
       ARCH: ia32
     steps:
@@ -224,6 +242,8 @@ jobs:
   win32-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
     runs-on: windows-2019
+    needs:
+      - platforms
     env:
       ARCH: x64
     steps:
