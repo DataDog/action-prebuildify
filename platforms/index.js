@@ -15,9 +15,9 @@ const { values } = parseArgs({
 })
 
 function match (platform, filter) {
-  filter = filter.replace('windows', 'win32').replace('macos', 'darwin')
-
-  return filter.find(f => platform === f || platform.startsWith(filter) || platform.endsWith(filter))
+  return filter
+    .map(f => f.replace('windows', 'win32').replace('macos', 'darwin'))
+    .find(f => platform === f || platform.startsWith(filter) || platform.endsWith(filter))
 }
 
 function output (platforms) {
