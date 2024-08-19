@@ -15,6 +15,7 @@ jobs:
       min-node-version: 14 # Neon only supports Node >=14 when using latest Rust
       cache: true
       neon: true
+      skip: linux-ia32
       package-manager: yarn
       target-name: test
       directory-path: ./test/neon
