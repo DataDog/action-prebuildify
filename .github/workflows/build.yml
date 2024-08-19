@@ -119,7 +119,7 @@ jobs:
           echo '${{ fromJson(needs.platforms.outputs.platforms) }}'
 
   linux-arm:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm') }}
     runs-on: arm-4core-linux-arm-limited
     name: linux-arm
     needs:
@@ -136,7 +136,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm64:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm64') }}
     runs-on: arm-4core-linux-arm-limited
     name: linux-arm64
     needs:
@@ -153,7 +153,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-ia32:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-ia32') }}
     runs-on: ubuntu-latest
     name: linux-ia32
     needs:
@@ -166,7 +166,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-x64:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-x64') }}
     runs-on: ubuntu-latest
     name: linux-x64
     needs:
@@ -179,7 +179,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxmusl-x64:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
     runs-on: ubuntu-latest
     container:
       # musl is statically linked so we can use more recent version of image.
@@ -196,7 +196,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxmusl-arm64:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
     runs-on: arm-4core-linux-arm-limited
     name: linuxmusl-arm64
     needs:
@@ -216,7 +216,7 @@ jobs:
   # TODO: linuxmusl-arm
 
   darwin-arm64:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-arm64') }}
     runs-on: macos-14
     needs:
       - platforms
@@ -227,7 +227,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   darwin-x64:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
     runs-on: macos-12
     needs:
       - platforms
@@ -238,7 +238,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   win32-ia32:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-ia32') }}
     runs-on: windows-2019
     needs:
       - platforms
@@ -249,7 +249,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   win32-x64:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
     runs-on: windows-2019
     needs:
       - platforms
