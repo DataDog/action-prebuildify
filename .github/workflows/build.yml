@@ -253,6 +253,7 @@ jobs:
   # Tests
 
   alpine-test:
+    if: ${{ !failure() && !cancelled() }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -270,6 +271,7 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   linux-arm64-test:
+    if: ${{ !failure() && !cancelled() }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -284,6 +286,7 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   linux-x64-test:
+    if: ${{ !failure() && !cancelled() }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -298,6 +301,7 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   darwin-x64-test:
+    if: ${{ !failure() && !cancelled() }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -341,6 +345,7 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   win32-test:
+    if: ${{ !failure() && !cancelled() }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -376,7 +381,7 @@ jobs:
     # If any of the jobs it depends on is skipped, this job will be skipped.
     # To workaround this, we use the `if` condition but we also need to add `always()` to make sure the job is run
     # related to https://github.com/actions/runner/issues/2205
-    if: ${{ always() && ! contains(needs.*.result, 'failure') && ! contains(needs.*.result, 'cancelled') }}
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-latest
     name: prebuilds
     steps:
