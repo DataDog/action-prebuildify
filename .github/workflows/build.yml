@@ -94,7 +94,7 @@ jobs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
       - id: versions
-        uses: DataDog/action-prebuildify/compute-matrix@rochdev/fix-empty-prebuild-warning
+        uses: DataDog/action-prebuildify/compute-matrix@main
         with:
           min: ${{ inputs.min-node-version }}
 
@@ -104,7 +104,7 @@ jobs:
       platforms: ${{ steps.platforms.outputs.platforms }}
     steps:
       - id: platforms
-        uses: DataDog/action-prebuildify/platforms@rochdev/fix-empty-prebuild-warning
+        uses: DataDog/action-prebuildify/platforms@main
         with:
           skip: ${{ inputs.skip }}
           only: ${{ inputs.only }}
@@ -124,7 +124,7 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm64') }}
@@ -141,7 +141,7 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-ia32') }}
@@ -154,7 +154,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-x64') }}
@@ -167,7 +167,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxmusl-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
@@ -184,7 +184,7 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl tar zstd
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxmusl-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
@@ -202,7 +202,7 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   # TODO: linuxmusl-arm
 
@@ -215,7 +215,7 @@ jobs:
       ARCH: arm64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   darwin-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
@@ -226,7 +226,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   win32-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-ia32') }}
@@ -237,7 +237,7 @@ jobs:
       ARCH: ia32
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   win32-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
@@ -248,7 +248,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   # Tests
 
@@ -268,7 +268,7 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/test@main
 
   linux-arm64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm64') }}
@@ -283,7 +283,7 @@ jobs:
     name: linux-arm64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/test@main
 
   linux-x64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linux-x64') }}
@@ -298,7 +298,7 @@ jobs:
     name: linux-x64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/test@main
 
   darwin-x64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
@@ -342,7 +342,7 @@ jobs:
         if: ${{ matrix.node <= '14' }}
       #########################################################################
 
-      - uses: DataDog/action-prebuildify/test@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/test@main
 
   win32-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
@@ -361,7 +361,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
-      - uses: DataDog/action-prebuildify/test@rochdev/fix-empty-prebuild-warning
+      - uses: DataDog/action-prebuildify/test@main
 
   # Prebuilds
 
