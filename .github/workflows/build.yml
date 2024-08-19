@@ -109,6 +109,15 @@ jobs:
           skip: ${{ inputs.skip }}
           only: ${{ inputs.only }}
 
+  debug:
+    runs-on: ubuntu-latest
+    needs:
+      - platforms
+    steps:
+      - run: |
+        echo '${{ needs.platforms.outputs.platforms }}'
+        echo '${{ fromJson(needs.platforms.outputs.platforms) }}'
+
   linux-arm:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), github.job) }}
     runs-on: arm-4core-linux-arm-limited
