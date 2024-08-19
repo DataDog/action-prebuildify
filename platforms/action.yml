@@ -15,5 +15,5 @@ runs:
   using: composite
   steps:
     - id: platforms
-      run: node $GITHUB_ACTION_PATH/index.js --skip ${{ inputs.skip }} --only ${{ inputs.only }} >> $GITHUB_OUTPUT
+      run: node $GITHUB_ACTION_PATH/index.js --skip=${{ inputs.skip }} --only=${{ inputs.only }} >> $GITHUB_OUTPUT
       shell: bash
