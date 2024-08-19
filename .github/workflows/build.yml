@@ -253,14 +253,14 @@ jobs:
   # Tests
 
   alpine-test:
-    if: ${{ !failure() && !cancelled() }}
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
       - prebuilds
-      - linuxmusl-x64
+      - platforms
     runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node }}-alpine
@@ -271,14 +271,14 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   linux-arm64-test:
-    if: ${{ !failure() && !cancelled() }}
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
       - prebuilds
-      - linux-arm64
+      - platforms
     runs-on: arm-4core-linux-arm-limited
     name: linux-arm64-test-${{ matrix.node }}
     steps:
@@ -286,14 +286,14 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   linux-x64-test:
-    if: ${{ !failure() && !cancelled() }}
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linux-x64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
       - prebuilds
-      - linux-x64
+      - platforms
     runs-on: ubuntu-latest
     name: linux-x64-test-${{ matrix.node }}
     steps:
@@ -301,14 +301,14 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   darwin-x64-test:
-    if: ${{ !failure() && !cancelled() }}
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
       - prebuilds
-      - darwin-x64
+      - platforms
     runs-on: macos-12
     name: darwin-x64-test-${{ matrix.node }}
     steps:
@@ -345,14 +345,14 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   win32-test:
-    if: ${{ !failure() && !cancelled() }}
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
       - prebuilds
-      - win32-x64
+      - platforms
     runs-on: windows-2019
     name: win32-test-${{ matrix.node }}
     steps:
