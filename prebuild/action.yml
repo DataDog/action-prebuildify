@@ -61,4 +61,5 @@ runs:
     - uses: actions/upload-artifact@v4
       with:
         name: prebuilds-${{ github.job }}
-        path: ${{ env.DIRECTORY_PATH }}/**/prebuilds/**/*
+        if-no-files-found: ignore
+        path: ${{ env.DIRECTORY_PATH }}/prebuilds/**/${{ github.job }}/*

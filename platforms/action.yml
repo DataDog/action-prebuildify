@@ -1,0 +1,19 @@
+name: Platforms
+description: Computes matrix of Node.js platforms
+inputs:
+  skip:
+    description: Platforms to skip
+    default: ''
+  only:
+    description: Platforms to include
+    default: ''
+outputs:
+  platforms:
+    description: Computed matrix of Node.js platforms
+    value: ${{ steps.platforms.outputs.platforms }}
+runs:
+  using: composite
+  steps:
+    - id: platforms
+      run: node $GITHUB_ACTION_PATH/index.js --skip=${{ inputs.skip }} --only=${{ inputs.only }} >> $GITHUB_OUTPUT
+      shell: bash

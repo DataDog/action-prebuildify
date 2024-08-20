@@ -33,6 +33,11 @@ on:
         default: ''
         required: false
         type: string
+      only:
+        description: List of jobs to include, for example when only a few platforms are supported.
+        default: ''
+        required: false
+        type: string
       target-name:
         description: Target name of the build output.
         default: addon
@@ -93,10 +98,23 @@ jobs:
         with:
           min: ${{ inputs.min-node-version }}
 
+  platforms:
+    runs-on: ubuntu-latest
+    outputs:
+      platforms: ${{ steps.platforms.outputs.platforms }}
+    steps:
+      - id: platforms
+        uses: DataDog/action-prebuildify/platforms@main
+        with:
+          skip: ${{ inputs.skip }}
+          only: ${{ inputs.only }}
+
   linux-arm:
-    if: ${{ !contains(inputs.skip, 'linux-arm') }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm') }}
     runs-on: arm-4core-linux-arm-limited
     name: linux-arm
+    needs:
+      - platforms
     env:
       ARCH: arm
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
@@ -109,9 +127,11 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-arm64:
-    if: ${{ !contains(inputs.skip, 'linux-arm64') }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm64') }}
     runs-on: arm-4core-linux-arm-limited
     name: linux-arm64
+    needs:
+      - platforms
     env:
       ARCH: arm64
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
@@ -124,9 +144,11 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-ia32:
-    if: ${{ !contains(inputs.skip, 'linux-ia32') }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-ia32') }}
     runs-on: ubuntu-latest
     name: linux-ia32
+    needs:
+      - platforms
     env:
       ARCH: ia32
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
@@ -135,9 +157,11 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linux-x64:
-    if: ${{ !contains(inputs.skip, 'linux-x64') }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-x64') }}
     runs-on: ubuntu-latest
     name: linux-x64
+    needs:
+      - platforms
     env:
       ARCH: x64
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
@@ -146,12 +170,14 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxmusl-x64:
-    if: ${{ !contains(inputs.skip, 'linuxmusl-x64') }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
     runs-on: ubuntu-latest
     container:
       # musl is statically linked so we can use more recent version of image.
       image: node:20.0.0-alpine
     name: linuxmusl-x64
+    needs:
+      - platforms
     env:
       ARCH: x64
       LIBC: musl
@@ -161,9 +187,11 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxmusl-arm64:
-    if: ${{ !contains(inputs.skip, 'linuxmusl-arm64') }}
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
     runs-on: arm-4core-linux-arm-limited
     name: linuxmusl-arm64
+    needs:
+      - platforms
     env:
       ARCH: arm64
       LIBC: musl
@@ -178,36 +206,44 @@ jobs:
 
   # TODO: linuxmusl-arm
 
-  macos-arm64:
-    if: ${{ !contains(inputs.skip, 'macos-arm64') }}
+  darwin-arm64:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-arm64') }}
     runs-on: macos-14
+    needs:
+      - platforms
     env:
       ARCH: arm64
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  macos-x64:
-    if: ${{ !contains(inputs.skip, 'macos-x64') }}
+  darwin-x64:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
     runs-on: macos-12
+    needs:
+      - platforms
     env:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  windows-ia32:
-    if: ${{ !contains(inputs.skip, 'windows-ia32') }}
+  win32-ia32:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-ia32') }}
     runs-on: windows-2019
+    needs:
+      - platforms
     env:
       ARCH: ia32
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  windows-x64:
-    if: ${{ !contains(inputs.skip, 'windows-x64') }}
+  win32-x64:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
     runs-on: windows-2019
+    needs:
+      - platforms
     env:
       ARCH: x64
     steps:
@@ -217,12 +253,14 @@ jobs:
   # Tests
 
   alpine-test:
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
       - prebuilds
+      - platforms
     runs-on: ubuntu-latest
     container:
       image: node:${{ matrix.node }}-alpine
@@ -232,29 +270,47 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/test@main
 
-  linux-test:
+  linux-arm64-test:
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
-        arch: [x64, arm64]
     needs:
       - versions
       - prebuilds
-    runs-on: ${{ matrix.arch == 'arm64' && 'arm-4core-linux-arm-limited' || 'ubuntu-latest' }}
-    name: linux-test-${{ matrix.node }}-${{ matrix.arch }}
+      - platforms
+    runs-on: arm-4core-linux-arm-limited
+    name: linux-arm64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/test@main
 
-  macos-x64-test:
+  linux-x64-test:
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linux-x64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
       - prebuilds
+      - platforms
+    runs-on: ubuntu-latest
+    name: linux-x64-test-${{ matrix.node }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DataDog/action-prebuildify/test@main
+
+  darwin-x64-test:
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
+    strategy:
+      matrix:
+        node: ${{ fromJson(needs.versions.outputs.versions) }}
+    needs:
+      - versions
+      - prebuilds
+      - platforms
     runs-on: macos-12
-    name: macos-x64-test-${{ matrix.node }}
+    name: darwin-x64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -288,15 +344,17 @@ jobs:
 
       - uses: DataDog/action-prebuildify/test@main
 
-  windows-test:
+  win32-test:
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
     needs:
       - versions
       - prebuilds
+      - platforms
     runs-on: windows-2019
-    name: windows-test-${{ matrix.node }}
+    name: win32-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -315,23 +373,20 @@ jobs:
       - linuxmusl-x64
       - linuxmusl-arm64
       - linux-x64
-      - macos-arm64
-      - macos-x64
-      - windows-ia32
-      - windows-x64
+      - darwin-arm64
+      - darwin-x64
+      - win32-ia32
+      - win32-x64
     # Usage of needs implies that the job will only run if all the jobs it depends on are successful.
     # If any of the jobs it depends on is skipped, this job will be skipped.
     # To workaround this, we use the `if` condition but we also need to add `always()` to make sure the job is run
     # related to https://github.com/actions/runner/issues/2205
-    if: ${{ always() && ! contains(needs.*.result, 'failure') && ! contains(needs.*.result, 'cancelled') }}
+    if: ${{ !failure() && !cancelled() }}
     runs-on: ubuntu-latest
     name: prebuilds
     steps:
-      - uses: actions/download-artifact@v4
-        with:
-          path: ${{ env.DIRECTORY_PATH }}
-          merge-multiple: true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact/merge@v4
         with:
           name: prebuilds
-          path: ${{ env.DIRECTORY_PATH }}/**/prebuilds/**/*
+          pattern: prebuilds-*
+          delete-merged: true
