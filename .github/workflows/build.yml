@@ -117,7 +117,7 @@ jobs:
       - platforms
     env:
       ARCH: arm
-      LIBC: libc
+      LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
     steps:
       - uses: actions/checkout@v4
@@ -135,7 +135,7 @@ jobs:
       - platforms
     env:
       ARCH: arm64
-      LIBC: libc
+      LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
     steps:
       - uses: actions/checkout@v4
@@ -153,7 +153,7 @@ jobs:
       - platforms
     env:
       ARCH: ia32
-      LIBC: libc
+      LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
     steps:
       - uses: actions/checkout@v4
@@ -167,7 +167,7 @@ jobs:
       - platforms
     env:
       ARCH: x64
-      LIBC: libc
+      LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@v4
