@@ -275,7 +275,7 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   linux-arm64-test:
-    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm64') }}
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -290,7 +290,7 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   linux-x64-test:
-    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linux-x64') }}
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -371,12 +371,12 @@ jobs:
 
   prebuilds:
     needs:
-      - linux-arm
-      - linux-arm64
-      - linux-ia32
+      - linuxglibc-arm
+      - linuxglibc-arm64
+      - linuxglibc-ia32
       - linuxmusl-x64
       - linuxmusl-arm64
-      - linux-x64
+      - linuxglibc-x64
       - darwin-arm64
       - darwin-x64
       - win32-ia32
