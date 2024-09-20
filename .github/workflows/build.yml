@@ -109,10 +109,10 @@ jobs:
           skip: ${{ inputs.skip }}
           only: ${{ inputs.only }}
 
-  linux-arm:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm') }}
+  linuxglibc-arm:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm') }}
     runs-on: arm-4core-linux-arm-limited
-    name: linux-arm
+    name: linuxglibc-arm
     needs:
       - platforms
     env:
@@ -127,10 +127,10 @@ jobs:
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  linux-arm64:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm64') }}
+  linuxglibc-arm64:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
     runs-on: arm-4core-linux-arm-limited
-    name: linux-arm64
+    name: linuxglibc-arm64
     needs:
       - platforms
     env:
@@ -145,10 +145,10 @@ jobs:
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  linux-ia32:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-ia32') }}
+  linuxglibc-ia32:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-ia32') }}
     runs-on: ubuntu-latest
-    name: linux-ia32
+    name: linuxglibc-ia32
     needs:
       - platforms
     env:
@@ -159,10 +159,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  linux-x64:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-x64') }}
+  linuxglibc-x64:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
     runs-on: ubuntu-latest
-    name: linux-x64
+    name: linuxglibc-x64
     needs:
       - platforms
     env:
