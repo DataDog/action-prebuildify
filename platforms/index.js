@@ -2,7 +2,7 @@
 
 const { parseArgs } = require('node:util')
 
-const systems = ['darwin', 'linux', 'linuxglibc', 'linuxmusl', 'win32']
+const systems = ['darwin', 'linuxglibc', 'linuxmusl', 'win32']
 const architectures = ['arm', 'arm64', 'ia32', 'x64']
 const platforms = systems.flatMap(s => architectures.map(a => `${s}-${a}`))
 
