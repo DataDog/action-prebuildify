@@ -18,8 +18,11 @@ function match (platform, filter) {
   for (let [start, end] of filter.map(f => f.split('-'))) {
     start = start.replace('windows', 'win32').replace('macos', 'darwin')
 
-    if (platform.startsWith(start)) return true
-    if (platform.endsWith(end || start)) return true
+    if (end) {
+      if (platform.startsWith(start) && platform.endsWith(end)) return true
+    } else {
+      if (platform.startsWith(start) || platform.endsWith(start)) return true
+    }
   }
 
   return false
