@@ -109,14 +109,15 @@ jobs:
           skip: ${{ inputs.skip }}
           only: ${{ inputs.only }}
 
-  linux-arm:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm') }}
+  linuxglibc-arm:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm') }}
     runs-on: arm-4core-linux-arm-limited
-    name: linux-arm
+    name: linuxglibc-arm
     needs:
       - platforms
     env:
       ARCH: arm
+      LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
     steps:
       - uses: actions/checkout@v4
@@ -126,14 +127,15 @@ jobs:
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  linux-arm64:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm64') }}
+  linuxglibc-arm64:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
     runs-on: arm-4core-linux-arm-limited
-    name: linux-arm64
+    name: linuxglibc-arm64
     needs:
       - platforms
     env:
       ARCH: arm64
+      LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
     steps:
       - uses: actions/checkout@v4
@@ -143,27 +145,29 @@ jobs:
       - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  linux-ia32:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-ia32') }}
+  linuxglibc-ia32:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-ia32') }}
     runs-on: ubuntu-latest
-    name: linux-ia32
+    name: linuxglibc-ia32
     needs:
       - platforms
     env:
       ARCH: ia32
+      LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
 
-  linux-x64:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linux-x64') }}
+  linuxglibc-x64:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
     runs-on: ubuntu-latest
-    name: linux-x64
+    name: linuxglibc-x64
     needs:
       - platforms
     env:
       ARCH: x64
+      LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@v4
@@ -271,7 +275,7 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   linux-arm64-test:
-    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linux-arm64') }}
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -286,7 +290,7 @@ jobs:
       - uses: DataDog/action-prebuildify/test@main
 
   linux-x64-test:
-    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linux-x64') }}
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -367,12 +371,12 @@ jobs:
 
   prebuilds:
     needs:
-      - linux-arm
-      - linux-arm64
-      - linux-ia32
+      - linuxglibc-arm
+      - linuxglibc-arm64
+      - linuxglibc-ia32
       - linuxmusl-x64
       - linuxmusl-arm64
-      - linux-x64
+      - linuxglibc-x64
       - darwin-arm64
       - darwin-x64
       - win32-ia32
