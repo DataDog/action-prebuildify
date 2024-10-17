@@ -297,6 +297,7 @@ jobs:
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
           . $HOME/.nvm/nvm.sh
           nvm install ${{ matrix.node }}
+          npm install -g yarn@^1.22.22
         shell: bash
       - uses: DataDog/action-prebuildify/test@main
 
