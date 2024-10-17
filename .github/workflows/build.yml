@@ -288,8 +288,8 @@ jobs:
       image: centos:${{ matrix.node < 18 && '7' || '8' }}
     name: centos-test-${{ matrix.node }}
     steps:
-      # checkout@v4 uses node 20 which doesn't run on centos 7
-      - uses: actions/checkout@v3
+      # checkout@v3/v4 use node 20 which doesn't run on centos 7
+      - uses: actions/checkout@v2
       - run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
           . $HOME/.nvm/nvm.sh
