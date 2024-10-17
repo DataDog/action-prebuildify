@@ -286,10 +286,10 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: centos:${{ matrix.node < 18 && '7' || '8' }}
+      volumes:
+        - /node20217:/node20217:rw,rshared
+        - /node20217:/__e/node20:ro,rshared
     name: centos-test-${{ matrix.node }}
-    env:
-      ACTIONS_RUNNER_FORCED_INTERNAL_NODE_VERSION: node16
-      ACTIONS_RUNNER_FORCE_ACTIONS_NODE_VERSION: node16
     steps:
       # actions/checkout uses node 20 which doesn't run on centos 7
       - run: |
@@ -302,6 +302,7 @@ jobs:
           nvm install ${{ matrix.node }}
           npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
+          cp -r $(dirname $(nvm which default)) /node20217/bin
         shell: bash
       - uses: DataDog/action-prebuildify/test@main
 
