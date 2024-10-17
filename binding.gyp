@@ -10,7 +10,7 @@
     "xcode_settings": {
       "MACOSX_DEPLOYMENT_TARGET": "10.10",
       "OTHER_CFLAGS": [
-        "-std=c++17",
+        "-std=c++20",
         "-stdlib=libc++",
         "-Wall"
       ]
@@ -18,7 +18,7 @@
     "conditions": [
       ["OS == 'linux'", {
         "cflags": [
-          "-std=c++11",
+          "-std=c++20",
           "-Wall"
         ],
         "cflags_cc": [
