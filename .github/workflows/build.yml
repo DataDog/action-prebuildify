@@ -299,6 +299,7 @@ jobs:
           nvm install ${{ matrix.node }}
           npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
+          cp $(nvm which default) /__e/node20/bin/node
         shell: bash
       - uses: DataDog/action-prebuildify/test@main
 
