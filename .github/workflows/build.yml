@@ -287,11 +287,12 @@ jobs:
     container:
       image: centos:${{ matrix.node < 18 && '7' || '8' }}
     name: centos-test-${{ matrix.node }}
-    env:
-      ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION: 'true'
     steps:
-      # checkout@v4 uses node 20 which doesn't run on centos 7
-      - uses: actions/checkout@v3
+      # actions/checkout uses node 20 which doesn't run on centos 7
+      - run: |
+          curl -o repo.tar.gz https://github.com/${{ github.repository }}/archive/${{ github.ref }}.tar.gz -JLO
+          tar --strip-components=1 -zxf repo.tar.gz
+        shell: bash
       - run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
           . $HOME/.nvm/nvm.sh
