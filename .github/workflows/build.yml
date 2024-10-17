@@ -199,9 +199,8 @@ jobs:
     env:
       ARCH: arm64
       LIBC: musl
-      DOCKER_BUILDER: node:20.0.0-alpine
+      DOCKER_BUILDER: uurien/node-to-build:20.0.0-alpine
     steps:
-      - run: apk update && apk add bash build-base git python3 curl tar zstd gcc
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
