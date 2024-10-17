@@ -18,7 +18,7 @@
     "conditions": [
       ["OS == 'linux'", {
         "cflags": [
-          "-std=c++20",
+          "-std=c++2a",
           "-Wall"
         ],
         "cflags_cc": [
