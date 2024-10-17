@@ -298,7 +298,7 @@ jobs:
           . $HOME/.nvm/nvm.sh
           nvm install ${{ matrix.node }}
           npm install -g yarn@^1.22.22
-          yarn global bin >> $GITHUB_PATH
+          dirname $(nvm which default) >> $GITHUB_PATH
         shell: bash
       - uses: DataDog/action-prebuildify/test@main
 
