@@ -297,12 +297,14 @@ jobs:
           tar --strip-components=1 -zxf repo.tar.gz
         shell: bash
       - run: |
+          curl -LO https://unofficial-builds.nodejs.org/download/release/v20.9.0/node-v20.9.0-linux-x64-glibc-217.tar.xz
+          tar -xf node-v20.9.0-linux-x64-glibc-217.tar.xz --strip-components 1 -C /node20217
+      - run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
           . $HOME/.nvm/nvm.sh
           nvm install ${{ matrix.node }}
           npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
-          cp -r $(dirname $(nvm which default)) /node20217/bin
         shell: bash
       - uses: DataDog/action-prebuildify/test@main
 
