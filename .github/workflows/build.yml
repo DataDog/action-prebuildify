@@ -291,22 +291,20 @@ jobs:
         - /node20217:/__e/node20:ro,rshared
     name: centos-test-${{ matrix.node }}
     steps:
-      # actions/checkout uses node 20 which doesn't run on centos 7
-      - run: |
-          curl -o repo.tar.gz https://github.com/${{ github.repository }}/archive/${{ github.ref }}.tar.gz -JLO
-          tar --strip-components=1 -zxf repo.tar.gz
-        shell: bash
-      - run: |
+      - name: Install Node for runner (CentOS-compatible)
+        run: |
           curl -LO https://unofficial-builds.nodejs.org/download/release/v20.9.0/node-v20.9.0-linux-x64-glibc-217.tar.xz
           tar -xf node-v20.9.0-linux-x64-glibc-217.tar.xz --strip-components 1 -C /node20217
-      - run: |
+      - run: actions/checkout@v4
+      - name: Install Node for tests
+        run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
           . $HOME/.nvm/nvm.sh
           nvm install ${{ matrix.node }}
           npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
         shell: bash
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@ugaitz/support-node-23
 
   linux-arm64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
