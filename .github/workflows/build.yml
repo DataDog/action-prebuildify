@@ -286,7 +286,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: centos:${{ matrix.node < 18 && '7' || '8' }}
-    name: alpine-test-${{ matrix.node }}
     name: centos-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
