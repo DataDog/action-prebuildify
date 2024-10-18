@@ -17,6 +17,9 @@
     },
     "conditions": [
       ["OS == 'linux'", {
+        "cflags!": [
+          "-std=gnu++20"
+        ],
         "cflags": [
           "-std=c++2a",
           "-Wall"
@@ -28,7 +31,7 @@
       ["OS == 'win'", {
         "cflags": [],
         'defines': [
-            'NOMINMAX' # allow std::min/max to work
+          'NOMINMAX' # allow std::min/max to work
         ],
       }]
     ]
