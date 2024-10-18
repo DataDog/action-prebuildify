@@ -17,14 +17,14 @@
     },
     "conditions": [
       ["OS == 'linux'", {
-        "cflags!": [
-          "-std=gnu++20"
-        ],
         "cflags": [
-          "-std=c++2a",
           "-Wall"
         ],
+        "cflags_cc!": [
+          "-std=gnu++20"
+        ],
         "cflags_cc": [
+          "-std=gnu++2a",
           "-Wno-cast-function-type"
         ]
       }],
