@@ -291,6 +291,7 @@ jobs:
         - /node20217:/__e/node20:ro,rshared
     name: centos-test-${{ matrix.node }}
     steps:
+      # https://github.com/actions/runner/issues/2906#issuecomment-2109514798
       - name: Install Node for runner (CentOS-compatible)
         run: |
           curl -LO https://unofficial-builds.nodejs.org/download/release/v20.9.0/node-v20.9.0-linux-x64-glibc-217.tar.xz
