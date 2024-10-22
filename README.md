@@ -10,6 +10,8 @@ be added to `.gitignore`, and can be loaded using
 [node-gyp-build](https://www.npmjs.com/package/node-gyp-build) with
 `require('node-gyp-build')(__dirname)`.
 
+> *NOTE:* Currently, `node-gyp-build` must be `<4` to work with this action.
+
 Example usage with the available options and the defaults:
 
 ```yaml
