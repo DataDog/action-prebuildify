@@ -11,7 +11,7 @@ runs:
       shell: bash -l {0}
       working-directory: ${{ env.DIRECTORY_PATH }}
     - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && echo "$HOME/.cargo/bin" >> $GITHUB_PATH
-      if: ${{ env.NAPI_RS == 'true' }}
+      if: ${{ env.NAPI_RS == 'true' || env.RUST == 'true' }}
       shell: bash
     - run: $PACKAGE_MANAGER test
       shell: bash -l {0}
