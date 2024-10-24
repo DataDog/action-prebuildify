@@ -5,28 +5,29 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Install Node for tests
-      run: |
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-        . $HOME/.nvm/nvm.sh
-        nvm install ${{ inputs.node }}
-        npm install -g yarn@^1.22.22
-        dirname $(nvm which default) >> $GITHUB_PATH
-      shell: bash
-    - run: node -e "console.log(process.versions)"
-      shell: bash -l {0}
     - uses: actions/download-artifact@v4
       with:
         path: ${{ env.DIRECTORY_PATH }}
     - run: chmod -R +x ./prebuilds
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
-    - run: $PACKAGE_MANAGER install --ignore-scripts
-      shell: bash -l {0}
-      working-directory: ${{ env.DIRECTORY_PATH }}
     - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && echo "$HOME/.cargo/bin" >> $GITHUB_PATH
       if: ${{ env.NAPI_RS == 'true' }}
       shell: bash
-    - run: $PACKAGE_MANAGER test
-      shell: bash -l {0}
+    - name: Run tests on specific Node version
+      run: |
+        # Install Node
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+        . $HOME/.nvm/nvm.sh
+        nvm install ${{ inputs.node }}
+        npm install -g yarn@^1.22.22
+        dirname $(nvm which default) >> $GITHUB_PATH
+
+        # Output versions
+        node -e "console.log(process.versions)"
+
+        # Run tests
+        $PACKAGE_MANAGER install --ignore-scripts
+        $PACKAGE_MANAGER test
+      shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
