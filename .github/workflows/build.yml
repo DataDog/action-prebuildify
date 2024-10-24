@@ -273,8 +273,6 @@ jobs:
       - run: apk update && apk add bash build-base git python3 curl
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/test@rochdev/nvm-all-the-things
-        with:
-          node: ${{ matrix.node }}
 
   centos-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
