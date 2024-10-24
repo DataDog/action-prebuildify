@@ -19,11 +19,12 @@ runs:
       if: ${{ inputs.node != '' }}
       with:
         node-version: ${{ inputs.node }}
-    - name: Run tests
-      run: |
-        node -e "console.log(process.versions)"
-
-        $PACKAGE_MANAGER install --ignore-scripts
-        $PACKAGE_MANAGER test
-      shell: bash
+    - run: node -e "console.log(process.versions)"
+      shell: bash -l {0}
+      working-directory: ${{ env.DIRECTORY_PATH }}
+    - run: $PACKAGE_MANAGER install --ignore-scripts
+      shell: bash -l {0}
+      working-directory: ${{ env.DIRECTORY_PATH }}
+    - run: $PACKAGE_MANAGER test
+      shell: bash -l {0}
       working-directory: ${{ env.DIRECTORY_PATH }}
