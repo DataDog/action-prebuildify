@@ -13,6 +13,8 @@ runs:
         npm install -g yarn@^1.22.22
         dirname $(nvm which default) >> $GITHUB_PATH
       shell: bash
+    - run: node -e "console.log(process.versions)"
+      shell: bash -l {0}
     - uses: actions/download-artifact@v4
       with:
         path: ${{ env.DIRECTORY_PATH }}
