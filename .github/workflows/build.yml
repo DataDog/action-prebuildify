@@ -272,7 +272,7 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@rochdev/nvm-all-the-things
+      - uses: DataDog/action-prebuildify/test@main
 
   centos-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
@@ -305,7 +305,7 @@ jobs:
           npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
         shell: bash
-      - uses: DataDog/action-prebuildify/test@rochdev/nvm-all-the-things
+      - uses: DataDog/action-prebuildify/test@main
 
   linux-arm64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
@@ -320,7 +320,7 @@ jobs:
     name: linux-arm64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@rochdev/nvm-all-the-things
+      - uses: DataDog/action-prebuildify/test@main
         with:
           node: ${{ matrix.node }}
 
@@ -337,7 +337,7 @@ jobs:
     name: linux-x64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@rochdev/nvm-all-the-things
+      - uses: DataDog/action-prebuildify/test@main
         with:
           node: ${{ matrix.node }}
 
@@ -383,7 +383,7 @@ jobs:
         if: ${{ matrix.node <= '14' }}
       #########################################################################
 
-      - uses: DataDog/action-prebuildify/test@rochdev/nvm-all-the-things
+      - uses: DataDog/action-prebuildify/test@main
         with:
           node: ${{ matrix.node }}
 
@@ -404,7 +404,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
-      - uses: DataDog/action-prebuildify/test@rochdev/nvm-all-the-things
+      - uses: DataDog/action-prebuildify/test@main
         with:
           node: ${{ matrix.node }}
 
