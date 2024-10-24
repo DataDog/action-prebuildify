@@ -20,11 +20,11 @@ runs:
       with:
         node-version: ${{ inputs.node }}
     - run: node -e "console.log(process.versions)"
-      shell: bash -l {0}
+      shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
     - run: $PACKAGE_MANAGER install --ignore-scripts
-      shell: bash -l {0}
+      shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
     - run: $PACKAGE_MANAGER test
-      shell: bash -l {0}
+      shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
