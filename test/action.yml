@@ -1,7 +1,8 @@
 inputs:
   node:
-    description: The version of Node to use for tests
-    required: true
+    description: The version of Node to install for tests
+    required: false
+    default: ''
 runs:
   using: composite
   steps:
@@ -14,21 +15,13 @@ runs:
     - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && echo "$HOME/.cargo/bin" >> $GITHUB_PATH
       if: ${{ env.NAPI_RS == 'true' }}
       shell: bash
-    - name: Run tests on specific Node version
+    - uses: actions/setup-node@v4
+      if: ${{ inputs.node != '' }}
+      with:
+        node-version: ${{ inputs.node }}
+    - name: Run tests
       run: |
-        echo "Install Node"
-
-        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-        . $HOME/.nvm/nvm.sh
-        nvm install ${{ inputs.node }}
-        npm install -g yarn@^1.22.22
-        dirname $(nvm which default) >> $GITHUB_PATH
-
-        echo "Output versions"
-
         node -e "console.log(process.versions)"
-
-        echo "Run tests"
 
         $PACKAGE_MANAGER install --ignore-scripts
         $PACKAGE_MANAGER test

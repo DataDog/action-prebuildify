@@ -299,9 +299,15 @@ jobs:
           curl -LO https://unofficial-builds.nodejs.org/download/release/v20.9.0/node-v20.9.0-linux-x64-glibc-217.tar.xz
           tar -xf node-v20.9.0-linux-x64-glibc-217.tar.xz --strip-components 1 -C /node20217
       - uses: actions/checkout@v4
+      - name: Install Node for tests
+        run: |
+          curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+          . $HOME/.nvm/nvm.sh
+          nvm install ${{ matrix.node }}
+          npm install -g yarn@^1.22.22
+          dirname $(nvm which default) >> $GITHUB_PATH
+        shell: bash
       - uses: DataDog/action-prebuildify/test@rochdev/nvm-all-the-things
-        with:
-          node: ${{ matrix.node }}
 
   linux-arm64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
