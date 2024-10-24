@@ -34,11 +34,11 @@ function output (platforms) {
 }
 
 if (values.only) {
-  const only = values.only.split(',')
+  const only = values.only.split(/[\s,]/)
 
   output(platforms.filter(p => match(p, only)))
 } else if (values.skip) {
-  const skip = values.skip.split(',')
+  const skip = values.skip.split(/[\s,]/)
 
   output(platforms.filter(p => !match(p, skip)))
 } else {
