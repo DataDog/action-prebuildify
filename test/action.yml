@@ -1,9 +1,9 @@
+inputs:
+  node:
+    description: The version of Node to use for tests
+    required: true
 runs:
   using: composite
-  inputs:
-    node:
-      description: The version of Node to use for tests
-      required: true
   steps:
     - name: Install Node for tests
       run: |
