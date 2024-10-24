@@ -16,17 +16,20 @@ runs:
       shell: bash
     - name: Run tests on specific Node version
       run: |
-        # Install Node
+        echo "Install Node"
+
         curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
         . $HOME/.nvm/nvm.sh
         nvm install ${{ inputs.node }}
         npm install -g yarn@^1.22.22
         dirname $(nvm which default) >> $GITHUB_PATH
 
-        # Output versions
+        echo "Output versions"
+
         node -e "console.log(process.versions)"
 
-        # Run tests
+        echo "Run tests"
+
         $PACKAGE_MANAGER install --ignore-scripts
         $PACKAGE_MANAGER test
       shell: bash
