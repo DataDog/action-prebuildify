@@ -321,6 +321,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/test@main
+        with:
+          node: ${{ matrix.node }}
 
   linux-x64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
@@ -336,6 +338,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/test@main
+        with:
+          node: ${{ matrix.node }}
 
   darwin-x64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
@@ -380,6 +384,8 @@ jobs:
       #########################################################################
 
       - uses: DataDog/action-prebuildify/test@main
+        with:
+          node: ${{ matrix.node }}
 
   win32-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
@@ -399,6 +405,8 @@ jobs:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
       - uses: DataDog/action-prebuildify/test@main
+        with:
+          node: ${{ matrix.node }}
 
   # Prebuilds
 

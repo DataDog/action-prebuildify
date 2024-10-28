@@ -1,3 +1,8 @@
+inputs:
+  node:
+    description: The version of Node to install for tests
+    required: false
+    default: ''
 runs:
   using: composite
   steps:
@@ -7,12 +12,19 @@ runs:
     - run: chmod -R +x ./prebuilds
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
-    - run: $PACKAGE_MANAGER install --ignore-scripts
-      shell: bash -l {0}
-      working-directory: ${{ env.DIRECTORY_PATH }}
     - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && echo "$HOME/.cargo/bin" >> $GITHUB_PATH
       if: ${{ env.NAPI_RS == 'true' }}
       shell: bash
+    - uses: actions/setup-node@v4
+      if: ${{ inputs.node != '' }}
+      with:
+        node-version: ${{ inputs.node }}
+    - run: node -e "console.log(process.versions)"
+      shell: bash
+      working-directory: ${{ env.DIRECTORY_PATH }}
+    - run: $PACKAGE_MANAGER install --ignore-scripts
+      shell: bash
+      working-directory: ${{ env.DIRECTORY_PATH }}
     - run: $PACKAGE_MANAGER test
-      shell: bash -l {0}
+      shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
