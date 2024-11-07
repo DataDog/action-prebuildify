@@ -14,6 +14,7 @@ runs:
     - run: |
         yarn exec -s -- node $GITHUB_ACTION_PATH/fetch_node_headers.js >> "$GITHUB_OUTPUT"
         echo "NODE_HEADERS_DIRECTORY=${DIRECTORY_PATH}/tmp_node_headers" >> "$GITHUB_ENV"
+      if: ${{ env.GYP == 'true' }}
       id: compute-node-targets-hash
       shell: bash
     - name: Restore node headers
