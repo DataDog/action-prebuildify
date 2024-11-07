@@ -1,4 +1,4 @@
-name: Test (Neon)
+name: Test (Node-API)
 
 on:
   push:
