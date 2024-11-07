@@ -94,7 +94,7 @@ jobs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
       - id: versions
-        uses: DataDog/action-prebuildify/compute-matrix@main
+        uses: DataDog/action-prebuildify/compute-matrix@rochdev/napi-no-headers
         with:
           min: ${{ inputs.min-node-version }}
 
@@ -104,7 +104,7 @@ jobs:
       platforms: ${{ steps.platforms.outputs.platforms }}
     steps:
       - id: platforms
-        uses: DataDog/action-prebuildify/platforms@main
+        uses: DataDog/action-prebuildify/platforms@rochdev/napi-no-headers
         with:
           skip: ${{ inputs.skip }}
           only: ${{ inputs.only }}
@@ -125,7 +125,7 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/napi-no-headers
 
   linuxglibc-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
@@ -143,7 +143,7 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/napi-no-headers
 
   linuxglibc-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-ia32') }}
@@ -157,7 +157,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/napi-no-headers
 
   linuxglibc-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
@@ -171,7 +171,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/napi-no-headers
 
   linuxmusl-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
@@ -188,7 +188,7 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl tar zstd
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/napi-no-headers
 
   linuxmusl-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
@@ -206,7 +206,7 @@ jobs:
         with:
           node-version: 18
       - run: npm i -g yarn
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/napi-no-headers
 
   # TODO: linuxmusl-arm
 
@@ -219,7 +219,7 @@ jobs:
       ARCH: arm64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/napi-no-headers
 
   darwin-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
@@ -230,7 +230,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/napi-no-headers
 
   win32-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-ia32') }}
@@ -241,7 +241,7 @@ jobs:
       ARCH: ia32
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/napi-no-headers
 
   win32-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
@@ -252,7 +252,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@rochdev/napi-no-headers
 
   # Tests
 
@@ -272,7 +272,7 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/napi-no-headers
 
   centos-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
@@ -305,7 +305,7 @@ jobs:
           npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
         shell: bash
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/napi-no-headers
 
   linux-arm64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
@@ -320,7 +320,7 @@ jobs:
     name: linux-arm64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/napi-no-headers
         with:
           node: ${{ matrix.node }}
 
@@ -337,7 +337,7 @@ jobs:
     name: linux-x64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/napi-no-headers
         with:
           node: ${{ matrix.node }}
 
@@ -383,7 +383,7 @@ jobs:
         if: ${{ matrix.node <= '14' }}
       #########################################################################
 
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/napi-no-headers
         with:
           node: ${{ matrix.node }}
 
@@ -404,7 +404,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@rochdev/napi-no-headers
         with:
           node: ${{ matrix.node }}
 
