@@ -10,6 +10,6 @@ const gid = process.getgid()
 const opts = { cwd, stdio, uid, gid }
 
 // Test that permissions work properly as there is a bug in older npm versions.
-execSync('touch foo.txt', opts)
+execSync('npm install', opts)
 
 console.log(hello()) // eslint-disable-line no-console
