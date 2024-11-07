@@ -9,6 +9,8 @@ runs:
       working-directory: ${{ env.DIRECTORY_PATH }}
 
     # Node headers cache start
+    - run: echo "NODE_HEADERS_DIRECTORY=${DIRECTORY_PATH}/tmp_node_headers" >> "$GITHUB_ENV"
+      shell: bash
     - run: yarn exec -s -- node $GITHUB_ACTION_PATH/fetch_node_headers.js >> "$GITHUB_OUTPUT"
       if: ${{ env.GYP == 'true' && env.CACHE == 'true' }}
       id: compute-node-targets-hash
@@ -33,10 +35,6 @@ runs:
         key: ${{ steps.cache-node-headers.outputs.cache-primary-key }}
     # Node headers cache end
 
-    - run: echo "NODE_HEADERS_DIRECTORY=${DIRECTORY_PATH}/tmp_node_headers" >> "$GITHUB_ENV"
-      shell: bash
-    - uses: DataDog/action-prebuildify/headers@rochdev/napi-no-headers
-      if: ${{ env.GYP == 'true' && env.CACHE == 'true' }}
     - run: yarn exec node $GITHUB_ACTION_PATH
       if: ${{ env.DOCKER_BUILDER == '' }}
       shell: bash
