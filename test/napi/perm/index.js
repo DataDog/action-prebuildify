@@ -4,8 +4,6 @@ const { execSync } = require('child_process')
 
 const cwd = __dirname
 const stdio = ['inherit', 'inherit', 'inherit']
-const uid = process.getuid()
-const gid = process.getgid()
-const opts = { cwd, stdio, uid, gid }
+const opts = { cwd, stdio }
 
 execSync('touch foo.txt', opts)
