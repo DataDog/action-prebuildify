@@ -1,0 +1,6 @@
+{
+  "private": true,
+  "dependencies": {
+    "node-gyp-build": "^3.9.0"
+  }
+}
