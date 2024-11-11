@@ -1,4 +1,4 @@
-name: Test
+name: Test (Node-API)
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
   build:
     uses: ./.github/workflows/build.yml
     with:
-      cache: true
-      napi: false
-      package-manager: yarn
-      target-name: test
+      min-node-version: 12
+      napi: true
+      package-manager: npm
+      directory-path: ./test/napi

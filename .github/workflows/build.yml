@@ -83,7 +83,7 @@ env:
   NAPI_RS: ${{ inputs.napi-rs }}
   NEON: ${{ inputs.neon }}
   RUST: ${{ inputs.rust }}
-  GYP: ${{ !inputs.napi-rs && !inputs.neon && !inputs.rust }}
+  GYP: ${{ !inputs.napi && !inputs.napi-rs && !inputs.neon && !inputs.rust }}
   DIRECTORY_PATH: ${{ inputs.directory-path }}
   NODE_VERSIONS: '>=${{ inputs.min-node-version }}'
 
@@ -302,6 +302,7 @@ jobs:
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
           . $HOME/.nvm/nvm.sh
           nvm install ${{ matrix.node }}
+          npm install -g npm@^7.24.2
           npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
         shell: bash

@@ -1,0 +1,16 @@
+{
+  "name": "napi",
+  "version": "0.1.0",
+  "description": "Node-API test application.",
+  "main": "build/Release/index.node",
+  "scripts": {
+    "build": "node-gyp rebuild",
+    "test": "node test"
+  },
+  "author": "Datadog Inc. <info@datadoghq.com>",
+  "license": "Apache-2.0",
+  "private": true,
+  "dependencies": {
+    "node-gyp-build": "^3.9.0"
+  }
+}

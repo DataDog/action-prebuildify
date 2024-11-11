@@ -3,17 +3,16 @@ runs:
   steps:
     # Make artifacts previously uploaded by the parent workflow available to binding.gyp
     - uses: actions/download-artifact@v4
-    - name: Install node-gyp
-      run: |
-        yarn global add node-gyp --ignore-engines
-      shell: bash
     - run: |
         $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
-    - run: |
-        yarn exec -s -- node $GITHUB_ACTION_PATH/fetch_node_headers.js >> "$GITHUB_OUTPUT"
-        echo "NODE_HEADERS_DIRECTORY=${DIRECTORY_PATH}/tmp_node_headers" >> "$GITHUB_ENV"
+
+    # Node headers cache start
+    - run: echo "NODE_HEADERS_DIRECTORY=${DIRECTORY_PATH}/tmp_node_headers" >> "$GITHUB_ENV"
+      shell: bash
+    - run: yarn exec -s -- node $GITHUB_ACTION_PATH/fetch_node_headers.js >> "$GITHUB_OUTPUT"
+      if: ${{ env.GYP == 'true' && env.CACHE == 'true' }}
       id: compute-node-targets-hash
       shell: bash
     - name: Restore node headers
@@ -34,6 +33,8 @@ runs:
       with:
         path: ${{ env.NODE_HEADERS_DIRECTORY }}
         key: ${{ steps.cache-node-headers.outputs.cache-primary-key }}
+    # Node headers cache end
+
     - run: yarn exec node $GITHUB_ACTION_PATH
       if: ${{ env.DOCKER_BUILDER == '' }}
       shell: bash
