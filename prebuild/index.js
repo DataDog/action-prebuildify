@@ -39,8 +39,7 @@ const napiTargets = {
   'linuxglibc-x64': 'x86_64-unknown-linux-gnu',
   'linuxmusl-x64': 'x86_64-unknown-linux-musl',
   'linuxmusl-arm64': 'aarch64-unknown-linux-musl',
-  // x86_64-apple-darwin is universal macOS, aarch64-apple-darwin is iOS
-  'darwin-arm64': 'x86_64-apple-darwin',
+  'darwin-arm64': 'aarch64-apple-darwin',
   'darwin-x64': 'x86_64-apple-darwin',
   'win32-ia32': 'i686-pc-windows-msvc',
   'win32-x64': 'x86_64-pc-windows-msvc'
