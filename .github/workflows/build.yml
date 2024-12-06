@@ -223,7 +223,7 @@ jobs:
 
   darwin-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
-    runs-on: macos-12
+    runs-on: macos-13
     needs:
       - platforms
     env:
@@ -351,7 +351,7 @@ jobs:
       - versions
       - prebuilds
       - platforms
-    runs-on: macos-12
+    runs-on: macos-13
     name: darwin-x64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
