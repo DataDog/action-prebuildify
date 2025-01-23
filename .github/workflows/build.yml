@@ -83,6 +83,8 @@ env:
   NAPI_RS: ${{ inputs.napi-rs }}
   NEON: ${{ inputs.neon }}
   RUST: ${{ inputs.rust }}
+  WASM_PACK: ${{ inputs.wasm-pack }}
+  WASM_OUTPUT_DIR_PATH: ${{ inputs.wasm-pack-output-directory-path }}
   GYP: ${{ !inputs.napi && !inputs.napi-rs && !inputs.neon && !inputs.rust }}
   DIRECTORY_PATH: ${{ inputs.directory-path }}
   NODE_VERSIONS: '>=${{ inputs.min-node-version }}'

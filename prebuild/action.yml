@@ -50,6 +50,8 @@ runs:
           -e NAPI_RS="$NAPI_RS" \
           -e NEON="$NEON" \
           -e RUST="$RUST" \
+          -e WASM_PACK="$WASM_PACK" \
+          -e WASM_OUTPUT_DIR_PATH="$WASM_OUTPUT_DIR_PATH" \
           -e DIRECTORY_PATH="$DIRECTORY_PATH" \
           -e NODE_VERSIONS="$NODE_VERSIONS" \
           -e NODE_HEADERS_DIRECTORY="/usr/node_headers" \

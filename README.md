@@ -31,4 +31,6 @@ jobs:
       rust: false # Whether or not this build is for a Rust project.
       skip: '' # list of jobs to skip, for example when a platform is not supported
       target-name: 'addon' # target name in binding.gyp (or napi.name in package.json for napi-rs projects)
+      wasm-pack: false # Whether or not this build is for a WASM-Pack project. Note: shouldn't be used with rust: true
+      wasm-pack-output-directory-path: '' # The output dir path for wasm-pack builds. Requires wasm-pack: true
 ```

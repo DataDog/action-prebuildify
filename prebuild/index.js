@@ -19,6 +19,8 @@ const {
   NAPI_RS = 'false',
   NEON = 'false',
   RUST = 'false',
+  WASM_PACK = 'false',
+  WASM_OUTPUT_DIR_PATH = '',
   NODE_VERSIONS = '>=12',
   POSTBUILD = '',
   PREBUILD = '',
@@ -57,6 +59,8 @@ function prebuildify () {
 
   if (NAPI === 'true' || NAPI_RS === 'true' || NEON === 'true' || RUST === 'true') {
     prebuildTarget(arch, { version: targets[0].version, abi: 'napi' })
+  } else if (WASM_PACK === 'true') {
+    prebuildWasmPackTarget()
   } else {
     targets.forEach(target => prebuildTarget(arch, target))
   }
@@ -64,6 +68,25 @@ function prebuildify () {
   if (POSTBUILD) {
     execSync(POSTBUILD, { cwd, stdio, shell })
   }
+}
+
+function prebuildWasmPackTarget() {
+  // Note: wasm-pack builds are cross-architecture compatible, so we don't need to build for each target
+  let input = path.join(__dirname, DIRECTORY_PATH, 'pkg')
+  let output = path.join(__dirname, WASM_OUTPUT_DIR_PATH.length > 0 ? WASM_OUTPUT_DIR_PATH : DIRECTORY_PATH, 'prebuilds', TARGET_NAME)
+  fs.mkdirSync(output, { recursive: true })
+
+  installRust()
+  installWasmPack()
+
+  let cmd = `wasm-pack build --target nodejs ${path.join(__dirname, DIRECTORY_PATH)}`
+  execSync(cmd, { cwd, stdio, shell })
+  const files = fs.readdirSync(input)
+  files.forEach(file => {
+    const srcPath = path.join(input, file)
+    const destPath = path.join(output, file)
+    fs.copyFileSync(srcPath, destPath)
+  })
 }
 
 function prebuildTarget (arch, target) {
@@ -134,7 +157,6 @@ function installRust () {
   const target = napiTargets[`${platform}${libc}-${arch}`]
 
   process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
-  process.env.CARGO_BUILD_TARGET = target
 
   if (platform === 'linux' && libc === 'musl') {
     process.env.RUSTFLAGS = '-C target-feature=-crt-static'
@@ -144,4 +166,17 @@ function installRust () {
     "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s",
     `-y --verbose --no-update-default-toolchain --default-host ${target}`
   ].join(' -- '), { cwd, stdio, shell })
+}
+
+function installWasmPack() {
+  const target = napiTargets[`${platform}${libc}-${arch}`]
+
+  process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
+  process.env.CARGO_BUILD_TARGET = target
+
+  if (platform === 'linux' && libc === 'musl') {
+    process.env.RUSTFLAGS = '-C target-feature=-crt-static'
+  }
+
+  execSync('curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh', { cwd, stdio, shell })
 }
