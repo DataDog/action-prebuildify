@@ -142,7 +142,6 @@ function installRust () {
 
   execSync([
     "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s",
-    `-y --verbose --no-update-default-toolchain --default-host ${target}`
+    `-y --verbose --no-update-default-toolchain --default-host ${target} && rustup toolchain install`
   ].join(' -- '), { cwd, stdio, shell })
-  execSync('rustup toolchain install', { cwd, stdio, shell })
 }
