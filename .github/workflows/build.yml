@@ -118,7 +118,7 @@ jobs:
     env:
       ARCH: arm
       LIBC: glibc
-      DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
+      DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7-beta
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -154,7 +154,7 @@ jobs:
     env:
       ARCH: ia32
       LIBC: glibc
-      DOCKER_BUILDER: rochdev/holy-node-box:12-i386
+      DOCKER_BUILDER: rochdev/holy-node-box:12-i386-beta
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
@@ -168,7 +168,7 @@ jobs:
     env:
       ARCH: x64
       LIBC: glibc
-      DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
+      DOCKER_BUILDER: rochdev/holy-node-box:12-amd64-beta
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
