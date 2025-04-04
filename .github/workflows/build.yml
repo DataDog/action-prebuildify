@@ -111,7 +111,7 @@ jobs:
 
   linuxglibc-arm:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm') }}
-    runs-on: arm-4core-linux-arm-limited
+    runs-on: ubuntu-24.04-arm
     name: linuxglibc-arm
     needs:
       - platforms
@@ -121,15 +121,11 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@alpine-3.13
 
   linuxglibc-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
-    runs-on: arm-4core-linux-arm-limited
+    runs-on: ubuntu-24.04-arm
     name: linuxglibc-arm64
     needs:
       - platforms
@@ -139,10 +135,6 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@alpine-3.13
 
   linuxglibc-ia32:
@@ -191,7 +183,7 @@ jobs:
 
   linuxmusl-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
-    runs-on: arm-4core-linux-arm-limited
+    runs-on: ubuntu-24.04-arm
     name: linuxmusl-arm64
     needs:
       - platforms
@@ -202,10 +194,6 @@ jobs:
       PREBUILD: apk update && apk add bash build-base git python3 curl tar zstd
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@alpine-3.13
 
   # TODO: linuxmusl-arm
@@ -317,7 +305,7 @@ jobs:
       - versions
       - prebuilds
       - platforms
-    runs-on: arm-4core-linux-arm-limited
+    runs-on: ubuntu-24.04-arm
     name: linux-arm64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
