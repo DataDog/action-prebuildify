@@ -168,16 +168,14 @@ jobs:
   linuxmusl-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
     runs-on: ubuntu-latest
-    container:
-      image: node:12-alpine3.13
     name: linuxmusl-x64
     needs:
       - platforms
     env:
       ARCH: x64
       LIBC: musl
+      DOCKER_BUILDER: rochdev/holy-node-box:12-amd64-beta
     steps:
-      - run: apk update && apk add bash build-base git python3 curl tar zstd
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@alpine-3.13
 
@@ -190,8 +188,7 @@ jobs:
     env:
       ARCH: arm64
       LIBC: musl
-      DOCKER_BUILDER: node:12-alpine3.13
-      PREBUILD: apk update && apk add bash build-base git python3 curl tar zstd
+      DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8-beta
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@alpine-3.13
