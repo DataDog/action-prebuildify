@@ -177,8 +177,7 @@ jobs:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
     runs-on: ubuntu-latest
     container:
-      # musl is statically linked so we can use more recent version of image.
-      image: node:20.0.0-alpine
+      image: node:12-alpine3.13
     name: linuxmusl-x64
     needs:
       - platforms
