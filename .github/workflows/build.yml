@@ -174,7 +174,7 @@ jobs:
     env:
       ARCH: x64
       LIBC: musl
-      DOCKER_BUILDER: rochdev/holy-node-box:12-amd64-beta
+      DOCKER_BUILDER: rochdev/holy-node-box:12-amd64-alpine
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@alpine-3.13
@@ -188,7 +188,7 @@ jobs:
     env:
       ARCH: arm64
       LIBC: musl
-      DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8-beta
+      DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8-alpine
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@alpine-3.13
