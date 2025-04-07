@@ -111,7 +111,7 @@ jobs:
 
   linuxglibc-arm:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm') }}
-    runs-on: arm-4core-linux-arm-limited
+    runs-on: ubuntu-24.04-arm
     name: linuxglibc-arm
     needs:
       - platforms
@@ -121,15 +121,11 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxglibc-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
-    runs-on: arm-4core-linux-arm-limited
+    runs-on: ubuntu-24.04-arm
     name: linuxglibc-arm64
     needs:
       - platforms
@@ -139,10 +135,6 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxglibc-ia32:
@@ -176,36 +168,29 @@ jobs:
   linuxmusl-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
     runs-on: ubuntu-latest
-    container:
-      # musl is statically linked so we can use more recent version of image.
-      image: node:20.0.0-alpine
     name: linuxmusl-x64
     needs:
       - platforms
     env:
       ARCH: x64
       LIBC: musl
+      DOCKER_BUILDER: rochdev/holy-node-box:12-amd64-alpine
     steps:
-      - run: apk update && apk add bash build-base git python3 curl tar zstd
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxmusl-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
-    runs-on: arm-4core-linux-arm-limited
+    runs-on: ubuntu-24.04-arm
     name: linuxmusl-arm64
     needs:
       - platforms
     env:
       ARCH: arm64
       LIBC: musl
-      DOCKER_BUILDER: uurien/node-to-build:20.0.0-alpine
+      DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8-alpine
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
-      - run: npm i -g yarn
       - uses: DataDog/action-prebuildify/prebuild@main
 
   # TODO: linuxmusl-arm
@@ -317,7 +302,7 @@ jobs:
       - versions
       - prebuilds
       - platforms
-    runs-on: arm-4core-linux-arm-limited
+    runs-on: ubuntu-24.04-arm
     name: linux-arm64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
