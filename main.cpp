@@ -1,39 +1,17 @@
-#include <node.h>
+#include <nan.h>
 
-using namespace v8;
-
-// Code from this example: https://nodejs.org/api/addons.html#context-aware-addons
-
-class AddonData {
-  public:
-    explicit AddonData(Isolate* isolate):
-        call_count(0) {
-      // Ensure this per-addon-instance data is deleted at environment cleanup.
-      node::AddEnvironmentCleanupHook(isolate, DeleteInstance, this);
-    }
-
-    // Per-addon data.
-    int call_count;
-
-    static void DeleteInstance(void* data) {
-      delete static_cast<AddonData*>(data);
-    }
-};
-
-static void Method(const v8::FunctionCallbackInfo<v8::Value>& info) {
-  AddonData* data =
-    reinterpret_cast<AddonData*>(info.Data().As<External>()->Value());
-  data->call_count++;
-  info.GetReturnValue().Set((double)data->call_count);
+void Method(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+  info.GetReturnValue().Set(Nan::New("world").ToLocalChecked());
 }
 
-NODE_MODULE_INIT() {
-  Isolate* isolate = context->GetIsolate();
-  AddonData* data = new AddonData(isolate);
-  Local<External> external = External::New(isolate, data);
-
+void Init(v8::Local<v8::Object> exports) {
+  v8::Local<v8::Context> context =
+      exports->GetCreationContext().ToLocalChecked();
   exports->Set(context,
-    String::NewFromUtf8(isolate, "Method").ToLocalChecked(),
-    FunctionTemplate::New(isolate, Method, external)
-      ->GetFunction(context).ToLocalChecked()).FromJust();
+               Nan::New("hello").ToLocalChecked(),
+               Nan::New<v8::FunctionTemplate>(Method)
+                   ->GetFunction(context)
+                   .ToLocalChecked());
 }
+
+NODE_MODULE(hello, Init)

@@ -4,4 +4,4 @@ const { strictEqual } = require('assert')
 
 const addon = require('node-gyp-build')(__dirname)
 
-strictEqual(addon.Method(), 1)
+strictEqual(addon.hello(), 'world')
