@@ -4,9 +4,7 @@
     "sources": [
       "main.cpp"
     ],
-    "include_dirs": [
-      "<!(node -e \"require('nan')\")"
-    ],
+    "include_dirs": [],
     "xcode_settings": {
       "MACOSX_DEPLOYMENT_TARGET": "10.10",
       "OTHER_CFLAGS": [
