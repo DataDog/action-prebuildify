@@ -145,7 +145,7 @@ jobs:
       ARCH: arm64
       LIBC: glibc
       NODE_MIN_VERSION: '24'
-      DOCKER_BUILDER: rochdev/holy-node-box:24-amd64
+      DOCKER_BUILDER: rochdev/holy-node-box:24-arm64v8
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@main
