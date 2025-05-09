@@ -7,7 +7,7 @@ const execSync = require('child_process').execSync
 const semver = require('semver')
 const { getFilteredNodeTargets } = require('./targets')
 
-const platform = os.platform()
+const platform = process.env.PLATFORM || os.platform()
 const arch = process.env.ARCH || os.arch()
 const libc = process.env.LIBC || ''
 const stdio = [0, 1, 2]

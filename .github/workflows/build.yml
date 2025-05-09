@@ -117,6 +117,7 @@ jobs:
     env:
       ARCH: arm
       LIBC: glibc
+      PLATFORM: linux
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
     steps:
       - uses: actions/checkout@v4
@@ -130,6 +131,7 @@ jobs:
     env:
       ARCH: arm64
       LIBC: glibc
+      PLATFORM: linux
       NODE_MAX_VERSION: '23'
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
     steps:
@@ -144,6 +146,7 @@ jobs:
     env:
       ARCH: arm64
       LIBC: glibc
+      PLATFORM: linux
       NODE_MIN_VERSION: '24'
       DOCKER_BUILDER: rochdev/holy-node-box:24-arm64v8
     steps:
@@ -158,6 +161,7 @@ jobs:
     env:
       ARCH: ia32
       LIBC: glibc
+      PLATFORM: linux
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
     steps:
       - uses: actions/checkout@v4
@@ -171,6 +175,7 @@ jobs:
     env:
       ARCH: x64
       LIBC: glibc
+      PLATFORM: linux
       NODE_MAX_VERSION: '23'
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
@@ -185,6 +190,7 @@ jobs:
     env:
       ARCH: x64
       LIBC: glibc
+      PLATFORM: linux
       NODE_MIN_VERSION: '24'
       DOCKER_BUILDER: rochdev/holy-node-box:24-amd64
     steps:
@@ -199,6 +205,7 @@ jobs:
     env:
       ARCH: x64
       LIBC: musl
+      PLATFORM: linux
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64-alpine
     steps:
       - uses: actions/checkout@v4
@@ -212,6 +219,7 @@ jobs:
     env:
       ARCH: arm64
       LIBC: musl
+      PLATFORM: linux
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8-alpine
     steps:
       - uses: actions/checkout@v4
@@ -226,6 +234,7 @@ jobs:
       - platforms
     env:
       ARCH: arm64
+      PLATFORM: darwin
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@node-24
@@ -237,6 +246,7 @@ jobs:
       - platforms
     env:
       ARCH: x64
+      PLATFORM: darwin
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@node-24
@@ -248,6 +258,7 @@ jobs:
       - platforms
     env:
       ARCH: ia32
+      PLATFORM: win32
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@node-24
@@ -259,6 +270,7 @@ jobs:
       - platforms
     env:
       ARCH: x64
+      PLATFORM: win32
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@node-24

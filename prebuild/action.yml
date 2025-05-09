@@ -46,6 +46,7 @@ runs:
           -e NAPI="$NAPI" \
           -e POSTBUILD="$POSTBUILD" \
           -e PREBUILD="$PREBUILD" \
+          -e PLATFORM="$PLATFORM" \
           -e TARGET_NAME="$TARGET_NAME" \
           -e NAPI_RS="$NAPI_RS" \
           -e NEON="$NEON" \
@@ -55,7 +56,9 @@ runs:
           -e NODE_MAX_VERSION="$NODE_MAX_VERSION" \
           -e NODE_VERSIONS="$NODE_VERSIONS" \
           -e NODE_HEADERS_DIRECTORY="/usr/node_headers" \
+          -e ARCH="$ARCH" \
           -e LIBC="$LIBC" \
+          -e PLATFORM="$PLATFORM" \
           -w /usr/action \
           $DOCKER_BUILDER \
           /bin/bash -c 'yarn && cd /usr/workspace && yarn exec node /usr/action'
@@ -65,4 +68,4 @@ runs:
       with:
         name: prebuilds-${{ github.job }}
         if-no-files-found: ignore
-        path: ${{ env.DIRECTORY_PATH }}/prebuilds/**/${{ github.job }}/*
+        path: ${{ env.DIRECTORY_PATH }}/prebuilds/**/${{ env.PLATFORM }}${{ env.LIBC }}-${{ env.ARCH }}/*
