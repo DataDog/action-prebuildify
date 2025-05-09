@@ -14,7 +14,7 @@
     "test": "node test"
   },
   "dependencies": {
-    "nan": "^2.22.0",
+    "nan": "^2.22.2",
     "node-gyp-build": "^3.9.0"
   },
   "devDependencies": {
@@ -24,5 +24,7 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.1.0",
     "eslint-plugin-standard": "^5.0.0"
-  }
+  },
+  "//": "Temporary fix to make nan@2.22.2 work with Node 24",
+  "postinstall": "sed -i '' 's/^.* Holder() const.*//' ./node_modules/nan/nan_callbacks_12_inl.h"
 }

@@ -71,6 +71,7 @@ function prebuildTarget (arch, target) {
 
   if (platform === 'linux' && arch === 'ia32' && isRust) return
   if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
+  if (platform === 'linux' && arch === 'arm' && semver.gte(target.version, '24.0.0')) return
   if (platform === 'win32' && arch === 'ia32' && semver.gte(target.version, '18.0.0')) return
 
   let cmd
