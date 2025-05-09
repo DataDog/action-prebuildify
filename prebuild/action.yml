@@ -51,6 +51,8 @@ runs:
           -e NEON="$NEON" \
           -e RUST="$RUST" \
           -e DIRECTORY_PATH="$DIRECTORY_PATH" \
+          -e NODE_MIN_VERSION="$NODE_MIN_VERSION" \
+          -e NODE_MAX_VERSION="$NODE_MAX_VERSION" \
           -e NODE_VERSIONS="$NODE_VERSIONS" \
           -e NODE_HEADERS_DIRECTORY="/usr/node_headers" \
           -e LIBC="$LIBC" \
