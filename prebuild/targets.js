@@ -18,9 +18,11 @@ const nodeTargets = [
   { version: '24.0.0', abi: '137' }
 ]
 
-function getFilteredNodeTargets (semverConstraint) {
+function getFilteredNodeTargets (semverConstraint, min, max) {
   return nodeTargets.filter((target) =>
-    semver.satisfies(target.version, semverConstraint)
+    semver.satisfies(target.version, semverConstraint) &&
+      semver.satisfies(target.version, `>=${min}`) &&
+      semver.satisfies(target.version, `<=${max}`)
   )
 }
 

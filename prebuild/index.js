@@ -19,6 +19,8 @@ const {
   NAPI_RS = 'false',
   NEON = 'false',
   RUST = 'false',
+  NODE_MIN_VERSION = '12',
+  NODE_MAX_VERSION = '24',
   NODE_VERSIONS = '>=12',
   POSTBUILD = '',
   PREBUILD = '',
@@ -28,7 +30,7 @@ const {
 } = process.env
 
 // https://nodejs.org/en/download/releases/
-const targets = getFilteredNodeTargets(NODE_VERSIONS)
+const targets = getFilteredNodeTargets(NODE_VERSIONS, NODE_MIN_VERSION, NODE_MAX_VERSION)
 
 const napiTargets = {
   'linux-arm64': 'aarch64-unknown-linux-gnu',

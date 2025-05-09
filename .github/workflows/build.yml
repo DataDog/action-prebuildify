@@ -123,7 +123,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@node-24
 
-  linuxglibc-arm64:
+  linuxglibc-217-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
     runs-on: ubuntu-24.04-arm
     name: linuxglibc-arm64
@@ -132,10 +132,26 @@ jobs:
     env:
       ARCH: arm64
       LIBC: glibc
+      NODE_MAX_VERSION: '23'
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@node-24
+
+  linuxglibc-228-arm64:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
+    runs-on: ubuntu-24.04-arm
+    name: linuxglibc-arm64
+    needs:
+      - platforms
+    env:
+      ARCH: arm64
+      LIBC: glibc
+      NODE_MIN_VERSION: '24'
+      DOCKER_BUILDER: rochdev/holy-node-box:24-amd64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxglibc-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-ia32') }}
@@ -151,7 +167,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@node-24
 
-  linuxglibc-x64:
+  linuxglibc-217-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
     runs-on: ubuntu-latest
     name: linuxglibc-x64
@@ -160,10 +176,26 @@ jobs:
     env:
       ARCH: x64
       LIBC: glibc
+      NODE_MAX_VERSION: '23'
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@v4
       - uses: DataDog/action-prebuildify/prebuild@node-24
+
+  linuxglibc-228-x64:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
+    runs-on: ubuntu-latest
+    name: linuxglibc-x64
+    needs:
+      - platforms
+    env:
+      ARCH: x64
+      LIBC: glibc
+      NODE_MIN_VERSION: '24'
+      DOCKER_BUILDER: rochdev/holy-node-box:24-amd64
+    steps:
+      - uses: actions/checkout@v4
+      - uses: DataDog/action-prebuildify/prebuild@main
 
   linuxmusl-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
