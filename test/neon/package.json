@@ -5,8 +5,8 @@
   "main": "index.node",
   "scripts": {
     "build": "cargo-cp-artifact -nc build/Release/test.node -- cargo build -Z build-std=std,panic_abort --message-format=json-render-diagnostics",
-    "build-debug": "npm run build --",
-    "build-release": "npm run build -- --release",
+    "build-debug": "yarn run build --",
+    "build-release": "yarn run build -- --release",
     "test": "node test"
   },
   "author": "Datadog Inc. <info@datadoghq.com>",
