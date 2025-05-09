@@ -7,9 +7,6 @@
     "variables": {
       "node_major": "<!(node --version | sed -e 's/^v\([0-9]*\).*$/\\1/')"
     },
-    "include_dirs": [
-      "<!(node -e \"require('nan')\")"
-    ],
     "xcode_settings": {
       "MACOSX_DEPLOYMENT_TARGET": "10.10",
       "OTHER_CFLAGS": [
