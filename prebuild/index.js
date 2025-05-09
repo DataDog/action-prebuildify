@@ -29,6 +29,7 @@ const {
   NODE_HEADERS_DIRECTORY = path.join(os.tmpdir(), 'prebuilds')
 } = process.env
 
+console.log(NODE_MIN_VERSION, NODE_MAX_VERSION)
 // https://nodejs.org/en/download/releases/
 const targets = getFilteredNodeTargets(NODE_VERSIONS, NODE_MIN_VERSION, NODE_MAX_VERSION)
 
@@ -51,6 +52,7 @@ prebuildify()
 
 function prebuildify () {
   fs.mkdirSync(NODE_HEADERS_DIRECTORY, { recursive: true })
+  console.log(`${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}`)
   fs.mkdirSync(`${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}`, { recursive: true })
 
   if (PREBUILD) {
