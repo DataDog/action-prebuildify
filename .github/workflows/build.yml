@@ -112,7 +112,6 @@ jobs:
   linuxglibc-arm:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm') }}
     runs-on: ubuntu-24.04-arm
-    name: linuxglibc-arm
     needs:
       - platforms
     env:
@@ -126,7 +125,6 @@ jobs:
   linuxglibc-217-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
     runs-on: ubuntu-24.04-arm
-    name: linuxglibc-arm64
     needs:
       - platforms
     env:
@@ -141,7 +139,6 @@ jobs:
   linuxglibc-228-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
     runs-on: ubuntu-24.04-arm
-    name: linuxglibc-arm64
     needs:
       - platforms
     env:
@@ -156,7 +153,6 @@ jobs:
   linuxglibc-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-ia32') }}
     runs-on: ubuntu-latest
-    name: linuxglibc-ia32
     needs:
       - platforms
     env:
@@ -170,7 +166,6 @@ jobs:
   linuxglibc-217-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
     runs-on: ubuntu-latest
-    name: linuxglibc-x64
     needs:
       - platforms
     env:
@@ -185,7 +180,6 @@ jobs:
   linuxglibc-228-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
     runs-on: ubuntu-latest
-    name: linuxglibc-x64
     needs:
       - platforms
     env:
@@ -200,7 +194,6 @@ jobs:
   linuxmusl-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
     runs-on: ubuntu-latest
-    name: linuxmusl-x64
     needs:
       - platforms
     env:
@@ -214,7 +207,6 @@ jobs:
   linuxmusl-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
     runs-on: ubuntu-24.04-arm
-    name: linuxmusl-arm64
     needs:
       - platforms
     env:
