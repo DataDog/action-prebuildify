@@ -219,7 +219,7 @@ jobs:
 
   win32-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-ia32') }}
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs:
       - platforms
     env:
@@ -230,7 +230,7 @@ jobs:
 
   win32-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
-    runs-on: windows-2019
+    runs-on: windows-2022
     needs:
       - platforms
     env:
@@ -382,7 +382,7 @@ jobs:
       - versions
       - prebuilds
       - platforms
-    runs-on: windows-2019
+    runs-on: windows-2022
     name: win32-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
