@@ -94,7 +94,7 @@ jobs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
       - id: versions
-        uses: DataDog/action-prebuildify/compute-matrix@main
+        uses: DataDog/action-prebuildify/compute-matrix@szegedi/new-windows
         with:
           min: ${{ inputs.min-node-version }}
 
@@ -104,7 +104,7 @@ jobs:
       platforms: ${{ steps.platforms.outputs.platforms }}
     steps:
       - id: platforms
-        uses: DataDog/action-prebuildify/platforms@main
+        uses: DataDog/action-prebuildify/platforms@szegedi/new-windows
         with:
           skip: ${{ inputs.skip }}
           only: ${{ inputs.only }}
@@ -121,7 +121,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/new-windows
 
   linuxglibc-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
@@ -135,7 +135,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/new-windows
 
   linuxglibc-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-ia32') }}
@@ -149,7 +149,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/new-windows
 
   linuxglibc-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
@@ -163,7 +163,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/new-windows
 
   linuxmusl-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
@@ -177,7 +177,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64-alpine
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/new-windows
 
   linuxmusl-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
@@ -191,7 +191,7 @@ jobs:
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8-alpine
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/new-windows
 
   # TODO: linuxmusl-arm
 
@@ -204,7 +204,7 @@ jobs:
       ARCH: arm64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/new-windows
 
   darwin-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
@@ -215,7 +215,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/new-windows
 
   win32-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-ia32') }}
@@ -226,7 +226,7 @@ jobs:
       ARCH: ia32
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/new-windows
 
   win32-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
@@ -237,7 +237,7 @@ jobs:
       ARCH: x64
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/new-windows
 
   # Tests
 
@@ -257,7 +257,7 @@ jobs:
     steps:
       - run: apk update && apk add bash build-base git python3 curl
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@szegedi/new-windows
 
   centos-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
@@ -291,7 +291,7 @@ jobs:
           npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
         shell: bash
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@szegedi/new-windows
 
   linux-arm64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
@@ -306,7 +306,7 @@ jobs:
     name: linux-arm64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@szegedi/new-windows
         with:
           node: ${{ matrix.node }}
 
@@ -323,7 +323,7 @@ jobs:
     name: linux-x64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@szegedi/new-windows
         with:
           node: ${{ matrix.node }}
 
@@ -369,7 +369,7 @@ jobs:
         if: ${{ matrix.node <= '14' }}
       #########################################################################
 
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@szegedi/new-windows
         with:
           node: ${{ matrix.node }}
 
@@ -390,7 +390,7 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@szegedi/new-windows
         with:
           node: ${{ matrix.node }}
 
