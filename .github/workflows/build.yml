@@ -94,7 +94,7 @@ jobs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
       - id: versions
-        uses: DataDog/action-prebuildify/compute-matrix@main
+        uses: DataDog/action-prebuildify/compute-matrix@06e04c31038bc538dc707c7164219cfd5efeac00 # main
         with:
           min: ${{ inputs.min-node-version }}
 
@@ -104,7 +104,7 @@ jobs:
       platforms: ${{ steps.platforms.outputs.platforms }}
     steps:
       - id: platforms
-        uses: DataDog/action-prebuildify/platforms@main
+        uses: DataDog/action-prebuildify/platforms@06e04c31038bc538dc707c7164219cfd5efeac00 # main
         with:
           skip: ${{ inputs.skip }}
           only: ${{ inputs.only }}
@@ -120,8 +120,8 @@ jobs:
       LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   linuxglibc-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
@@ -134,8 +134,8 @@ jobs:
       LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   linuxglibc-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-ia32') }}
@@ -148,8 +148,8 @@ jobs:
       LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-i386
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   linuxglibc-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
@@ -162,8 +162,8 @@ jobs:
       LIBC: glibc
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   linuxmusl-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
@@ -176,8 +176,8 @@ jobs:
       LIBC: musl
       DOCKER_BUILDER: rochdev/holy-node-box:12-amd64-alpine
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   linuxmusl-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
@@ -190,8 +190,8 @@ jobs:
       LIBC: musl
       DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8-alpine
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   # TODO: linuxmusl-arm
 
@@ -203,8 +203,8 @@ jobs:
     env:
       ARCH: arm64
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   darwin-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
@@ -214,8 +214,8 @@ jobs:
     env:
       ARCH: x64
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   win32-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-ia32') }}
@@ -225,8 +225,8 @@ jobs:
     env:
       ARCH: ia32
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   win32-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
@@ -236,8 +236,8 @@ jobs:
     env:
       ARCH: x64
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/prebuild@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   # Tests
 
@@ -256,8 +256,8 @@ jobs:
     name: alpine-test-${{ matrix.node }}
     steps:
       - run: apk update && apk add bash build-base git python3 curl
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/test@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   centos-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
@@ -281,7 +281,7 @@ jobs:
         run: |
           curl -LO https://unofficial-builds.nodejs.org/download/release/v20.9.0/node-v20.9.0-linux-x64-glibc-217.tar.xz
           tar -xf node-v20.9.0-linux-x64-glibc-217.tar.xz --strip-components 1 -C /node20217
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
       - name: Install Node for tests
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
@@ -291,7 +291,7 @@ jobs:
           npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
         shell: bash
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
   linux-arm64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
@@ -305,8 +305,8 @@ jobs:
     runs-on: ubuntu-24.04-arm
     name: linux-arm64-test-${{ matrix.node }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/test@06e04c31038bc538dc707c7164219cfd5efeac00 # main
         with:
           node: ${{ matrix.node }}
 
@@ -322,8 +322,8 @@ jobs:
     runs-on: ubuntu-latest
     name: linux-x64-test-${{ matrix.node }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/test@06e04c31038bc538dc707c7164219cfd5efeac00 # main
         with:
           node: ${{ matrix.node }}
 
@@ -339,8 +339,8 @@ jobs:
     runs-on: macos-13
     name: darwin-x64-test-${{ matrix.node }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
@@ -369,7 +369,7 @@ jobs:
         if: ${{ matrix.node <= '14' }}
       #########################################################################
 
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@06e04c31038bc538dc707c7164219cfd5efeac00 # main
         with:
           node: ${{ matrix.node }}
 
@@ -385,12 +385,12 @@ jobs:
     runs-on: windows-2022
     name: win32-test-${{ matrix.node }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
-      - uses: DataDog/action-prebuildify/test@main
+      - uses: DataDog/action-prebuildify/test@06e04c31038bc538dc707c7164219cfd5efeac00 # main
         with:
           node: ${{ matrix.node }}
 
@@ -416,7 +416,7 @@ jobs:
     runs-on: ubuntu-latest
     name: prebuilds
     steps:
-      - uses: actions/upload-artifact/merge@v4
+      - uses: actions/upload-artifact/merge@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: prebuilds
           pattern: prebuilds-*
