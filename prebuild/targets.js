@@ -15,7 +15,8 @@ const nodeTargets = [
   { version: '21.0.0', abi: '120' },
   { version: '22.0.0', abi: '127' },
   { version: '23.0.0', abi: '131' },
-  { version: '24.0.0', abi: '137' }
+  { version: '24.0.0', abi: '137' },
+  { version: '25.0.0', abi: '141' }
 ]
 
 function getFilteredNodeTargets (semverConstraint) {
