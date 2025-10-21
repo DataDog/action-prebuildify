@@ -197,7 +197,7 @@ jobs:
 
   darwin-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-arm64') }}
-    runs-on: macos-14
+    runs-on: macos-15
     needs:
       - platforms
     env:
@@ -208,7 +208,7 @@ jobs:
 
   darwin-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
-    runs-on: macos-13
+    runs-on: macos-15
     needs:
       - platforms
     env:
