@@ -27,8 +27,16 @@ const {
   NODE_HEADERS_DIRECTORY = path.join(os.tmpdir(), 'prebuilds')
 } = process.env
 
+let alpineVersion
+if (platform === 'linux' && libc === 'musl') {
+  try {
+    alpineVersion = fs.readFileSync('/etc/alpine-release', 'utf8').trim()
+  } catch (err) {
+    // File doesn't exist or can't be read (e.g., on non-Alpine systems)
+  }
+}
 // https://nodejs.org/en/download/releases/
-const targets = getFilteredNodeTargets(NODE_VERSIONS)
+const targets = getFilteredNodeTargets(NODE_VERSIONS, alpineVersion)
 
 const napiTargets = {
   'linux-arm64': 'aarch64-unknown-linux-gnu',

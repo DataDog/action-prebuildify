@@ -6,7 +6,7 @@ const { values } = parseArgs({
   args: process.argv.slice(2),
   options: {
     min: { type: 'string', default: '12' },
-    max: { type: 'string', default: '24' },
+    max: { type: 'string', default: '25' },
     step: { type: 'string', default: '2' }
   }
 })

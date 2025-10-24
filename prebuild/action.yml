@@ -63,4 +63,4 @@ runs:
       with:
         name: prebuilds-${{ github.job }}
         if-no-files-found: ignore
-        path: ${{ env.DIRECTORY_PATH }}/prebuilds/**/${{ github.job }}/*
+        path: ${{ env.DIRECTORY_PATH }}/prebuilds/**/${{ env.PREBUILDS_DIR || github.job }}/*
