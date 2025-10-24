@@ -300,12 +300,19 @@ jobs:
       - platforms
     runs-on: ubuntu-latest
     container:
-      image: centos:${{ matrix.node < 18 && '7' || '8' }}
+      image: ${{ matrix.node < 18 && 'centos:7' || (matrix.node < 25 && 'centos:8' || 'rockylinux:9') }}
       volumes:
         - /node20217:/node20217:rw,rshared
         - /node20217:/__e/node20:ro,rshared
     name: centos-test-${{ matrix.node }}
     steps:
+      # Rocky Linux 9 doesn't seem to come with xz preinstalled, and on x64 it
+      # also lacks libatomic which Node.js 25 needs. (Weirdly, it does come with
+      # it on arm64.)
+      - name: Install libraries for Rocky Linux 9
+        if: ${{ matrix.node >= 25 }}
+        run: |
+          dnf install -y libatomic xz
       # https://github.com/actions/runner/issues/2906#issuecomment-2109514798
       - name: Install Node for runner (CentOS-compatible)
         run: |
