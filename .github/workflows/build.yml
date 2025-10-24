@@ -306,6 +306,17 @@ jobs:
         - /node20217:/__e/node20:ro,rshared
     name: centos-test-${{ matrix.node }}
     steps:
+      - name: Install libatomic for Node 25 - CentOS 8 vault repos (EOL)
+        if: matrix.node == '25'
+        run: |
+          for f in /etc/yum.repos.d/CentOS-*.repo; do
+            sed -i -e 's|^mirrorlist=|#mirrorlist=|g' \
+                   -e 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' "$f"
+          done
+          yum clean all
+          yum -y update
+          yum -y install libatomic
+          echo "libatomic installed successfully."
       # https://github.com/actions/runner/issues/2906#issuecomment-2109514798
       - name: Install Node for runner (CentOS-compatible)
         run: |
