@@ -313,8 +313,6 @@ jobs:
             sed -i -e 's|^mirrorlist=|#mirrorlist=|g' \
                    -e 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' "$f"
           done
-          yum clean all
-          yum -y update
           yum -y install libatomic
           echo "libatomic installed successfully."
       # https://github.com/actions/runner/issues/2906#issuecomment-2109514798
