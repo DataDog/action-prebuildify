@@ -4,7 +4,7 @@ GitHub Actions reusable workflow to generate prebuilds for a Node native add-on.
 
 ## Usage
 
-This workflow can be used to generate Node 12 - 24 prebuilds for Linux, macOS
+This workflow can be used to generate Node 12 - 25 prebuilds for Linux, macOS
 and Windows. The prebuilds will be stored in the `prebuilds` folder which should
 be added to `.gitignore`, and can be loaded using
 [node-gyp-build](https://www.npmjs.com/package/node-gyp-build) with

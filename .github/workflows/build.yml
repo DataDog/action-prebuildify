@@ -193,11 +193,41 @@ jobs:
       - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
       - uses: DataDog/action-prebuildify/prebuild@06e04c31038bc538dc707c7164219cfd5efeac00 # main
 
+  linuxmusl-x64-alpine-3-17:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
+    runs-on: ubuntu-latest
+    name: linuxmusl-x64-alpine-3-17
+    needs:
+      - platforms
+    env:
+      ARCH: x64
+      LIBC: musl
+      DOCKER_BUILDER: rochdev/holy-node-box:12-amd64-alpine-3.17
+      PREBUILDS_DIR: linuxmusl-x64
+    steps:
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/node-25
+
+  linuxmusl-arm64-alpine-3-17:
+    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
+    runs-on: ubuntu-24.04-arm
+    name: linuxmusl-arm64-alpine-3-17
+    needs:
+      - platforms
+    env:
+      ARCH: arm64
+      LIBC: musl
+      DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8-alpine-3.17
+      PREBUILDS_DIR: linuxmusl-arm64
+    steps:
+      - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
+      - uses: DataDog/action-prebuildify/prebuild@szegedi/node-25
+
   # TODO: linuxmusl-arm
 
   darwin-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-arm64') }}
-    runs-on: macos-14
+    runs-on: macos-15
     needs:
       - platforms
     env:
@@ -208,7 +238,7 @@ jobs:
 
   darwin-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
-    runs-on: macos-13
+    runs-on: macos-15
     needs:
       - platforms
     env:
@@ -276,6 +306,15 @@ jobs:
         - /node20217:/__e/node20:ro,rshared
     name: centos-test-${{ matrix.node }}
     steps:
+      - name: Install libatomic for Node 25 - CentOS 8 vault repos (EOL)
+        if: matrix.node == '25'
+        run: |
+          for f in /etc/yum.repos.d/CentOS-*.repo; do
+            sed -i -e 's|^mirrorlist=|#mirrorlist=|g' \
+                   -e 's|^#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' "$f"
+          done
+          yum -y install libatomic
+          echo "libatomic installed successfully."
       # https://github.com/actions/runner/issues/2906#issuecomment-2109514798
       - name: Install Node for runner (CentOS-compatible)
         run: |
@@ -403,6 +442,8 @@ jobs:
       - linuxglibc-ia32
       - linuxmusl-x64
       - linuxmusl-arm64
+      - linuxmusl-x64-alpine-3-17
+      - linuxmusl-arm64-alpine-3-17
       - linuxglibc-x64
       - darwin-arm64
       - darwin-x64
