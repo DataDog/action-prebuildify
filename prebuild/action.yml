@@ -15,6 +15,10 @@ runs:
       if: ${{ env.GYP == 'true' && env.CACHE == 'true' }}
       id: compute-node-targets-hash
       shell: bash
+    - name: Check GitHub Output
+      shell: bash
+      run: |
+        echo "Github Output: $(cat $GITHUB_OUTPUT)"
     - name: Restore node headers
       if: ${{ env.GYP == 'true' && env.CACHE == 'true' }}
       id: cache-node-headers
