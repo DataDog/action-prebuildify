@@ -16,4 +16,4 @@ jobs:
       napi: false
       package-manager: yarn
       target-name: test
-      nightly-versions: 26-nightly
+      nightly-versions: true

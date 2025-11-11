@@ -47,7 +47,7 @@ async function getFilteredNodeTargets (semverConstraint, alpineVersion) {
   )
 
   // Only get nightly target if NIGHTLY_VERSIONS is set
-  if (process.env.NIGHTLY_VERSIONS) {
+  if (process.env.NIGHTLY_VERSION) {
     const nightlyTarget = await getNightlyTarget()
     filteredTargets.push(nightlyTarget)
   }
