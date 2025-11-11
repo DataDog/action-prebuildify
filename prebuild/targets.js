@@ -1,7 +1,6 @@
 'use strict'
 
 const semver = require('semver')
-const fetch = require('node-fetch')
 
 const nodeTargets = [
   { version: '12.0.0', abi: '72', alpineVersion: '~3.14' },
@@ -59,6 +58,7 @@ async function getNightlyTarget () {
   let response
   try {
     response = await fetch('https://nodejs.org/download/nightly/index.json')
+    console.log('This is the response ', response) // eslint-disable-line no-console
   } catch (error) {
     return
   }

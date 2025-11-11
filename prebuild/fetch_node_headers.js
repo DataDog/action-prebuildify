@@ -24,10 +24,12 @@ function fetchNodeHeaders (version, devDir) {
   return new Promise((resolve, reject) => {
     operation.attempt(() => {
       let cmd
-      if (version.includes('nightly')) {
+      const isNightly = version.includes('nightly')
+
+      if (isNightly) {
         cmd = [
           'node-gyp install',
-          '--dist-url=https://nodejs.org/download/nightly/v26.0.0-nightly202511108a76958005',
+          '--dist-url=https://nodejs.org/download/nightly',
           `--target=${version}`,
           `--devdir=${devDir}`
         ].join(' ')
@@ -42,6 +44,10 @@ function fetchNodeHeaders (version, devDir) {
       try {
         execSync(cmd, { stdio, shell })
       } catch (err) {
+        if (isNightly) {
+          console.log('Failed to execute nightly: ', err) // eslint-disable-line no-console
+          return
+        }
         if (operation.retry(err)) {
           return
         } else if (err) {
@@ -65,7 +71,7 @@ function computeNodeTargetsHash (targets) {
 
 async function fetchAllNodeHeaders (targets, targetDir) {
   for (const target of targets) {
-    await fetchNodeHeaders(target.version, targetDir)
+    fetchNodeHeaders(target.version, targetDir)
   }
 }
 
@@ -78,6 +84,7 @@ async function main () {
     await fetchAllNodeHeaders(targets, process.argv[2])
   }
 }
+
 
 main().catch((err) => {
   console.error(err) // eslint-disable-line no-console
