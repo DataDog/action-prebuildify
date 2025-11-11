@@ -8,7 +8,10 @@ const stdio = [0, 1, 2]
 const shell = process.env.SHELL
 
 const { NODE_VERSIONS = '>=12' } = process.env
-const targets = getFilteredNodeTargets(NODE_VERSIONS)
+
+async function initializeTargets () {
+  return await getFilteredNodeTargets(NODE_VERSIONS)
+}
 
 function fetchNodeHeaders (version, devDir) {
   const operation = retry.operation({
@@ -20,11 +23,22 @@ function fetchNodeHeaders (version, devDir) {
   })
   return new Promise((resolve, reject) => {
     operation.attempt(() => {
-      const cmd = [
-        'node-gyp install',
-        `--target=${version}`,
-        `--devdir=${devDir}`
-      ].join(' ')
+      let cmd
+      if (version.includes('nightly')) {
+        cmd = [
+          'node-gyp install',
+          `--dist-url=https://nodejs.org/download/nightly/v26.0.0-nightly202511108a76958005`,
+          `--target=${version}`,
+          `--devdir=${devDir}`
+        ].join(' ')
+      } else {
+        cmd = [
+          'node-gyp install',
+          `--target=${version}`,
+          `--devdir=${devDir}`
+        ].join(' ')
+      }
+
       try {
         execSync(cmd, { stdio, shell })
       } catch (err) {
@@ -40,7 +54,7 @@ function fetchNodeHeaders (version, devDir) {
   })
 }
 
-function computeNodeTargetsHash () {
+function computeNodeTargetsHash (targets) {
   const crypto = require('crypto')
   const hash = crypto
     .createHash('sha256')
@@ -49,14 +63,23 @@ function computeNodeTargetsHash () {
   console.log(`hash=${hash}`) // eslint-disable-line no-console
 }
 
-function fetchAllNodeHeaders (targetDir) {
+async function fetchAllNodeHeaders (targets, targetDir) {
   for (const target of targets) {
-    fetchNodeHeaders(target.version, targetDir)
+    await fetchNodeHeaders(target.version, targetDir)
   }
 }
 
-if (process.argv.length === 2) {
-  computeNodeTargetsHash()
-} else {
-  fetchAllNodeHeaders(process.argv[2])
+async function main () {
+  const targets = await initializeTargets()
+
+  if (process.argv.length === 2) {
+    computeNodeTargetsHash(targets)
+  } else {
+    await fetchAllNodeHeaders(targets, process.argv[2])
+  }
 }
+
+main().catch((err) => {
+  console.error(err) // eslint-disable-line no-console
+  process.exit(1)
+})

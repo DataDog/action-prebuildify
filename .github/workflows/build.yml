@@ -68,6 +68,11 @@ on:
         default: 12
         required: false
         type: number
+      nightly-versions:
+        description: Single nightly Node.js version to build (e.g., "26-nightly")
+        default: ''
+        required: false
+        type: string
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -97,6 +102,7 @@ jobs:
         uses: DataDog/action-prebuildify/compute-matrix@b4f429ed58677e0d608de76a04f4a385a5f25dfb # main
         with:
           min: ${{ inputs.min-node-version }}
+          nightly: ${{ inputs.nightly-versions }}
 
   platforms:
     runs-on: ubuntu-latest

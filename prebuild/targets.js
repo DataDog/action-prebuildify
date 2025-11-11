@@ -35,14 +35,43 @@ function isAlpineVersionSupported (alpineVersion) {
   )
 }
 
-function getFilteredNodeTargets (semverConstraint, alpineVersion) {
+async function getFilteredNodeTargets (semverConstraint, alpineVersion) {
   if (alpineVersion !== undefined && !isAlpineVersionSupported(alpineVersion)) {
     throw new Error(`Alpine version ${alpineVersion} is not supported.`)
   }
-  return nodeTargets.filter((target) =>
+
+  const filteredTargets = nodeTargets.filter((target) =>
     semver.satisfies(target.version, semverConstraint) &&
     (alpineVersion === undefined || semver.satisfies(alpineVersion, target.alpineVersion))
   )
+
+  // Only get nightly target if NIGHTLY_VERSIONS is set
+  if (process.env.NIGHTLY_VERSIONS) {
+    const nightlyTarget = await getNightlyTarget()
+    filteredTargets.push(nightlyTarget)
+  }
+
+  return filteredTargets
+}
+
+async function getNightlyTarget () {
+  let response
+  try {
+    response = await fetch('https://nodejs.org/download/nightly/index.json')
+  } catch (error) {
+    return
+  }
+
+  const data = await response.json()
+  const nightlyVersion = data.find(release => release.version.includes('nightly')).version
+  const abiVersion = data.find(release => release.version.includes('nightly')).modules
+
+  return {
+    version: nightlyVersion,
+    abi: abiVersion,
+    isNightly: true,
+    alpineVersion: '~3.17'
+  }
 }
 
 module.exports = { getFilteredNodeTargets }

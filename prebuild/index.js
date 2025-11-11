@@ -36,7 +36,9 @@ if (platform === 'linux' && libc === 'musl') {
   }
 }
 // https://nodejs.org/en/download/releases/
-const targets = getFilteredNodeTargets(NODE_VERSIONS, alpineVersion)
+async function initializeTargets() {
+  return await getFilteredNodeTargets(NODE_VERSIONS, alpineVersion)
+}
 
 const napiTargets = {
   'linux-arm64': 'aarch64-unknown-linux-gnu',
@@ -53,9 +55,9 @@ const napiTargets = {
   'win32-x64': 'x86_64-pc-windows-msvc'
 }
 
-prebuildify()
+async function run() {
+  const targets = await initializeTargets()
 
-function prebuildify () {
   fs.mkdirSync(NODE_HEADERS_DIRECTORY, { recursive: true })
   fs.mkdirSync(`${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}`, { recursive: true })
 
@@ -74,8 +76,11 @@ function prebuildify () {
   }
 }
 
+run().catch(console.error)
+
 function prebuildTarget (arch, target) {
   const isRust = NAPI_RS === 'true' || NEON === 'true' || RUST === 'true'
+  const isNightly = target.isNightly || target.version.includes('nightly')
 
   if (platform === 'linux' && arch === 'ia32' && isRust) return
   if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
@@ -116,9 +121,21 @@ function prebuildTarget (arch, target) {
       // taken from https://github.com/nodejs/node-gyp/issues/2673#issuecomment-1196931379
       '--openssl_fips=""'
     ].join(' ')
-  }
 
-  execSync(cmd, { cwd, stdio, shell })
+    // Special handling for nightly versions with node-gyp
+    if (isNightly) {
+      try {
+        execSync(cmd, { cwd, stdio, shell })
+      } catch (error) {
+        // eslint-disable-next-line no-console
+        console.error(`node-gyp failed for nightly version ${target.version}`)
+        return
+      }
+      return
+    } else {
+      execSync(cmd, { cwd, stdio, shell })
+    }
+  }
 
   if (RUST === 'true') {
     const names = fs.readdirSync(`${DIRECTORY_PATH}/build/Release`)
