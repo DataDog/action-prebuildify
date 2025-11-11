@@ -70,7 +70,7 @@ on:
         type: number
       nightly-versions:
         description: Build with nightly Node.js versions
-        default: ''
+        default: false
         required: false
         type: boolean
 
