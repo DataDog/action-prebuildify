@@ -68,6 +68,7 @@ async function run () {
   if (NAPI === 'true' || NAPI_RS === 'true' || NEON === 'true' || RUST === 'true') {
     prebuildTarget(arch, { version: targets[0].version, abi: 'napi' })
   } else {
+    console.log(`These are the targets ${targets}`)
     targets.forEach(target => prebuildTarget(arch, target))
   }
 

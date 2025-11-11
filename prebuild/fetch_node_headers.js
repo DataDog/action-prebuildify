@@ -25,6 +25,7 @@ function fetchNodeHeaders (version, devDir) {
     operation.attempt(() => {
       let cmd
       if (version.includes('nightly')) {
+        console.log('Entering to get nightly') // eslint-disable-line no-console
         cmd = [
           'node-gyp install',
           '--dist-url=https://nodejs.org/download/nightly/v26.0.0-nightly202511108a76958005',
@@ -42,6 +43,7 @@ function fetchNodeHeaders (version, devDir) {
       try {
         execSync(cmd, { stdio, shell })
       } catch (err) {
+        console.log('Failed to execute nightly: ', err) // eslint-disable-line no-console
         if (operation.retry(err)) {
           return
         } else if (err) {

@@ -59,6 +59,7 @@ async function getNightlyTarget () {
   let response
   try {
     response = await fetch('https://nodejs.org/download/nightly/index.json')
+    console.log('This is the response ', response) // eslint-disable-line no-console
   } catch (error) {
     return
   }
