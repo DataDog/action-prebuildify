@@ -1,6 +1,7 @@
 'use strict'
 
 const semver = require('semver')
+const fetch = require('node-fetch')
 
 const nodeTargets = [
   { version: '12.0.0', abi: '72', alpineVersion: '~3.14' },

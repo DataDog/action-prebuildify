@@ -36,7 +36,7 @@ if (platform === 'linux' && libc === 'musl') {
   }
 }
 // https://nodejs.org/en/download/releases/
-async function initializeTargets() {
+async function initializeTargets () {
   return await getFilteredNodeTargets(NODE_VERSIONS, alpineVersion)
 }
 
@@ -55,7 +55,7 @@ const napiTargets = {
   'win32-x64': 'x86_64-pc-windows-msvc'
 }
 
-async function run() {
+async function run () {
   const targets = await initializeTargets()
 
   fs.mkdirSync(NODE_HEADERS_DIRECTORY, { recursive: true })
@@ -76,7 +76,7 @@ async function run() {
   }
 }
 
-run().catch(console.error)
+run().catch(() => {})
 
 function prebuildTarget (arch, target) {
   const isRust = NAPI_RS === 'true' || NEON === 'true' || RUST === 'true'

@@ -27,7 +27,7 @@ function fetchNodeHeaders (version, devDir) {
       if (version.includes('nightly')) {
         cmd = [
           'node-gyp install',
-          `--dist-url=https://nodejs.org/download/nightly/v26.0.0-nightly202511108a76958005`,
+          '--dist-url=https://nodejs.org/download/nightly/v26.0.0-nightly202511108a76958005',
           `--target=${version}`,
           `--devdir=${devDir}`
         ].join(' ')
