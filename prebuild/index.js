@@ -57,10 +57,8 @@ const napiTargets = {
 
 async function run () {
   const targets = await initializeTargets()
-
   fs.mkdirSync(NODE_HEADERS_DIRECTORY, { recursive: true })
   fs.mkdirSync(`${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}`, { recursive: true })
-
   if (PREBUILD) {
     execSync(PREBUILD, { cwd, stdio, shell })
   }
@@ -68,7 +66,6 @@ async function run () {
   if (NAPI === 'true' || NAPI_RS === 'true' || NEON === 'true' || RUST === 'true') {
     prebuildTarget(arch, { version: targets[0].version, abi: 'napi' })
   } else {
-    console.log(`These are the targets ${targets}`) // eslint-disable-line no-console
     targets.forEach(target => prebuildTarget(arch, target))
   }
 
@@ -121,18 +118,17 @@ function prebuildTarget (arch, target) {
       // Workaround for https://github.com/nodejs/node-gyp/issues/2750
       // taken from https://github.com/nodejs/node-gyp/issues/2673#issuecomment-1196931379
       '--openssl_fips=""'
-    ].join(' ')
-
-    // Special handling for nightly versions with node-gyp
+    ]
+    // This allows node-gyp to point to the nightly dist
+    if (isNightly) cmd.push('--dist-url=https://nodejs.org/download/nightly')
+    cmd = cmd.join(' ')
     if (isNightly) {
       try {
         execSync(cmd, { cwd, stdio, shell })
       } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error(`node-gyp failed for nightly version ${target.version}`)
+        console.error(`node-gyp failed for nightly version ${target.version}`, error) // eslint-disable-line no-console
         return
       }
-      return
     } else {
       execSync(cmd, { cwd, stdio, shell })
     }

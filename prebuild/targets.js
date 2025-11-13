@@ -45,7 +45,7 @@ async function getFilteredNodeTargets (semverConstraint, alpineVersion) {
     (alpineVersion === undefined || semver.satisfies(alpineVersion, target.alpineVersion))
   )
 
-  // Only get nightly target if NIGHTLY_VERSIONS is set
+  // Only get nightly target if NIGHTLY_VERSION env is set
   if (process.env.NIGHTLY_VERSION) {
     const nightlyTarget = await getNightlyTarget()
     filteredTargets.push(nightlyTarget)
@@ -56,22 +56,27 @@ async function getFilteredNodeTargets (semverConstraint, alpineVersion) {
 
 async function getNightlyTarget () {
   let response
-  try {
-    response = await fetch('https://nodejs.org/download/nightly/index.json')
-    console.log('This is the response ', response) // eslint-disable-line no-console
-  } catch (error) {
-    return
+  let data
+  let versions = process.env.NIGHTLY_VERSION
+
+  if (versions === 'latest') {
+    try {
+      response = await fetch('https://nodejs.org/download/nightly/index.json') // eslint-disable-line no-undef
+    } catch (err) {
+      return
+    }
+    data = await response.json()
+    data = data[0]
+  } else {
+    versions = versions.split(',').map(val => val.trim())
+    data = { version: versions[0], modules: versions[1], alpineVersion: versions[2] }
   }
 
-  const data = await response.json()
-  const nightlyVersion = data.find(release => release.version.includes('nightly')).version
-  const abiVersion = data.find(release => release.version.includes('nightly')).modules
-
   return {
-    version: nightlyVersion,
-    abi: abiVersion,
+    version: data.version,
+    abi: data.modules,
     isNightly: true,
-    alpineVersion: '~3.17'
+    alpineVersion: data.alpineVersion || '~3.17'
   }
 }
 
