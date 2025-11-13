@@ -22,7 +22,7 @@ jobs:
       cache: false # enable caching of dependencies based on lockfile
       directory-path: '.' # The path to the directory containing your build files, relative to the repo root.
       min-node-version: 12 # The minimum Node.js version to build and test
-      nightly-versions: '' # Full nightly node, abi and alpine version to build (e.g., "v26.0.0-1234567890,142,~3.17" or "latest")
+      nightly-versions: '' # Full nightly node, abi and alpine versions to build (e.g., "v26.0.0-1234567890,142,~3.17" or "latest")
       napi: false # generate single Node-API binary for all versions of Node
       napi-rs: false # Whether or not this build is for a napi-rs project.
       neon: false # Whether or not this build is for a Neon project.

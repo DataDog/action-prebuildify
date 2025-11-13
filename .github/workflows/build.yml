@@ -69,7 +69,7 @@ on:
         required: false
         type: number
       nightly-versions:
-        description: Build with nightly Node.js versions, for latest use 'latest' for specified version use the following format nodeVersion,abiVersion,alpineVersion
+        description: Versions to build again, use 'latest' to use the nightliest node version, for specific version use the following format 'nodeVersion,abiVersion,alpineVersion'
         required: false
         type: string
 
