@@ -68,8 +68,8 @@ on:
         default: 12
         required: false
         type: number
-      nightly-versions:
-        description: Versions to build again, use 'latest' to use the nightliest node version, for specific version use the following format 'nodeVersion,abiVersion,alpineVersion'
+      nightly-version:
+        description: Versions to build again, use 'latest' to use the most recent nightly node version, for a specific version use the following format 'nodeVersion,abiVersion,alpineVersion'
         required: false
         type: string
 
@@ -90,7 +90,7 @@ env:
   GYP: ${{ !inputs.napi && !inputs.napi-rs && !inputs.neon && !inputs.rust }}
   DIRECTORY_PATH: ${{ inputs.directory-path }}
   NODE_VERSIONS: '>=${{ inputs.min-node-version }}'
-  NIGHTLY_VERSION: ${{ inputs.nightly-versions && true }}
+  NIGHTLY_VERSION: ${{ inputs.nightly-version }}
 
 jobs:
   versions:

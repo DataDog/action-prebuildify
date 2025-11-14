@@ -74,8 +74,6 @@ async function run () {
   }
 }
 
-run().catch(() => {})
-
 function prebuildTarget (arch, target) {
   const isRust = NAPI_RS === 'true' || NEON === 'true' || RUST === 'true'
   const isNightly = target.isNightly || target.version.includes('nightly')
@@ -169,3 +167,5 @@ function installRust () {
   ].join(' -- '), { cwd, stdio, shell })
   execSync('rustup show active-toolchain || rustup toolchain install', { cwd, stdio, shell })
 }
+
+run()
