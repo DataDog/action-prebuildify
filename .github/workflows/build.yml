@@ -404,7 +404,7 @@ jobs:
       - run: |
           npm install -g node-gyp@9
           npm config set node_gyp $(npm prefix -g)/lib/node_modules/node-gyp/bin/node-gyp.js
-          pip3 install setuptools
+          pip3 install --break-system-packages setuptools
         if: ${{ matrix.node <= '14' }}
       #########################################################################
 
