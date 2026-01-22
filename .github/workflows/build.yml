@@ -206,7 +206,7 @@ jobs:
       PREBUILDS_DIR: linuxmusl-x64
     steps:
       - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
-      - uses: DataDog/action-prebuildify/prebuild@szegedi/node-25
+      - uses: DataDog/action-prebuildify/prebuild@f428f5dd7e18628365f5384edfb1d9c93b4e226b
 
   linuxmusl-arm64-alpine-3-17:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
@@ -221,7 +221,7 @@ jobs:
       PREBUILDS_DIR: linuxmusl-arm64
     steps:
       - uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba4906955 # v4.3.0
-      - uses: DataDog/action-prebuildify/prebuild@szegedi/node-25
+      - uses: DataDog/action-prebuildify/prebuild@f428f5dd7e18628365f5384edfb1d9c93b4e226b
 
   # TODO: linuxmusl-arm
 
