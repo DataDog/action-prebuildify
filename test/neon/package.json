@@ -13,7 +13,7 @@
   "license": "Apache-2.0",
   "private": true,
   "devDependencies": {
-    "cargo-cp-artifact": "^0.1"
+    "cargo-cp-artifact": "^0.1.9"
   },
   "dependencies": {
     "node-gyp-build": "^3.9.0"
