@@ -54,7 +54,7 @@ function prebuildFilename (abi, baseName) {
     return `${baseName}${libcTag}.node${abiTag}.node`
   }
   if (abi === 'napi') {
-    return `node-napi.node`
+    return 'node-napi.node'
   }
   return `node-${abi}.node`
 }
