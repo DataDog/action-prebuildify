@@ -68,6 +68,11 @@ on:
         default: 12
         required: false
         type: number
+      node-gyp-build-major:
+        description: Major version of node-gyp-build used by the package (3 or 4). Controls the prebuild directory and filename naming convention.
+        default: 3
+        required: false
+        type: number
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
@@ -86,6 +91,7 @@ env:
   GYP: ${{ !inputs.napi && !inputs.napi-rs && !inputs.neon && !inputs.rust }}
   DIRECTORY_PATH: ${{ inputs.directory-path }}
   NODE_VERSIONS: '>=${{ inputs.min-node-version }}'
+  NODE_GYP_BUILD_MAJOR: ${{ inputs.node-gyp-build-major }}
 
 jobs:
   versions:

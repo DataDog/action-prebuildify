@@ -24,8 +24,40 @@ const {
   PREBUILD = '',
   DIRECTORY_PATH = '.',
   TARGET_NAME = 'addon',
-  NODE_HEADERS_DIRECTORY = path.join(os.tmpdir(), 'prebuilds')
+  NODE_HEADERS_DIRECTORY = path.join(os.tmpdir(), 'prebuilds'),
+  NODE_GYP_BUILD_MAJOR = '3'
 } = process.env
+
+// Prebuild directory and filename conventions differ between node-gyp-build v3 and v4:
+//
+// v3: prebuilds/${platform}${libc}-${arch}/node-${abi}.node
+//     e.g. prebuilds/linuxglibc-arm64/node-115.node
+//
+// v4: prebuilds/${platform}-${arch}/${TARGET_NAME}[.musl].node.[napi|abi${N}].node
+//     e.g. prebuilds/linux-arm64/dd_pprof.node.abi115.node
+//          prebuilds/linux-arm64/dd_pprof.musl.node.napi.node
+//
+// When NODE_GYP_BUILD_MAJOR=4, libc is encoded as a filename tag ('musl' only;
+// glibc is the default and needs no tag) rather than in the directory name.
+
+function prebuildDir () {
+  if (NODE_GYP_BUILD_MAJOR === '4') {
+    return `${DIRECTORY_PATH}/prebuilds/${platform}-${arch}`
+  }
+  return `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}`
+}
+
+function prebuildFilename (abi, baseName) {
+  if (NODE_GYP_BUILD_MAJOR === '4') {
+    const libcTag = libc === 'musl' ? '.musl' : ''
+    const abiTag = abi === 'napi' ? '.napi' : `.abi${abi}`
+    return `${baseName}${libcTag}.node${abiTag}.node`
+  }
+  if (abi === 'napi') {
+    return `node-napi.node`
+  }
+  return `node-${abi}.node`
+}
 
 let alpineVersion
 if (platform === 'linux' && libc === 'musl') {
@@ -57,7 +89,7 @@ prebuildify()
 
 function prebuildify () {
   fs.mkdirSync(NODE_HEADERS_DIRECTORY, { recursive: true })
-  fs.mkdirSync(`${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}`, { recursive: true })
+  fs.mkdirSync(prebuildDir(), { recursive: true })
 
   if (PREBUILD) {
     execSync(PREBUILD, { cwd, stdio, shell })
@@ -124,13 +156,13 @@ function prebuildTarget (arch, target) {
     const names = fs.readdirSync(`${DIRECTORY_PATH}/build/Release`)
 
     for (const name of names) {
-      const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${name}`
-        .replace('.node', `-${target.abi}.node`)
+      const baseName = name.replace(/\.node$/, '')
+      const output = `${prebuildDir()}/${prebuildFilename(target.abi, baseName)}`
 
       fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}`, output)
     }
   } else {
-    const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/node-${target.abi}.node`
+    const output = `${prebuildDir()}/${prebuildFilename(target.abi, TARGET_NAME)}`
     const input = NAPI_RS === 'true'
       ? `${DIRECTORY_PATH}/${TARGET_NAME}.node`
       : `${DIRECTORY_PATH}/build/Release/${TARGET_NAME}.node`
