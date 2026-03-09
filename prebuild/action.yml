@@ -54,6 +54,7 @@ runs:
           -e NODE_VERSIONS="$NODE_VERSIONS" \
           -e NODE_HEADERS_DIRECTORY="/usr/node_headers" \
           -e LIBC="$LIBC" \
+          -e NODE_GYP_BUILD_MAJOR="$NODE_GYP_BUILD_MAJOR" \
           -w /usr/action \
           $DOCKER_BUILDER \
           /bin/bash -c 'yarn && cd /usr/workspace && yarn exec node /usr/action'
@@ -64,3 +65,10 @@ runs:
         name: prebuilds-${{ github.job }}
         if-no-files-found: ignore
         path: ${{ env.DIRECTORY_PATH }}/prebuilds/**/${{ env.PREBUILDS_DIR || github.job }}/*
+      if: ${{ env.NODE_GYP_BUILD_MAJOR != '4' }}
+    - uses: actions/upload-artifact@v4
+      with:
+        name: prebuilds-${{ github.job }}
+        if-no-files-found: ignore
+        path: ${{ env.DIRECTORY_PATH }}/prebuilds/**/*
+      if: ${{ env.NODE_GYP_BUILD_MAJOR == '4' }}
