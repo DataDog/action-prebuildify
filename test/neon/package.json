@@ -16,6 +16,6 @@
     "cargo-cp-artifact": "^0.1"
   },
   "dependencies": {
-    "node-gyp-build": "^3.9.0"
+    "node-gyp-build": "^4.8.4"
   }
 }
