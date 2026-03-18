@@ -177,18 +177,31 @@ function installRust () {
   process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
   process.env.CARGO_BUILD_TARGET = target
 
-  if (platform === 'linux' && libc === 'musl') {
-    process.env.RUSTFLAGS = '-C target-feature=-crt-static'
-  }
-
-  // sh.rustup.rs now auto-detects the Windows host and passes --default-host
-  // itself; passing it again causes rustup-init to error with "cannot be used
-  // multiple times". Drop it from our args and add the cross-compilation
-  // target separately instead.
   execSync([
     "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s",
     '-y --verbose --no-update-default-toolchain'
   ].join(' -- '), { cwd, stdio, shell })
   execSync('rustup show active-toolchain || rustup toolchain install', { cwd, stdio, shell })
   execSync(`rustup target add ${target}`, { cwd, stdio, shell })
+
+  if (platform === 'linux' && libc === 'musl') {
+    // -C target-feature=-crt-static: link dynamically against musl (required
+    //   for dlopen-loaded libraries).
+    process.env.RUSTFLAGS = '-C target-feature=-crt-static'
+
+    // musl 1.2.3+ (Alpine 3.16+) rejects dlopen of shared libraries that use
+    // initial-exec TLS, which is Rust's default for musl targets. The fix is
+    // -Z tls-model=global-dynamic, which is always safe for dlopen-loaded libs.
+    //
+    // However, -Z tls-model is not yet stabilized and requires a nightly
+    // toolchain. Detect the active toolchain and apply the full fix only for
+    // nightly; stable Rust users on Alpine 3.16+ may still encounter SIGSEGV.
+    const rustcVersion = execSync('rustc --version', { cwd, shell }).toString()
+    if (rustcVersion.includes('nightly')) {
+      process.env.RUSTFLAGS += ' -Z tls-model=global-dynamic'
+      // Fat LTO (lto = true) does whole-program analysis that can convert
+      // global-dynamic TLS back to initial-exec, undoing the fix above.
+      process.env.CARGO_PROFILE_RELEASE_LTO = 'false'
+    }
+  }
 }
