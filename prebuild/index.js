@@ -181,9 +181,14 @@ function installRust () {
     process.env.RUSTFLAGS = '-C target-feature=-crt-static'
   }
 
+  // sh.rustup.rs now auto-detects the Windows host and passes --default-host
+  // itself; passing it again causes rustup-init to error with "cannot be used
+  // multiple times". Drop it from our args and add the cross-compilation
+  // target separately instead.
   execSync([
     "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s",
-    `-y --verbose --no-update-default-toolchain --default-host ${target}`
+    '-y --verbose --no-update-default-toolchain'
   ].join(' -- '), { cwd, stdio, shell })
   execSync('rustup show active-toolchain || rustup toolchain install', { cwd, stdio, shell })
+  execSync(`rustup target add ${target}`, { cwd, stdio, shell })
 }
