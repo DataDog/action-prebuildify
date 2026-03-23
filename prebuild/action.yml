@@ -57,7 +57,7 @@ runs:
           -e NODE_GYP_BUILD_MAJOR="$NODE_GYP_BUILD_MAJOR" \
           -w /usr/action \
           $DOCKER_BUILDER \
-          /bin/bash -c 'yarn && cd /usr/workspace && yarn exec node /usr/action'
+          /bin/bash -c '(command -v apk >/dev/null && apk add --no-cache autoconf automake libtool) || true; yarn && cd /usr/workspace && yarn exec node /usr/action'
       if: ${{ env.DOCKER_BUILDER != '' }}
       shell: bash
     - uses: actions/upload-artifact@v4
