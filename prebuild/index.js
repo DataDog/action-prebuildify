@@ -54,9 +54,9 @@ function prebuildFilename (abi, baseName) {
     return `${baseName}${libcTag}.node${abiTag}.node`
   }
   if (abi === 'napi') {
-    return 'node-napi.node'
+    return `${baseName}-napi.node`
   }
-  return `node-${abi}.node`
+  return `${baseName}-${abi}.node`
 }
 
 let alpineVersion
@@ -162,7 +162,8 @@ function prebuildTarget (arch, target) {
       fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}`, output)
     }
   } else {
-    const output = `${prebuildDir()}/${prebuildFilename(target.abi, TARGET_NAME)}`
+    const baseName = NODE_GYP_BUILD_MAJOR === '4' ? TARGET_NAME : 'node'
+    const output = `${prebuildDir()}/${prebuildFilename(target.abi, baseName)}`
     const input = NAPI_RS === 'true'
       ? `${DIRECTORY_PATH}/${TARGET_NAME}.node`
       : `${DIRECTORY_PATH}/build/Release/${TARGET_NAME}.node`
