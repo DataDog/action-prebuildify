@@ -134,10 +134,15 @@ function prebuildTarget (arch, target) {
     const names = fs.readdirSync(`${DIRECTORY_PATH}/build/Release`)
 
     for (const name of names) {
-      const baseName = name.replace(/\.node$/, '')
-      const output = `${prebuildDir()}/${prebuildFilename(target.abi, baseName)}`
+      if (name.endsWith('.node')) {
+        const baseName = name.replace(/\.node$/, '')
+        const output = `${prebuildDir()}/${prebuildFilename(target.abi, baseName)}`
 
-      fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}`, output)
+        fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}`, output)
+      } else {
+        // Copy non-.node files (e.g. binaries like crashtracker-receiver) as-is
+        fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}`, `${prebuildDir()}/${name}`)
+      }
     }
   } else {
     const baseName = NODE_GYP_BUILD_MAJOR === '4' ? TARGET_NAME : 'node'
