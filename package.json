@@ -11,7 +11,7 @@
     "rebuild": "node-gyp rebuild",
     "prebuild": "node prebuild",
     "lint": "eslint .",
-    "test": "node test"
+    "test": "node test/naming && node test"
   },
   "dependencies": {
     "node-gyp-build": "^3.9.0"
