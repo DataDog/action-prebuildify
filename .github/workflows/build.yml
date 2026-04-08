@@ -200,7 +200,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@257be4e943dd400fea3058977aa85f06efb72c9f # main
 
   linuxmusl-x64-alpine-3-17:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
+    if: ${{ !inputs.napi && !inputs.napi-rs && !inputs.neon && !inputs.rust && contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
     runs-on: ubuntu-latest
     name: linuxmusl-x64-alpine-3-17
     needs:
@@ -215,7 +215,7 @@ jobs:
       - uses: DataDog/action-prebuildify/prebuild@257be4e943dd400fea3058977aa85f06efb72c9f
 
   linuxmusl-arm64-alpine-3-17:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
+    if: ${{ !inputs.napi && !inputs.napi-rs && !inputs.neon && !inputs.rust && contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
     runs-on: ubuntu-24.04-arm
     name: linuxmusl-arm64-alpine-3-17
     needs:
