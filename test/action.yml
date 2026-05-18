@@ -22,6 +22,9 @@ runs:
     - run: node -e "console.log(process.versions)"
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
+    - run: command -v yarn || npm install -g yarn@^1.22.22
+      if: ${{ env.PACKAGE_MANAGER == 'yarn' }}
+      shell: bash
     - run: $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
