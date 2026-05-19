@@ -312,8 +312,8 @@ jobs:
         - /node20217:/__e/node20:ro,rshared
     name: centos-test-${{ matrix.node }}
     steps:
-      - name: Install libatomic for Node 25 - CentOS 8 vault repos (EOL)
-        if: matrix.node == '25'
+      - name: Install libatomic for Node 25+ - CentOS 8 vault repos (EOL)
+        if: ${{ matrix.node >= 25 }}
         run: |
           for f in /etc/yum.repos.d/CentOS-*.repo; do
             sed -i -e 's|^mirrorlist=|#mirrorlist=|g' \

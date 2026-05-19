@@ -16,7 +16,8 @@ const nodeTargets = [
   { version: '22.0.0', abi: '127', alpineVersion: '~3.14' },
   { version: '23.0.0', abi: '131', alpineVersion: '~3.14' },
   { version: '24.0.0', abi: '137', alpineVersion: '~3.14' },
-  { version: '25.0.0', abi: '141', alpineVersion: '~3.17' }
+  { version: '25.0.0', abi: '141', alpineVersion: '~3.17' },
+  { version: '26.0.0', abi: '147', alpineVersion: '~3.17' }
 ]
 
 const allowedAlpineVersions = getAllowedAlpineVersions()
