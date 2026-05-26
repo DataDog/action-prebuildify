@@ -6,6 +6,7 @@ const fs = require('fs')
 const execSync = require('child_process').execSync
 const semver = require('semver')
 const { getFilteredNodeTargets } = require('./targets')
+const naming = require('./naming')
 
 const platform = os.platform()
 const arch = process.env.ARCH || os.arch()
@@ -24,8 +25,17 @@ const {
   PREBUILD = '',
   DIRECTORY_PATH = '.',
   TARGET_NAME = 'addon',
-  NODE_HEADERS_DIRECTORY = path.join(os.tmpdir(), 'prebuilds')
+  NODE_HEADERS_DIRECTORY = path.join(os.tmpdir(), 'prebuilds'),
+  NODE_GYP_BUILD_MAJOR = '3'
 } = process.env
+
+function prebuildDir () {
+  return naming.prebuildDir(NODE_GYP_BUILD_MAJOR, DIRECTORY_PATH, platform, arch, libc)
+}
+
+function prebuildFilename (abi, baseName) {
+  return naming.prebuildFilename(NODE_GYP_BUILD_MAJOR, abi, baseName, libc)
+}
 
 let alpineVersion
 if (platform === 'linux' && libc === 'musl') {
@@ -58,7 +68,8 @@ const napiTargets = {
 async function run () {
   const targets = await initializeTargets()
   fs.mkdirSync(NODE_HEADERS_DIRECTORY, { recursive: true })
-  fs.mkdirSync(`${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}`, { recursive: true })
+  fs.mkdirSync(prebuildDir(), { recursive: true })
+
   if (PREBUILD) {
     execSync(PREBUILD, { cwd, stdio, shell })
   }
@@ -136,13 +147,19 @@ function prebuildTarget (arch, target) {
     const names = fs.readdirSync(`${DIRECTORY_PATH}/build/Release`)
 
     for (const name of names) {
-      const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/${name}`
-        .replace('.node', `-${target.abi}.node`)
+      if (name.endsWith('.node')) {
+        const baseName = name.replace(/\.node$/, '')
+        const output = `${prebuildDir()}/${prebuildFilename(target.abi, baseName)}`
 
-      fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}`, output)
+        fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}`, output)
+      } else {
+        // Copy non-.node files (e.g. binaries like crashtracker-receiver) as-is
+        fs.copyFileSync(`${DIRECTORY_PATH}/build/Release/${name}`, `${prebuildDir()}/${name}`)
+      }
     }
   } else {
-    const output = `${DIRECTORY_PATH}/prebuilds/${platform}${libc}-${arch}/node-${target.abi}.node`
+    const baseName = NODE_GYP_BUILD_MAJOR === '4' ? TARGET_NAME : 'node'
+    const output = `${prebuildDir()}/${prebuildFilename(target.abi, baseName)}`
     const input = NAPI_RS === 'true'
       ? `${DIRECTORY_PATH}/${TARGET_NAME}.node`
       : `${DIRECTORY_PATH}/build/Release/${TARGET_NAME}.node`
@@ -157,15 +174,33 @@ function installRust () {
   process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
   process.env.CARGO_BUILD_TARGET = target
 
-  if (platform === 'linux' && libc === 'musl') {
-    process.env.RUSTFLAGS = '-C target-feature=-crt-static'
-  }
-
   execSync([
     "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s",
-    `-y --verbose --no-update-default-toolchain --default-host ${target}`
+    '-y --verbose --no-update-default-toolchain'
   ].join(' -- '), { cwd, stdio, shell })
   execSync('rustup show active-toolchain || rustup toolchain install', { cwd, stdio, shell })
+  execSync(`rustup target add ${target}`, { cwd, stdio, shell })
+
+  if (platform === 'linux' && libc === 'musl') {
+    // -C target-feature=-crt-static: link dynamically against musl (required
+    //   for dlopen-loaded libraries).
+    process.env.RUSTFLAGS = '-C target-feature=-crt-static'
+
+    // musl 1.2.3+ (Alpine 3.16+) rejects dlopen of shared libraries that use
+    // initial-exec TLS, which is Rust's default for musl targets. The fix is
+    // -Z tls-model=global-dynamic, which is always safe for dlopen-loaded libs.
+    //
+    // However, -Z tls-model is not yet stabilized and requires a nightly
+    // toolchain. Detect the active toolchain and apply the full fix only for
+    // nightly; stable Rust users on Alpine 3.16+ may still encounter SIGSEGV.
+    const rustcVersion = execSync('rustc --version', { cwd, shell }).toString()
+    if (rustcVersion.includes('nightly')) {
+      process.env.RUSTFLAGS += ' -Z tls-model=global-dynamic'
+      // Fat LTO (lto = true) does whole-program analysis that can convert
+      // global-dynamic TLS back to initial-exec, undoing the fix above.
+      process.env.CARGO_PROFILE_RELEASE_LTO = 'false'
+    }
+  }
 }
 
 run()
