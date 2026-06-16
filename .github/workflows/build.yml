@@ -372,17 +372,22 @@ jobs:
         with:
           node: ${{ matrix.node }}
 
-  darwin-x64-test:
-    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
+  darwin-arm64-test:
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'darwin-arm64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
+        # Node.js < 16 has no official macOS arm64 build (Apple Silicon
+        # support landed in Node 16), so setup-node cannot install them here.
+        exclude:
+          - node: 12
+          - node: 14
     needs:
       - versions
       - prebuilds
       - platforms
-    runs-on: macos-15-intel
-    name: darwin-x64-test-${{ matrix.node }}
+    runs-on: macos-15
+    name: darwin-arm64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -391,27 +396,13 @@ jobs:
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
 
       #########################################################################
-      # node-gyp < 10 is not compatible with python 3.12
-      #
-      # For node 16+, we need to install node-gyp@latest that is compatible
-      # with python 3.12
+      # node-gyp < 10 is not compatible with python 3.12, so for node 16+ we
+      # install node-gyp@latest. (Node 12/14 are excluded from this job above,
+      # as they have no macOS arm64 build.)
       # Instruct npm to use the global version.
       - run: |
           npm install -g node-gyp@latest
           npm explore npm/node_modules/@npmcli/run-script -g -- npm_config_global=false npm install node-gyp@latest
-        if: ${{ matrix.node > '14' }}
-      # For node 14, we need to install node-gyp@9, because node-gyp@10 is not
-      # compatible with node 14. By installing manually setuptools, we ensure
-      # that node-gyp@9 is compatible with python 3.12.
-      # Older node-gyp versions are not compatible with python 3.12 even with
-      # setuptools that's why we install node-gyp@9.
-      # nvm@6 refuses to use the local node-gyp version, hence we install it
-      # globally and instruct npm to use the global version.
-      - run: |
-          npm install -g node-gyp@9
-          npm config set node_gyp $(npm prefix -g)/lib/node_modules/node-gyp/bin/node-gyp.js
-          pip3 install --break-system-packages setuptools
-        if: ${{ matrix.node <= '14' }}
       #########################################################################
 
       - uses: DataDog/action-prebuildify/test@c4c8dfb44e41a5a66d93256702ebea3a89556a35 # main
