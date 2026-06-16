@@ -372,8 +372,8 @@ jobs:
         with:
           node: ${{ matrix.node }}
 
-  darwin-x64-test:
-    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
+  darwin-arm64-test:
+    if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'darwin-arm64') }}
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
@@ -381,8 +381,8 @@ jobs:
       - versions
       - prebuilds
       - platforms
-    runs-on: macos-15-intel
-    name: darwin-x64-test-${{ matrix.node }}
+    runs-on: macos-15
+    name: darwin-arm64-test-${{ matrix.node }}
     steps:
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
