@@ -3,12 +3,6 @@
 const semver = require('semver')
 
 const nodeTargets = [
-  { version: '12.0.0', abi: '72', alpineVersion: '~3.14' },
-  { version: '13.0.0', abi: '79', alpineVersion: '~3.14' },
-  { version: '14.0.0', abi: '83', alpineVersion: '~3.14' },
-  { version: '15.0.0', abi: '88', alpineVersion: '~3.14' },
-  { version: '16.0.0', abi: '93', alpineVersion: '~3.14' },
-  { version: '17.0.1', abi: '102', alpineVersion: '~3.14' },
   { version: '18.0.0', abi: '108', alpineVersion: '~3.14' },
   { version: '19.0.0', abi: '111', alpineVersion: '~3.14' },
   { version: '20.0.0', abi: '115', alpineVersion: '~3.14' },

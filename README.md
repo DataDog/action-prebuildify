@@ -4,7 +4,7 @@ GitHub Actions reusable workflow to generate prebuilds for a Node native add-on.
 
 ## Usage
 
-This workflow can be used to generate Node 12 - 26 prebuilds for Linux, macOS
+This workflow can be used to generate Node 18 - 26 prebuilds for Linux, macOS
 and Windows. The prebuilds will be stored in the `prebuilds` folder which should
 be added to `.gitignore`, and can be loaded using
 [node-gyp-build](https://www.npmjs.com/package/node-gyp-build) with
@@ -21,7 +21,7 @@ jobs:
     with:
       cache: false # enable caching of dependencies based on lockfile
       directory-path: '.' # The path to the directory containing your build files, relative to the repo root.
-      min-node-version: 12 # The minimum Node.js version to build and test
+      min-node-version: 18 # The minimum Node.js version to build and test
       napi: false # generate single Node-API binary for all versions of Node
       napi-rs: false # Whether or not this build is for a napi-rs project.
       neon: false # Whether or not this build is for a Neon project.

@@ -1,8 +1,0 @@
-name: Node 12
-runs:
-  using: composite
-  steps:
-    - uses: actions/setup-node@v4
-      with:
-        node-version: '12'
-        cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}

@@ -65,7 +65,7 @@ on:
         type: string
       min-node-version:
         description: The minimum Node.js version to build and test
-        default: 12
+        default: 18
         required: false
         type: number
       node-gyp-build-major:
@@ -306,10 +306,7 @@ jobs:
       - platforms
     runs-on: ubuntu-latest
     container:
-      image: centos:${{ matrix.node < 18 && '7' || '8' }}
-      volumes:
-        - /node20217:/node20217:rw,rshared
-        - /node20217:/__e/node20:ro,rshared
+      image: centos:8
     name: centos-test-${{ matrix.node }}
     steps:
       - name: Install libatomic for Node 25+ - CentOS 8 vault repos (EOL)
@@ -321,18 +318,12 @@ jobs:
           done
           yum -y install libatomic
           echo "libatomic installed successfully."
-      # https://github.com/actions/runner/issues/2906#issuecomment-2109514798
-      - name: Install Node for runner (CentOS-compatible)
-        run: |
-          curl -LO https://unofficial-builds.nodejs.org/download/release/v20.9.0/node-v20.9.0-linux-x64-glibc-217.tar.xz
-          tar -xf node-v20.9.0-linux-x64-glibc-217.tar.xz --strip-components 1 -C /node20217
       - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
       - name: Install Node for tests
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
           . $HOME/.nvm/nvm.sh
           nvm install ${{ matrix.node }}
-          npm install -g npm@^7.24.2
           npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
         shell: bash
@@ -377,11 +368,6 @@ jobs:
     strategy:
       matrix:
         node: ${{ fromJson(needs.versions.outputs.versions) }}
-        # Node.js < 16 has no official macOS arm64 build (Apple Silicon
-        # support landed in Node 16), so setup-node cannot install them here.
-        exclude:
-          - node: 12
-          - node: 14
     needs:
       - versions
       - prebuilds
@@ -396,10 +382,8 @@ jobs:
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
 
       #########################################################################
-      # node-gyp < 10 is not compatible with python 3.12, so for node 16+ we
-      # install node-gyp@latest. (Node 12/14 are excluded from this job above,
-      # as they have no macOS arm64 build.)
-      # Instruct npm to use the global version.
+      # node-gyp < 10 is not compatible with python 3.12, so we install
+      # node-gyp@latest. Instruct npm to use the global version.
       - run: |
           npm install -g node-gyp@latest
           npm explore npm/node_modules/@npmcli/run-script -g -- npm_config_global=false npm install node-gyp@latest
