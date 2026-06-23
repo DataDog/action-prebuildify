@@ -124,7 +124,7 @@ jobs:
     env:
       ARCH: arm
       LIBC: glibc
-      DOCKER_BUILDER: rochdev/holy-node-box:12-arm32v7
+      DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-arm32v7
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
@@ -138,7 +138,7 @@ jobs:
     env:
       ARCH: arm64
       LIBC: glibc
-      DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8
+      DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-arm64v8
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
@@ -152,7 +152,7 @@ jobs:
     env:
       ARCH: ia32
       LIBC: glibc
-      DOCKER_BUILDER: rochdev/holy-node-box:12-i386
+      DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-i386
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
@@ -166,7 +166,7 @@ jobs:
     env:
       ARCH: x64
       LIBC: glibc
-      DOCKER_BUILDER: rochdev/holy-node-box:12-amd64
+      DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-amd64
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
@@ -180,7 +180,7 @@ jobs:
     env:
       ARCH: x64
       LIBC: musl
-      DOCKER_BUILDER: rochdev/holy-node-box:12-amd64-alpine
+      DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-amd64-alpine
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
@@ -194,7 +194,7 @@ jobs:
     env:
       ARCH: arm64
       LIBC: musl
-      DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8-alpine
+      DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-arm64v8-alpine
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
       - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
@@ -208,7 +208,7 @@ jobs:
     env:
       ARCH: x64
       LIBC: musl
-      DOCKER_BUILDER: rochdev/holy-node-box:12-amd64-alpine-3.17
+      DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-amd64-alpine3.17
       PREBUILDS_DIR: linuxmusl-x64
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
@@ -223,7 +223,7 @@ jobs:
     env:
       ARCH: arm64
       LIBC: musl
-      DOCKER_BUILDER: rochdev/holy-node-box:12-arm64v8-alpine-3.17
+      DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-arm64v8-alpine3.17
       PREBUILDS_DIR: linuxmusl-arm64
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5.0.1
