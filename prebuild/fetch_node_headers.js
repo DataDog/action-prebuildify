@@ -44,10 +44,6 @@ function fetchNodeHeaders (version, devDir) {
       try {
         execSync(cmd, { stdio, shell })
       } catch (err) {
-        if (isNightly) {
-          console.log('Failed to execute nightly: ', err) // eslint-disable-line no-console
-          return
-        }
         if (operation.retry(err)) {
           return
         } else if (err) {

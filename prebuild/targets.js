@@ -55,13 +55,15 @@ async function getNightlyTarget () {
   let versions = process.env.NIGHTLY_VERSION
 
   if (versions === 'latest') {
-    try {
-      response = await fetch('https://nodejs.org/download/nightly/index.json') // eslint-disable-line no-undef
-    } catch (err) {
-      return
+    response = await fetch('https://nodejs.org/download/nightly/index.json') // eslint-disable-line no-undef
+    if (!response.ok) {
+      throw new Error(`Failed to fetch Node nightly index: ${response.status}`)
     }
     data = await response.json()
-    data = data[0]
+    data = data.find((entry) => entry.files.includes('headers'))
+    if (!data) {
+      throw new Error('Node nightly index has no version with headers')
+    }
   } else {
     versions = versions.split(',').map(val => val.trim())
     data = { version: versions[0], modules: versions[1], alpineVersion: versions[2] }

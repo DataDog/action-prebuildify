@@ -131,16 +131,7 @@ function prebuildTarget (arch, target) {
     // This allows node-gyp to point to the nightly dist
     if (isNightly) cmd.push('--dist-url=https://nodejs.org/download/nightly')
     cmd = cmd.join(' ')
-    if (isNightly) {
-      try {
-        execSync(cmd, { cwd, stdio, shell })
-      } catch (error) {
-        console.error(`node-gyp failed for nightly version ${target.version}`, error) // eslint-disable-line no-console
-        return
-      }
-    } else {
-      execSync(cmd, { cwd, stdio, shell })
-    }
+    execSync(cmd, { cwd, stdio, shell })
   }
 
   if (RUST === 'true') {

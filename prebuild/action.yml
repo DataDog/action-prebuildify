@@ -52,6 +52,7 @@ runs:
           -e RUST="$RUST" \
           -e DIRECTORY_PATH="$DIRECTORY_PATH" \
           -e NODE_VERSIONS="$NODE_VERSIONS" \
+          -e NIGHTLY_VERSION="$NIGHTLY_VERSION" \
           -e NODE_HEADERS_DIRECTORY="/usr/node_headers" \
           -e LIBC="$LIBC" \
           -e NODE_GYP_BUILD_MAJOR="$NODE_GYP_BUILD_MAJOR" \
