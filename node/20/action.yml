@@ -2,7 +2,7 @@ name: Node 20
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v5
       with:
         node-version: '20'
         cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
