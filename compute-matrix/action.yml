@@ -3,7 +3,7 @@ description: Computes matrix of Node.js versions
 inputs:
   min:
     description: The minimum Node.js version to include in the matrix
-    default: '12'
+    default: '18'
   max:
     description: The maximum Node.js version to include in the matrix
     default: '26'
