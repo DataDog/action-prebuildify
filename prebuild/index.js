@@ -46,7 +46,9 @@ if (platform === 'linux' && libc === 'musl') {
   }
 }
 // https://nodejs.org/en/download/releases/
-const targets = getFilteredNodeTargets(NODE_VERSIONS, alpineVersion)
+async function initializeTargets () {
+  return await getFilteredNodeTargets(NODE_VERSIONS, alpineVersion)
+}
 
 const napiTargets = {
   'linux-arm64': 'aarch64-unknown-linux-gnu',
@@ -63,9 +65,8 @@ const napiTargets = {
   'win32-x64': 'x86_64-pc-windows-msvc'
 }
 
-prebuildify()
-
-function prebuildify () {
+async function run () {
+  const targets = await initializeTargets()
   fs.mkdirSync(NODE_HEADERS_DIRECTORY, { recursive: true })
   fs.mkdirSync(prebuildDir(), { recursive: true })
 
@@ -86,6 +87,7 @@ function prebuildify () {
 
 function prebuildTarget (arch, target) {
   const isRust = NAPI_RS === 'true' || NEON === 'true' || RUST === 'true'
+  const isNightly = target.isNightly || target.version.includes('nightly')
 
   if (platform === 'linux' && arch === 'ia32' && isRust) return
   if (platform === 'linux' && arch === 'ia32' && semver.gte(target.version, '14.0.0')) return
@@ -125,10 +127,12 @@ function prebuildTarget (arch, target) {
       // Workaround for https://github.com/nodejs/node-gyp/issues/2750
       // taken from https://github.com/nodejs/node-gyp/issues/2673#issuecomment-1196931379
       '--openssl_fips=""'
-    ].join(' ')
+    ]
+    // This allows node-gyp to point to the nightly dist
+    if (isNightly) cmd.push('--dist-url=https://nodejs.org/download/nightly')
+    cmd = cmd.join(' ')
+    execSync(cmd, { cwd, stdio, shell })
   }
-
-  execSync(cmd, { cwd, stdio, shell })
 
   if (RUST === 'true') {
     const names = fs.readdirSync(`${DIRECTORY_PATH}/build/Release`)
@@ -189,3 +193,5 @@ function installRust () {
     }
   }
 }
+
+run()
