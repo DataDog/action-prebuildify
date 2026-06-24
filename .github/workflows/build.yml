@@ -99,8 +99,14 @@ jobs:
     outputs:
       versions: ${{ steps.versions.outputs.versions }}
     steps:
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
       - id: versions
-        uses: DataDog/action-prebuildify/compute-matrix@52f656de95fa80939195e2b9897c032b492271b3 # main
+        uses: ./.prebuildify/compute-matrix
         with:
           min: ${{ inputs.min-node-version }}
 
@@ -109,8 +115,14 @@ jobs:
     outputs:
       platforms: ${{ steps.platforms.outputs.platforms }}
     steps:
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
       - id: platforms
-        uses: DataDog/action-prebuildify/platforms@52f656de95fa80939195e2b9897c032b492271b3 # main
+        uses: ./.prebuildify/platforms
         with:
           skip: ${{ inputs.skip }}
           only: ${{ inputs.only }}
@@ -126,8 +138,15 @@ jobs:
       LIBC: glibc
       DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-arm32v7
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   linuxglibc-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
@@ -140,8 +159,15 @@ jobs:
       LIBC: glibc
       DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-arm64v8
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   linuxglibc-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-ia32') }}
@@ -154,8 +180,15 @@ jobs:
       LIBC: glibc
       DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-i386
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   linuxglibc-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
@@ -168,8 +201,15 @@ jobs:
       LIBC: glibc
       DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-amd64
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   linuxmusl-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
@@ -182,8 +222,15 @@ jobs:
       LIBC: musl
       DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-amd64-alpine
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   linuxmusl-arm64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
@@ -196,8 +243,15 @@ jobs:
       LIBC: musl
       DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-arm64v8-alpine
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   linuxmusl-x64-alpine-3-17:
     if: ${{ !inputs.napi && !inputs.napi-rs && !inputs.neon && !inputs.rust && contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-x64') }}
@@ -211,8 +265,15 @@ jobs:
       DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-amd64-alpine3.17
       PREBUILDS_DIR: linuxmusl-x64
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   linuxmusl-arm64-alpine-3-17:
     if: ${{ !inputs.napi && !inputs.napi-rs && !inputs.neon && !inputs.rust && contains(fromJson(needs.platforms.outputs.platforms), 'linuxmusl-arm64') }}
@@ -226,8 +287,15 @@ jobs:
       DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-arm64v8-alpine3.17
       PREBUILDS_DIR: linuxmusl-arm64
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   # TODO: linuxmusl-arm
 
@@ -239,8 +307,15 @@ jobs:
     env:
       ARCH: arm64
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   darwin-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'darwin-x64') }}
@@ -250,8 +325,15 @@ jobs:
     env:
       ARCH: x64
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   win32-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-ia32') }}
@@ -261,8 +343,15 @@ jobs:
     env:
       ARCH: ia32
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   win32-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'win32-x64') }}
@@ -272,8 +361,15 @@ jobs:
     env:
       ARCH: x64
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/prebuild@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/prebuild
 
   # Tests
 
@@ -292,8 +388,15 @@ jobs:
     name: alpine-test-${{ matrix.node }}
     steps:
       - run: apk update && apk add bash build-base git python3 curl
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/test@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/test
 
   centos-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
@@ -318,7 +421,8 @@ jobs:
           done
           yum -y install libatomic
           echo "libatomic installed successfully."
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - name: Install Node for tests
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
@@ -327,7 +431,13 @@ jobs:
           npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
         shell: bash
-      - uses: DataDog/action-prebuildify/test@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/test
 
   linux-arm64-test:
     if: ${{ !failure() && !cancelled() && contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-arm64') }}
@@ -341,8 +451,15 @@ jobs:
     runs-on: ubuntu-24.04-arm
     name: linux-arm64-test-${{ matrix.node }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/test@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/test
         with:
           node: ${{ matrix.node }}
 
@@ -358,8 +475,15 @@ jobs:
     runs-on: ubuntu-latest
     name: linux-x64-test-${{ matrix.node }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: DataDog/action-prebuildify/test@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/test
         with:
           node: ${{ matrix.node }}
 
@@ -375,7 +499,8 @@ jobs:
     runs-on: macos-15
     name: darwin-arm64-test-${{ matrix.node }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ matrix.node }}
@@ -389,7 +514,13 @@ jobs:
           npm explore npm/node_modules/@npmcli/run-script -g -- npm_config_global=false npm install node-gyp@latest
       #########################################################################
 
-      - uses: DataDog/action-prebuildify/test@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/test
         with:
           node: ${{ matrix.node }}
 
@@ -405,12 +536,19 @@ jobs:
     runs-on: windows-2022
     name: win32-test-${{ matrix.node }}
     steps:
-      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      - name: Check out the calling repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
       - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
         with:
           node-version: ${{ matrix.node }}
           cache: ${{ (env.CACHE == 'true') && env.PACKAGE_MANAGER || '' }}
-      - uses: DataDog/action-prebuildify/test@52f656de95fa80939195e2b9897c032b492271b3 # main
+      - name: Check out action-prebuildify
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        with:
+          repository: ${{ job.workflow_repository }}
+          ref: ${{ job.workflow_sha }}
+          path: .prebuildify
+      - uses: ./.prebuildify/test
         with:
           node: ${{ matrix.node }}
 
