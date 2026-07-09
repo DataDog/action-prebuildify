@@ -131,8 +131,9 @@ function prebuildTarget (arch, target) {
     // This allows node-gyp to point to the nightly dist
     if (isNightly) cmd.push('--dist-url=https://nodejs.org/download/nightly')
     cmd = cmd.join(' ')
-    execSync(cmd, { cwd, stdio, shell })
   }
+
+  execSync(cmd, { cwd, stdio, shell })
 
   if (RUST === 'true') {
     const names = fs.readdirSync(`${DIRECTORY_PATH}/build/Release`)
@@ -194,4 +195,7 @@ function installRust () {
   }
 }
 
-run()
+run().catch((err) => {
+  console.error(err) // eslint-disable-line no-console
+  process.exit(1)
+})
