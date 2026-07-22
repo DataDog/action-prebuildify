@@ -9,10 +9,22 @@ on:
     - cron: '0 4 * * *'
 
 jobs:
+  prepare-artifact:
+    runs-on: ubuntu-latest
+    steps:
+      - run: mkdir build-input && touch build-input/marker
+      - uses: actions/upload-artifact@v7
+        with:
+          name: build-input
+          path: build-input/marker
+
   build:
+    needs: prepare-artifact
     uses: ./.github/workflows/build.yml
     with:
+      artifact-name: build-input
       cache: true
       napi: false
       package-manager: yarn
+      prebuild: 'node -e "require(\"fs\").accessSync(\"build-input/marker\")"'
       target-name: test

@@ -3,6 +3,12 @@ runs:
   steps:
     # Make artifacts previously uploaded by the parent workflow available to binding.gyp
     - uses: actions/download-artifact@v7
+      if: ${{ env.ARTIFACT_NAME == '' }}
+    - uses: actions/download-artifact@v7
+      if: ${{ env.ARTIFACT_NAME != '' }}
+      with:
+        name: ${{ env.ARTIFACT_NAME }}
+        path: ${{ env.ARTIFACT_NAME }}
     - run: |
         $PACKAGE_MANAGER install --ignore-scripts
       shell: bash

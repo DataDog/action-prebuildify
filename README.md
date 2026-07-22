@@ -19,6 +19,7 @@ jobs:
   build:
     uses: Datadog/action-prebuildify/.github/workflows/build.yml@main
     with:
+      artifact-name: '' # artifact to download into a same-named directory before building
       cache: false # enable caching of dependencies based on lockfile
       directory-path: '.' # The path to the directory containing your build files, relative to the repo root.
       min-node-version: 18 # The minimum Node.js version to build and test
