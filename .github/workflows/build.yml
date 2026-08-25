@@ -147,7 +147,7 @@ jobs:
     env:
       ARCH: arm
       LIBC: glibc
-      DOCKER_BUILDER: node:22.23.2-bullseye
+      DOCKER_BUILDER: arm32v7/node:22.23.2-bullseye
     steps:
       - name: Check out the calling repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
