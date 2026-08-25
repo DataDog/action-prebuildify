@@ -16,6 +16,7 @@ jobs:
       cache: true
       neon: true
       skip: linux-ia32
-      package-manager: yarn
+      node-gyp-build-major: 4
+      package-manager: npm
       target-name: test
       directory-path: ./test/neon

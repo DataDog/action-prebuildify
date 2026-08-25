@@ -180,27 +180,6 @@ jobs:
           path: .prebuildify
       - uses: ./.prebuildify/prebuild
 
-  linuxglibc-ia32:
-    if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-ia32') }}
-    runs-on: ubuntu-latest
-    name: linuxglibc-ia32
-    needs:
-      - platforms
-    env:
-      ARCH: ia32
-      LIBC: glibc
-      DOCKER_BUILDER: ghcr.io/rochdev/holy-node-box:12-i386
-    steps:
-      - name: Check out the calling repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Check out action-prebuildify
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          repository: ${{ job.workflow_repository }}
-          ref: ${{ job.workflow_sha }}
-          path: .prebuildify
-      - uses: ./.prebuildify/prebuild
-
   linuxglibc-x64:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-x64') }}
     runs-on: ubuntu-latest
@@ -439,7 +418,6 @@ jobs:
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
           . $HOME/.nvm/nvm.sh
           nvm install ${{ matrix.node }}
-          npm install -g yarn@^1.22.22
           dirname $(nvm which default) >> $GITHUB_PATH
         shell: bash
       - name: Check out action-prebuildify

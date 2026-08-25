@@ -101,5 +101,4 @@ typings/
 
 build
 prebuilds
-!prebuild/node_modules
 !compute-matrix/node_modules

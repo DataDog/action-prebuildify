@@ -4,7 +4,9 @@ const { parseArgs } = require('node:util')
 
 const systems = ['darwin', 'linuxglibc', 'linuxmusl', 'win32']
 const architectures = ['arm', 'arm64', 'ia32', 'x64']
-const platforms = systems.flatMap(s => architectures.map(a => `${s}-${a}`))
+const platforms = systems.flatMap(system => architectures
+  .filter(architecture => !system.startsWith('linux') || architecture !== 'ia32')
+  .map(architecture => `${system}-${architecture}`))
 
 const { values } = parseArgs({
   args: process.argv.slice(2),
@@ -15,13 +17,13 @@ const { values } = parseArgs({
 })
 
 function match (platform, filter) {
-  for (let [start, end] of filter.map(f => f.split('-'))) {
-    start = start.replace('windows', 'win32').replace('macos', 'darwin')
+  for (const [start, end] of filter.map(item => item.split('-'))) {
+    const normalizedStart = start.replace('windows', 'win32').replace('macos', 'darwin')
 
     if (end) {
-      if (platform.startsWith(start) && platform.endsWith(end)) return true
+      if (platform.startsWith(normalizedStart) && platform.endsWith(end)) return true
     } else {
-      if (platform.startsWith(start) || platform.endsWith(start)) return true
+      if (platform.startsWith(normalizedStart) || platform.endsWith(normalizedStart)) return true
     }
   }
 

@@ -14,14 +14,16 @@
     "test": "node test/naming && node test"
   },
   "dependencies": {
-    "node-gyp-build": "^3.9.0"
+    "node-gyp-build": "^4.8.4"
   },
   "devDependencies": {
-    "eslint": "^7.31.0",
-    "eslint-config-standard": "^16.0.3",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^5.1.0",
-    "eslint-plugin-standard": "^5.0.0"
+    "@eslint/js": "^10.0.1",
+    "@stylistic/eslint-plugin": "^5.10.0",
+    "eslint": "^10.9.1",
+    "eslint-plugin-import-x": "^4.17.1",
+    "eslint-plugin-n": "^18.3.0",
+    "eslint-plugin-promise": "^7.3.0",
+    "globals": "^17.11.0",
+    "node-gyp": "^13.0.1"
   }
 }

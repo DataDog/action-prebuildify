@@ -18,9 +18,9 @@ const allowedAlpineVersions = getAllowedAlpineVersions()
 
 function getAllowedAlpineVersions () {
   const versions = new Set()
-  nodeTargets.forEach(target => {
+  for (const target of nodeTargets) {
     versions.add(target.alpineVersion)
-  })
+  }
   return Array.from(versions)
 }
 
@@ -35,10 +35,11 @@ async function getFilteredNodeTargets (semverConstraint, alpineVersion) {
     throw new Error(`Alpine version ${alpineVersion} is not supported.`)
   }
 
-  const filteredTargets = nodeTargets.filter((target) =>
-    semver.satisfies(target.version, semverConstraint) &&
-    (alpineVersion === undefined || semver.satisfies(alpineVersion, target.alpineVersion))
-  )
+  const filteredTargets = nodeTargets.filter(target => {
+    if (!semver.satisfies(target.version, semverConstraint)) return false
+
+    return alpineVersion === undefined || semver.satisfies(alpineVersion, target.alpineVersion)
+  })
 
   // Only get nightly target if NIGHTLY_VERSION env is set
   if (process.env.NIGHTLY_VERSION) {
@@ -55,12 +56,13 @@ async function getNightlyTarget () {
   let versions = process.env.NIGHTLY_VERSION
 
   if (versions === 'latest') {
-    response = await fetch('https://nodejs.org/download/nightly/index.json') // eslint-disable-line no-undef
+    const nightlyIndexUrl = 'https://nodejs.org/download/nightly/index.json'
+    response = await fetch(nightlyIndexUrl) // eslint-disable-line n/no-unsupported-features/node-builtins
     if (!response.ok) {
       throw new Error(`Failed to fetch Node nightly index: ${response.status}`)
     }
     data = await response.json()
-    data = data.find((entry) => entry.files.includes('headers'))
+    data = data.find(entry => entry.files.includes('headers'))
     if (!data) {
       throw new Error('Node nightly index has no version with headers')
     }

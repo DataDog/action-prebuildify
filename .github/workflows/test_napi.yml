@@ -14,5 +14,6 @@ jobs:
     with:
       min-node-version: 18
       napi: true
+      node-gyp-build-major: 4
       package-manager: npm
       directory-path: ./test/napi
