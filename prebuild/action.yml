@@ -54,7 +54,7 @@ runs:
       if: ${{ env.DOCKER_BUILDER == '' }}
       shell: bash
     - run: |
-        # The image provides the target libc and compiler. docker.sh installs the Node 18 action runtime.
+        # The image provides Node.js and the target libc. docker.sh installs any missing build tools.
         docker run \
           -v $GITHUB_ACTION_PATH:/usr/action \
           -v $PWD:/usr/workspace \
@@ -74,7 +74,7 @@ runs:
           -e NODE_GYP_BUILD_MAJOR="$NODE_GYP_BUILD_MAJOR" \
           -w /usr/action \
           $DOCKER_BUILDER \
-          /bin/bash /usr/action/docker.sh
+          /bin/sh /usr/action/docker.sh
       if: ${{ env.DOCKER_BUILDER != '' }}
       shell: bash
     - uses: actions/upload-artifact@v6
