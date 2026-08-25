@@ -9,15 +9,24 @@ runs:
       with:
         name: ${{ env.ARTIFACT_NAME }}
         path: ${{ env.ARTIFACT_NAME }}
+    - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+      with:
+        node-version: 24
+    - run: command -v yarn || npm install -g yarn@^1.22.22
+      if: ${{ env.PACKAGE_MANAGER == 'yarn' }}
+      shell: bash
     - run: |
         $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
+    - run: npm ci --ignore-scripts
+      shell: bash
+      working-directory: ${{ github.action_path }}
 
     # Node headers cache start
     - run: echo "NODE_HEADERS_DIRECTORY=${DIRECTORY_PATH}/tmp_node_headers" >> "$GITHUB_ENV"
       shell: bash
-    - run: yarn exec -s -- node $GITHUB_ACTION_PATH/fetch_node_headers.js >> "$GITHUB_OUTPUT"
+    - run: node $GITHUB_ACTION_PATH/fetch_node_headers.js >> "$GITHUB_OUTPUT"
       if: ${{ env.GYP == 'true' && env.CACHE == 'true' }}
       id: compute-node-targets-hash
       shell: bash
@@ -31,7 +40,7 @@ runs:
     - name: Fetch node headers
       if: ${{ env.GYP == 'true' && steps.cache-node-headers.outputs.cache-hit != 'true' }}
       run: |
-        yarn exec -s -- node $GITHUB_ACTION_PATH/fetch_node_headers.js $NODE_HEADERS_DIRECTORY
+        node $GITHUB_ACTION_PATH/fetch_node_headers.js $NODE_HEADERS_DIRECTORY
       shell: bash
     - name: Save node headers
       if: ${{ env.GYP == 'true' && env.CACHE == 'true' && steps.cache-node-headers.outputs.cache-hit != 'true' }}
@@ -41,10 +50,11 @@ runs:
         key: ${{ steps.cache-node-headers.outputs.cache-primary-key }}
     # Node headers cache end
 
-    - run: yarn exec node $GITHUB_ACTION_PATH
+    - run: node $GITHUB_ACTION_PATH
       if: ${{ env.DOCKER_BUILDER == '' }}
       shell: bash
     - run: |
+        # The image provides Node.js and the target libc. docker.sh installs any missing build tools.
         docker run \
           -v $GITHUB_ACTION_PATH:/usr/action \
           -v $PWD:/usr/workspace \
@@ -64,7 +74,7 @@ runs:
           -e NODE_GYP_BUILD_MAJOR="$NODE_GYP_BUILD_MAJOR" \
           -w /usr/action \
           $DOCKER_BUILDER \
-          /bin/bash -c '(command -v apk >/dev/null && apk add --no-cache autoconf automake libtool) || true; yarn && cd /usr/workspace && yarn exec node /usr/action'
+          /bin/sh /usr/action/docker.sh
       if: ${{ env.DOCKER_BUILDER != '' }}
       shell: bash
     - uses: actions/upload-artifact@v6

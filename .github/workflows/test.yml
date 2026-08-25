@@ -25,6 +25,7 @@ jobs:
       artifact-name: build-input
       cache: true
       napi: false
-      package-manager: yarn
+      node-gyp-build-major: 4
+      package-manager: npm
       prebuild: 'node -e "require(\"fs\").accessSync(\"build-input/marker\")"'
       target-name: test

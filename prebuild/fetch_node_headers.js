@@ -81,7 +81,7 @@ async function main () {
   }
 }
 
-main().catch((err) => {
-  console.error(err) // eslint-disable-line no-console
-  process.exit(1)
+main().catch(error => {
+  console.error(error) // eslint-disable-line no-console
+  process.exitCode = 1
 })

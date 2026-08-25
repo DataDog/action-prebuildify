@@ -10,7 +10,8 @@ be added to `.gitignore`, and can be loaded using
 [node-gyp-build](https://www.npmjs.com/package/node-gyp-build) with
 `require('node-gyp-build')(__dirname)`.
 
-> *NOTE:* Currently, `node-gyp-build` must be `<4` to work with this action.
+Linux ia32 prebuilds are not available because Node 18 and later do not ship a
+Linux x86 runtime.
 
 Example usage with the available options and the defaults:
 
@@ -27,6 +28,7 @@ jobs:
       napi: false # generate single Node-API binary for all versions of Node
       napi-rs: false # Whether or not this build is for a napi-rs project.
       neon: false # Whether or not this build is for a Neon project.
+      node-gyp-build-major: 3 # Major version of node-gyp-build used by the package.
       package-manager: 'npm' # npm or yarn
       postbuild: '' # command to run after prebuilds have been generated
       prebuild: '' # command to run before prebuilds are generated

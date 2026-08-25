@@ -14,6 +14,7 @@ const libc = process.env.LIBC || ''
 const stdio = [0, 1, 2]
 const shell = process.env.SHELL
 const cwd = path.join(process.cwd(), process.env.DIRECTORY_PATH)
+const nodeGyp = path.join(__dirname, 'node_modules', 'node-gyp', 'bin', 'node-gyp.js')
 
 const {
   NAPI = 'false',
@@ -41,7 +42,7 @@ let alpineVersion
 if (platform === 'linux' && libc === 'musl') {
   try {
     alpineVersion = fs.readFileSync('/etc/alpine-release', 'utf8').trim()
-  } catch (err) {
+  } catch {
     // File doesn't exist or can't be read (e.g., on non-Alpine systems)
   }
 }
@@ -114,7 +115,7 @@ function prebuildTarget (arch, target) {
     cmd = 'npm run build-release'
   } else {
     cmd = [
-      'node-gyp rebuild',
+      `"${process.execPath}" "${nodeGyp}" rebuild`,
       `--target=${target.version}`,
       `--arch=${arch}`,
       `--devdir=${NODE_HEADERS_DIRECTORY}`,
@@ -163,14 +164,22 @@ function prebuildTarget (arch, target) {
 function installRust () {
   const target = napiTargets[`${platform}${libc}-${arch}`]
 
-  process.env.PATH += path.delimiter + process.env.HOME + path.sep + '.cargo' + path.sep + 'bin'
+  process.env.PATH = process.env.HOME + path.sep + '.cargo' + path.sep + 'bin' + path.delimiter + process.env.PATH
   process.env.CARGO_BUILD_TARGET = target
 
   execSync([
-    "curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s",
+    'curl --proto \'=https\' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s',
     '-y --verbose --no-update-default-toolchain'
   ].join(' -- '), { cwd, stdio, shell })
-  execSync('rustup show active-toolchain || rustup toolchain install', { cwd, stdio, shell })
+
+  if (NEON === 'true') {
+    execSync('rustup toolchain install nightly', { cwd, stdio, shell })
+    process.env.RUSTUP_TOOLCHAIN = 'nightly'
+    execSync('rustup component add rust-src', { cwd, stdio, shell })
+  } else {
+    execSync('rustup show active-toolchain || rustup toolchain install', { cwd, stdio, shell })
+  }
+
   execSync(`rustup target add ${target}`, { cwd, stdio, shell })
 
   if (platform === 'linux' && libc === 'musl') {
@@ -195,7 +204,7 @@ function installRust () {
   }
 }
 
-run().catch((err) => {
-  console.error(err) // eslint-disable-line no-console
-  process.exit(1)
+run().catch(error => {
+  console.error(error) // eslint-disable-line no-console
+  process.exitCode = 1
 })
