@@ -13,17 +13,17 @@ runs:
         $PACKAGE_MANAGER install --ignore-scripts
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
-    - name: Restore Rust build cache
-      if: ${{ env.RUST == 'true' && env.CACHE == 'true' }}
+    - name: Restore Cargo build cache
+      if: ${{ env.CACHE == 'true' && (env.NAPI_RS == 'true' || env.NEON == 'true' || env.RUST == 'true') }}
       uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
       with:
         path: ${{ env.DIRECTORY_PATH }}/target
         key: >-
-          rust-${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-${{
+          cargo-${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-${{
           hashFiles(format('{0}/Cargo.lock', env.DIRECTORY_PATH),
           format('{0}/rust-toolchain', env.DIRECTORY_PATH),
           format('{0}/rust-toolchain.toml', env.DIRECTORY_PATH)) }}
-        restore-keys: rust-${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-
+        restore-keys: cargo-${{ runner.os }}-${{ runner.arch }}-${{ github.job }}-
 
     # Node headers cache start
     - run: echo "NODE_HEADERS_DIRECTORY=${DIRECTORY_PATH}/tmp_node_headers" >> "$GITHUB_ENV"

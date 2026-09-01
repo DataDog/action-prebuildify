@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       cache:
-        description: Whether to cache dependencies, Node headers, and Rust build artifacts.
+        description: Whether to cache dependencies, Node headers, and Cargo build artifacts.
         default: false
         required: false
         type: boolean
