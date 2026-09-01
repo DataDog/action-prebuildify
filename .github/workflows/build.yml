@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       cache:
-        description: Whether to enable caching of dependencies based on lockfile.
+        description: Whether to cache dependencies, Node headers, and Cargo build artifacts.
         default: false
         required: false
         type: boolean
