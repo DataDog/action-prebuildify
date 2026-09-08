@@ -13,7 +13,18 @@ runs:
     - run: chmod -R +x ./prebuilds
       shell: bash
       working-directory: ${{ env.DIRECTORY_PATH }}
-    - run: curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && echo "$HOME/.cargo/bin" >> $GITHUB_PATH
+    - run: |
+        for attempt in 1 2 3 4 5; do
+          if curl --proto '=https' --tlsv1.2 -sSf --output "$RUNNER_TEMP/rustup-init.sh" https://sh.rustup.rs; then
+            break
+          fi
+          if [ "$attempt" = 5 ]; then
+            exit 1
+          fi
+          sleep "$attempt"
+        done
+        sh "$RUNNER_TEMP/rustup-init.sh" -y
+        echo "$HOME/.cargo/bin" >> "$GITHUB_PATH"
       if: ${{ env.NAPI_RS == 'true' || env.RUST == 'true' }}
       shell: bash
     - uses: actions/setup-node@v5
