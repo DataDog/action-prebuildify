@@ -182,7 +182,8 @@ jobs:
 
   linuxglibc-ia32:
     if: ${{ contains(fromJson(needs.platforms.outputs.platforms), 'linuxglibc-ia32') }}
-    runs-on: ubuntu-latest
+    # Ubuntu 26.04 ships Docker 29.4.2, which breaks 32-bit networking.
+    runs-on: ubuntu-24.04
     name: linuxglibc-ia32
     needs:
       - platforms
